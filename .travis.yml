@@ -1,0 +1,47 @@
+language: java
+install: true
+
+env:
+  global:
+    - HOME="OnlineShopSimulator"
+
+matrix:
+  include:
+    - jdk: openjdk8
+    - jdk: openjdk9
+    - os: osx
+      osx_image: xcode10.1
+
+notifications:
+  email:
+    recipients:
+      - andrea.giuntini@stud.unifi.it
+      - agemelli60@gmail.com
+      - ale.venturi95@yahoo.it
+    on_success: never # default: change
+    on_failure: always # default: always
+
+addons:
+  sonarcloud:
+    organization: "aptunifi"
+    token:
+      secure: "78b12374ff8b4634024364a7df9b660d7a91939f" # encrypted value of your token
+
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+
+before_script: cd $HOME/
+
+script:
+  - ./gradlew build --scan -s
+  - ./gradlew sonarqube
+
+after_success:
+  - ./gradlew jacocoTestReport coveralls
+
