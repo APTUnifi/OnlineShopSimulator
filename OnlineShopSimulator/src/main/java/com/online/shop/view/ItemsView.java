@@ -11,4 +11,10 @@ public interface ItemsView {
 
 	void itemQuantityAdded(Item existingItem);
 
+	void itemRemoved(Item itemToRemove);
+
+	void errorLog(String error, Item itemToRemove);
+
+	void showSearchResult(Item item);
+
 }

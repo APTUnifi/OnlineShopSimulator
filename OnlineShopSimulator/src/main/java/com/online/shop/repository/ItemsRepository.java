@@ -9,7 +9,12 @@ public interface ItemsRepository {
 
 	public Item findByProductCode(String productCode);
 
+	public Item findByName(String name);
+
 	public void store(Item item);
 
 	public void increaseQuantity(Item itemToAdd);
+
+	public void remove(Item itemToRemove);
+
 }

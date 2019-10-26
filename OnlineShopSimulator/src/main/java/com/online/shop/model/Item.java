@@ -2,6 +2,7 @@ package com.online.shop.model;
 
 public class Item {
 	private String productCode;
+	private String name;
 	private int quantity;
 
 	// Used by Unit Testing
@@ -14,11 +15,19 @@ public class Item {
 		this.quantity = quantity;
 	}
 
+	public Item(String name) {
+		this.name = name;
+	}
+
 	public String getProductCode() {
 		return productCode;
 	}
 
 	public int getQuantity() {
 		return quantity;
+	}
+
+	public String getName() {
+		return name;
 	}
 }

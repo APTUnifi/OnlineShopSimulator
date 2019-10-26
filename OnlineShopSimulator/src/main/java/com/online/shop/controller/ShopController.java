@@ -35,4 +35,25 @@ public class ShopController {
 		itemsView.itemAdded(item);
 	}
 
+	public void removeItem(Item item) {
+
+		if (itemsRepository.findByProductCode(item.getProductCode()) == null) {
+			itemsView.errorLog("Item with production code " + item.getProductCode() + " does not exists", item);
+			return;
+		}
+		itemsRepository.remove(item);
+		itemsView.itemRemoved(item);
+	}
+
+	public void searchItem(Item item) {
+		Item retrievedItem = itemsRepository.findByName(item.getName());
+
+		if (retrievedItem == null) {
+			itemsView.errorLog("Item with name " + item.getName() + " doest not exists", item);
+			return;
+		}
+
+		itemsView.showSearchResult(item);
+	}
+
 }

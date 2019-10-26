@@ -42,7 +42,7 @@ public class ShopControllerTest {
 		// verify
 		verify(itemsView).showItems(items);
 	}
- 
+
 	@Test
 	public void testNewItemWhenQuantityIsNotPositive() {
 		// setup
@@ -51,6 +51,7 @@ public class ShopControllerTest {
 		// exercise + verify
 		assertThatThrownBy(() -> shopController.newItem(item)).isInstanceOf(IllegalArgumentException.class)
 				.hasMessage("Negative amount: -1");
+		verifyNoMoreInteractions(ignoreStubs(itemsRepository));
 	}
 
 	@Test
@@ -80,4 +81,52 @@ public class ShopControllerTest {
 		inOrder.verify(itemsView).itemQuantityAdded(existingItem);
 	}
 
+	@Test
+	public void testRemoveItemWhenItemAlreadyExists() {
+		// setup
+		Item itemToRemove = new Item("1", 1);
+		when(itemsRepository.findByProductCode("1")).thenReturn(itemToRemove);
+		// exercise
+		shopController.removeItem(itemToRemove);
+		// verify
+		InOrder inOrder = inOrder(itemsRepository, itemsView);
+		inOrder.verify(itemsRepository).remove(itemToRemove);
+		inOrder.verify(itemsView).itemRemoved(itemToRemove);
+
+	}
+
+	@Test
+	public void testRemoveItemWhenItemDoesNotAlreadyExists() {
+		// setup
+		Item itemToRemove = new Item("1", 1);
+		when(itemsRepository.findByProductCode("1")).thenReturn(null);
+		// exercise
+		shopController.removeItem(itemToRemove);
+		// verify
+		verify(itemsView).errorLog("Item with production code 1 does not exists", itemToRemove);
+		verifyNoMoreInteractions(ignoreStubs(itemsRepository));
+	}
+
+	@Test
+	public void testSearchItemWhenItemAlreadyExists() {
+		// setup
+		Item itemToSearch = new Item("battery");
+		when(itemsRepository.findByName("battery")).thenReturn(itemToSearch);
+		// exercise
+		shopController.searchItem(itemToSearch);
+		// verify
+		verify(itemsView).showSearchResult(itemToSearch);
+	}
+
+	@Test
+	public void testSearchItemWhenItemDoestNotExists() {
+		// setup
+		Item itemToSearch = new Item("battery");
+		when(itemsRepository.findByName("battery")).thenReturn(null);
+		// exercise
+		shopController.searchItem(itemToSearch);
+		// verify
+		verify(itemsView).errorLog("Item with name battery doest not exists", itemToSearch);
+		verifyNoMoreInteractions(ignoreStubs(itemsRepository));
+	}
 }
