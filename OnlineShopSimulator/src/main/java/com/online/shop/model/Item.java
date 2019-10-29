@@ -1,14 +1,24 @@
 package com.online.shop.model;
 
+import java.util.Objects;
+
 import org.testcontainers.shaded.org.apache.commons.lang.builder.EqualsBuilder;
 
 public class Item {
 	
 	private String productCode;
+	private String name;
 	private int quantity;
-
-	public Item(String productCode, int quantity) {
+	
+	public Item(String productCode, String name) {
 		this.productCode = productCode;
+		this.name = name;
+		this.quantity = 1;
+	}
+
+	public Item(String productCode, String name, int quantity) {
+		this.productCode = productCode;
+		this.name = name;
 		this.quantity = quantity;
 	}
 	
@@ -18,11 +28,40 @@ public class Item {
 
 	    if (o == null || getClass() != o.getClass()) return false;
 
-	    Item student = (Item) o;
+	    Item item = (Item) o;
 
 	    return new EqualsBuilder()
-	    		.append(productCode, student.productCode)
-	            .append(quantity, student.quantity)
+	    		.append(productCode, item.productCode)
+	    		.append(name, item.name)
 	            .isEquals();
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(productCode, name);
+	}
+	
+	public String getProductCode() {
+		return productCode;
+	}
+
+	public void setProductCode(String productCode) {
+		this.productCode = productCode;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public int getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
 	}
 }

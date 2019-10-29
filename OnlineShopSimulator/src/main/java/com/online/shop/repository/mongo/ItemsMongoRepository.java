@@ -8,6 +8,7 @@ import org.bson.Document;
 
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.Filters;
 import com.online.shop.model.Item;
 import com.online.shop.repository.ItemsRepository;
 
@@ -22,7 +23,7 @@ public class ItemsMongoRepository implements ItemsRepository {
 	}
 	
 	private Item fromDocumentToItem(Document d) {
-		return new Item(""+d.get("productCode"), (int)d.get("quantity"));
+		return new Item(""+d.get("productCode"), ""+d.get("name"), (int)d.get("quantity"));
 	}
 
 	@Override
@@ -31,5 +32,37 @@ public class ItemsMongoRepository implements ItemsRepository {
 							.map(this::fromDocumentToItem)
 							.collect(Collectors.toList());
 	}
+	
+	@Override
+	public Item findByProductCode(String productCode) {
+		Document d = items.find(Filters.eq("productCode", productCode)).first();
+		if (d != null)
+			return fromDocumentToItem(d);
+		return null;
+	}
+	
+	@Override	
+	public Item findByName(String name) {
+		Document d = items.find(Filters.eq("name", name)).first();
+		if (d != null)
+			return fromDocumentToItem(d);
+		return null;
+	}
+	
+	@Override
+	public void store(Item itemToAdd) {
+		items.insertOne(new Document()
+						.append("productCode", itemToAdd.getProductCode())
+						.append("name", itemToAdd.getName())
+						.append("quantity", itemToAdd.getQuantity()));
+	}
+
+	public void remove(String productCode, String name) {
+		items.deleteOne(Filters.and(Filters.eq("productCode", productCode),Filters.eq("name", name)));
+	}
+
+	
+	
+	
 
 }

@@ -2,6 +2,10 @@ package com.online.shop.repository;
 
 import static org.assertj.core.api.Assertions.*;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
 import org.bson.Document;
 import org.junit.After;
 import org.junit.Before;
@@ -45,13 +49,46 @@ public class ItemsMongoRepositoryIT {
 	
 	@Test
 	public void testFindAll() {
-		addTestItemToRepository("1",1);
-		addTestItemToRepository("2",1);
-		assertThat(itemsRepository.findAll()).containsExactly(new Item("1",1), new Item("2",1));
-		
+		addTestItemToRepository("1", "test1");
+		addTestItemToRepository("2", "test2");
+		assertThat(itemsRepository.findAll()).containsExactly(new Item("1", "test1"), new Item("2", "test2"));
+	}
+	
+	@Test
+	public void testFindByProductCode() {
+		addTestItemToRepository("1", "test1");
+		addTestItemToRepository("2", "test2");
+		assertThat(itemsRepository.findByProductCode("1")).isEqualTo(new Item("1","test1"));
+	}
+	
+	@Test
+	public void testFindByName() {
+		addTestItemToRepository("1", "test1");
+		addTestItemToRepository("2", "test2");
+		assertThat(itemsRepository.findByName("test2")).isEqualTo(new Item("2","test2"));
+	}
+	
+	@Test
+	public void testStore() {
+		Item itemToAdd = new Item("1", "test1");
+		itemsRepository.store(itemToAdd);
+		assertThat(retrieveAllItems()).containsExactly(itemToAdd);
+	}
+	
+	@Test
+	public void testRemove() {
+		addTestItemToRepository("1", "test1");
+		itemsRepository.remove("1", "test1");
+		assertThat(retrieveAllItems()).isEmpty();
 	}
 
-	private void addTestItemToRepository(String productCode, Integer quantity) {
-		items.insertOne(new Document().append("productCode", productCode).append("quantity", quantity));		
+	private List<Item> retrieveAllItems() {
+		return StreamSupport.stream(items.find().spliterator(), false)
+				.map(d -> new Item(""+d.get("productCode"), ""+d.get("name"), (int)d.get("quantity")))
+				.collect(Collectors.toList());
+	}
+
+	private void addTestItemToRepository(String productCode, String name) {
+		items.insertOne(new Document().append("productCode", productCode).append("name", name).append("quantity", 1));		
 	}
 }
