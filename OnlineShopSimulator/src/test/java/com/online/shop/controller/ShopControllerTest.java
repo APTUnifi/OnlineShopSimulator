@@ -18,6 +18,10 @@ import static org.mockito.Mockito.*;
 
 public class ShopControllerTest {
 
+	private static final String PRODUCT_CODE = "1";
+
+	private static final String ITEM_NAME = "battery";
+
 	@Mock
 	ItemsRepository itemsRepository;
 
@@ -43,11 +47,11 @@ public class ShopControllerTest {
 		verify(itemsView).showItems(items);
 	}
 
-	@Test
-	public void testNewItemWhenQuantityIsNotPositive() {
+	@Test 
+	public void testNewItemWhenQuantityIsNegative() {
 		// setup
-		Item item = new Item("1", -1);
-		when(itemsRepository.findByProductCode("1")).thenReturn(null);
+		Item item = new Item(PRODUCT_CODE, -1);
+		when(itemsRepository.findByProductCode(PRODUCT_CODE)).thenReturn(null);
 		// exercise + verify
 		assertThatThrownBy(() -> shopController.newItem(item)).isInstanceOf(IllegalArgumentException.class)
 				.hasMessage("Negative amount: -1");
@@ -55,10 +59,21 @@ public class ShopControllerTest {
 	}
 
 	@Test
+	public void testNewItemWhenQuantityIsZero() {
+		// setup
+		Item item = new Item(PRODUCT_CODE, 0);
+		when(itemsRepository.findByProductCode(PRODUCT_CODE)).thenReturn(null);
+		// exercise + verify
+		assertThatThrownBy(() -> shopController.newItem(item)).isInstanceOf(IllegalArgumentException.class)
+				.hasMessage("Negative amount: 0");
+		verifyNoMoreInteractions(ignoreStubs(itemsRepository));
+	}
+
+	@Test
 	public void testNewItemWhenItemDoesNotAlreadyExists() {
 		// setup
-		Item item = new Item("1", 1);
-		when(itemsRepository.findByProductCode("1")).thenReturn(null);
+		Item item = new Item(PRODUCT_CODE, 1);
+		when(itemsRepository.findByProductCode(PRODUCT_CODE)).thenReturn(null);
 		// exercise
 		shopController.newItem(item);
 		// verify
@@ -70,27 +85,27 @@ public class ShopControllerTest {
 	@Test
 	public void testNewItemWhenItemAlreadyExists() {
 		// setup
-		Item itemToAdd = new Item("1", 1);
-		Item existingItem = new Item("1", 2);
-		when(itemsRepository.findByProductCode("1")).thenReturn(existingItem);
+		Item itemToAdd = new Item(PRODUCT_CODE, 1);
+		Item existingItem = new Item(PRODUCT_CODE, 2);
+		when(itemsRepository.findByProductCode(PRODUCT_CODE)).thenReturn(existingItem);
 		// exercise
 		shopController.newItem(itemToAdd);
 		// verify
 		InOrder inOrder = inOrder(itemsRepository, itemsView);
-		inOrder.verify(itemsRepository).increaseQuantity(itemToAdd);
+		inOrder.verify(itemsRepository).modifyQuantity(existingItem, 1);
 		inOrder.verify(itemsView).itemQuantityAdded(existingItem);
 	}
 
 	@Test
 	public void testRemoveItemWhenItemAlreadyExists() {
 		// setup
-		Item itemToRemove = new Item("1", 1);
-		when(itemsRepository.findByProductCode("1")).thenReturn(itemToRemove);
+		Item itemToRemove = new Item(PRODUCT_CODE, 1);
+		when(itemsRepository.findByProductCode(PRODUCT_CODE)).thenReturn(itemToRemove);
 		// exercise
 		shopController.removeItem(itemToRemove);
 		// verify
 		InOrder inOrder = inOrder(itemsRepository, itemsView);
-		inOrder.verify(itemsRepository).remove(itemToRemove);
+		inOrder.verify(itemsRepository).remove(PRODUCT_CODE);
 		inOrder.verify(itemsView).itemRemoved(itemToRemove);
 
 	}
@@ -98,20 +113,20 @@ public class ShopControllerTest {
 	@Test
 	public void testRemoveItemWhenItemDoesNotAlreadyExists() {
 		// setup
-		Item itemToRemove = new Item("1", 1);
-		when(itemsRepository.findByProductCode("1")).thenReturn(null);
+		Item itemToRemove = new Item(PRODUCT_CODE, 1);
+		when(itemsRepository.findByProductCode(PRODUCT_CODE)).thenReturn(null);
 		// exercise
 		shopController.removeItem(itemToRemove);
 		// verify
-		verify(itemsView).errorLog("Item with production code 1 does not exists", itemToRemove);
+		verify(itemsView).errorLog("Item with product code 1 does not exists", itemToRemove);
 		verifyNoMoreInteractions(ignoreStubs(itemsRepository));
 	}
 
 	@Test
 	public void testSearchItemWhenItemAlreadyExists() {
 		// setup
-		Item itemToSearch = new Item("battery");
-		when(itemsRepository.findByName("battery")).thenReturn(itemToSearch);
+		Item itemToSearch = new Item(ITEM_NAME);
+		when(itemsRepository.findByName(ITEM_NAME)).thenReturn(itemToSearch);
 		// exercise
 		shopController.searchItem(itemToSearch);
 		// verify
@@ -121,12 +136,44 @@ public class ShopControllerTest {
 	@Test
 	public void testSearchItemWhenItemDoestNotExists() {
 		// setup
-		Item itemToSearch = new Item("battery");
-		when(itemsRepository.findByName("battery")).thenReturn(null);
+		Item itemToSearch = new Item(ITEM_NAME);
+		when(itemsRepository.findByName(ITEM_NAME)).thenReturn(null);
 		// exercise
 		shopController.searchItem(itemToSearch);
 		// verify
 		verify(itemsView).errorLog("Item with name battery doest not exists", itemToSearch);
+		verifyNoMoreInteractions(ignoreStubs(itemsRepository));
+	}
+
+	@Test
+	public void testModifyQuantityWhenModifierIsLessThanItemQuantity() {
+		// setup
+		Item itemToModify = new Item(PRODUCT_CODE, 2);
+		// exercise
+		shopController.modifyItemQuantity(itemToModify, -1);
+		// verify
+		verify(itemsRepository).modifyQuantity(itemToModify, -1);
+	}
+
+	@Test
+	public void testModifyQuantityWhenModifierIsEqualToItemQuantity() {
+		// Setup
+		Item itemToModify = new Item(PRODUCT_CODE, 2);
+		// exercise
+		shopController.modifyItemQuantity(itemToModify, -2);
+		// verify
+		verify(itemsRepository).remove(itemToModify.getProductCode());
+		verifyNoMoreInteractions(ignoreStubs(itemsRepository));
+	}
+
+	@Test
+	public void testModifyQuantityWhenModifierIsGreaterThanItemQuantity() {
+		// setup
+		Item itemToModify = new Item(PRODUCT_CODE, 2);
+		// exercise
+		shopController.modifyItemQuantity(itemToModify, -3);
+		// verify
+		verify(itemsView).errorLog("Item has quantity 2, can't remove more items", itemToModify);
 		verifyNoMoreInteractions(ignoreStubs(itemsRepository));
 	}
 }

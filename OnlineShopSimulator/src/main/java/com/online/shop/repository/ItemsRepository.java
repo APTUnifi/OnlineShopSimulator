@@ -13,8 +13,8 @@ public interface ItemsRepository {
 
 	public void store(Item item);
 
-	public void increaseQuantity(Item itemToAdd);
+	public void remove(String productCode);
 
-	public void remove(Item itemToRemove);
+	public void modifyQuantity(Item itemToBeModified, int modifier);
 
 }

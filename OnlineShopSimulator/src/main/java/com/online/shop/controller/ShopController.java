@@ -26,7 +26,7 @@ public class ShopController {
 		}
 
 		if (retrievedItem != null) {
-			itemsRepository.increaseQuantity(item);
+			itemsRepository.modifyQuantity(retrievedItem, item.getQuantity());
 			itemsView.itemQuantityAdded(retrievedItem);
 			return;
 		}
@@ -38,10 +38,10 @@ public class ShopController {
 	public void removeItem(Item item) {
 
 		if (itemsRepository.findByProductCode(item.getProductCode()) == null) {
-			itemsView.errorLog("Item with production code " + item.getProductCode() + " does not exists", item);
+			itemsView.errorLog("Item with product code " + item.getProductCode() + " does not exists", item);
 			return;
 		}
-		itemsRepository.remove(item);
+		itemsRepository.remove(item.getProductCode());
 		itemsView.itemRemoved(item);
 	}
 
@@ -54,6 +54,19 @@ public class ShopController {
 		}
 
 		itemsView.showSearchResult(item);
+	}
+
+	public void modifyItemQuantity(Item item, int modifier) {
+		// TODO Information is already obtained from database, is the control necessary?
+		if (modifier + item.getQuantity() == 0) {
+			itemsRepository.remove(item.getProductCode());
+			return;
+		}
+		if (modifier + item.getQuantity() < 0) {
+			itemsView.errorLog("Item has quantity " + item.getQuantity() + ", can't remove more items", item);
+			return;
+		}
+		itemsRepository.modifyQuantity(item, modifier);
 	}
 
 }

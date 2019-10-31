@@ -15,6 +15,7 @@ public class Item {
 		this.quantity = quantity;
 	}
 
+	// Used by Unit Testing
 	public Item(String name) {
 		this.name = name;
 	}

@@ -9,11 +9,11 @@ public interface ItemsView {
 
 	void itemAdded(Item item);
 
-	void itemQuantityAdded(Item existingItem);
+	void itemQuantityAdded(Item item);
 
-	void itemRemoved(Item itemToRemove);
+	void itemRemoved(Item item);
 
-	void errorLog(String error, Item itemToRemove);
+	void errorLog(String error, Item item);
 
 	void showSearchResult(Item item);
 
