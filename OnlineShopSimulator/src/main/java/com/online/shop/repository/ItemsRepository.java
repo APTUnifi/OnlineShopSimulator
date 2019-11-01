@@ -16,5 +16,4 @@ public interface ItemsRepository {
 	public void remove(String productCode);
 	
 	public void modifyQuantity(Item itemToBeModified, int modifier);
-	
 }
