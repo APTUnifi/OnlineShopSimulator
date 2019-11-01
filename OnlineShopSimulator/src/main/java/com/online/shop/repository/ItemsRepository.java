@@ -11,5 +11,10 @@ public interface ItemsRepository {
 	
 	public Item findByName(String name);
 
-	void store(Item itemToAdd);
+	public void store(Item itemToAdd);
+
+	public void remove(String productCode);
+	
+	public void modifyQuantity(Item itemToBeModified, int modifier);
+	
 }

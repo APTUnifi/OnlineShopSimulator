@@ -3,6 +3,7 @@ package com.online.shop.repository;
 import static org.assertj.core.api.Assertions.*;
 
 import java.util.List;
+import java.util.function.IntPredicate;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -17,6 +18,7 @@ import com.mongodb.MongoClient;
 import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
 import com.online.shop.model.Item;
 import com.online.shop.repository.mongo.ItemsMongoRepository;
 
@@ -28,6 +30,9 @@ public class ItemsMongoRepositoryIT {
 
 	private static final String SHOP_DB_NAME = "shop";
 	private static final String ITEMS_COLLECTION_NAME = "items";
+	
+	private static final int STARTER_QUANTITY = 2;
+	private static final int QUANTITY_MODIFIER = 1;
 
 	private MongoClient client;
 	private ItemsMongoRepository itemsRepository;
@@ -78,8 +83,25 @@ public class ItemsMongoRepositoryIT {
 	@Test
 	public void testRemove() {
 		addTestItemToRepository("1", "test1");
-		itemsRepository.remove("1", "test1");
+		itemsRepository.remove("1");
 		assertThat(retrieveAllItems()).isEmpty();
+	}
+	
+	@Test
+	public void testModifyQuantityWhenModifierIsPositive() {
+		Item itemToBeModified = new Item("1", "test1", STARTER_QUANTITY);
+		addTestItemToRepository(itemToBeModified.getProductCode(),
+								itemToBeModified.getName(),
+								itemToBeModified.getQuantity());
+		itemsRepository.modifyQuantity(itemToBeModified, QUANTITY_MODIFIER);
+		assertThat(retrieveItem("1").getQuantity()).isEqualTo(STARTER_QUANTITY + QUANTITY_MODIFIER);
+	}
+
+	private Item retrieveItem(String productCode) {
+		Document d = items.find(Filters.eq("productCode", productCode)).first();
+		if (d != null)
+			return new Item(""+d.get("productCode"), ""+d.get("name"), (int)d.get("quantity"));
+		return null;
 	}
 
 	private List<Item> retrieveAllItems() {
@@ -87,8 +109,12 @@ public class ItemsMongoRepositoryIT {
 				.map(d -> new Item(""+d.get("productCode"), ""+d.get("name"), (int)d.get("quantity")))
 				.collect(Collectors.toList());
 	}
-
+	
 	private void addTestItemToRepository(String productCode, String name) {
 		items.insertOne(new Document().append("productCode", productCode).append("name", name).append("quantity", 1));		
+	}
+
+	private void addTestItemToRepository(String productCode, String name, int quantity) {
+		items.insertOne(new Document().append("productCode", productCode).append("name", name).append("quantity", quantity));		
 	}
 }

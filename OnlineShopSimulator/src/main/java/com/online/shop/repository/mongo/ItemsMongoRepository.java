@@ -9,6 +9,7 @@ import org.bson.Document;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Updates;
 import com.online.shop.model.Item;
 import com.online.shop.repository.ItemsRepository;
 
@@ -56,13 +57,15 @@ public class ItemsMongoRepository implements ItemsRepository {
 						.append("name", itemToAdd.getName())
 						.append("quantity", itemToAdd.getQuantity()));
 	}
-
-	public void remove(String productCode, String name) {
-		items.deleteOne(Filters.and(Filters.eq("productCode", productCode),Filters.eq("name", name)));
+	
+	@Override
+	public void remove(String productCode) {
+		items.deleteOne(Filters.eq("productCode", productCode));
 	}
 
-	
-	
-	
-
+	@Override
+	public void modifyQuantity(Item itemToBeModified, int modifier) {
+		int newQuantity = itemToBeModified.getQuantity() + modifier;
+		items.updateOne(Filters.eq("productCode", itemToBeModified.getProductCode()), Updates.set("quantity", newQuantity));	
+	}
 }
