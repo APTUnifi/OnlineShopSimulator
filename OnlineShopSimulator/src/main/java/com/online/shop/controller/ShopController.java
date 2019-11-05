@@ -34,9 +34,34 @@ public class ShopController {
 		itemsRepository.store(item);
 		itemsView.itemAdded(item);
 	}
+	//for testing
+	public void addItem(Item item) {
+		Item retrievedItem = itemsRepository.findByProductCode(item.getProductCode());
+		
+		if (item.getQuantity() <= 0) {
+			throw new IllegalArgumentException("Negative amount: " + item.getQuantity());
+		}
 
+		if (retrievedItem != null) {
+			itemsRepository.modifyQuantity(retrievedItem, item.getQuantity());
+			itemsView.itemQuantityAdded(retrievedItem);
+			return;
+		}
+		itemsRepository.store(item);
+		itemsView.itemAddedToCart(item);
+	}
+
+	//for testing
+	public void removeItemFromCart(Item item) {
+		if (itemsRepository.findByProductCode(item.getProductCode()) == null) {
+			itemsView.errorLog("Item with product code " + item.getProductCode() + " does not exists", item);
+			return;
+		}
+		itemsRepository.remove(item.getProductCode());
+		itemsView.itemRemovedToCart(item);
+	}
+	
 	public void removeItem(Item item) {
-
 		if (itemsRepository.findByProductCode(item.getProductCode()) == null) {
 			itemsView.errorLog("Item with product code " + item.getProductCode() + " does not exists", item);
 			return;
@@ -52,7 +77,6 @@ public class ShopController {
 			itemsView.errorLog("Item with name " + item.getName() + " doest not exists", item);
 			return;
 		}
-
 		itemsView.showSearchResult(item);
 	}
 
