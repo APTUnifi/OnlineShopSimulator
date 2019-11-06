@@ -15,6 +15,6 @@ public interface ItemsView {
 
 	void errorLog(String error, Item item);
 
-	void showSearchResult(String itemName);
+	void showSearchResult(Item item);
 
 }

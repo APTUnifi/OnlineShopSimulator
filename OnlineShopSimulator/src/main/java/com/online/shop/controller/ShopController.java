@@ -53,8 +53,8 @@ public class ShopController {
 			return;
 		}
 
-		itemsView.showSearchResult(itemName);
-	}
+		itemsView.showSearchResult(retrievedItem);
+	} 
 
 	public void modifyItemQuantity(Item item, int modifier) {
 		if (modifier + item.getQuantity() == 0) {

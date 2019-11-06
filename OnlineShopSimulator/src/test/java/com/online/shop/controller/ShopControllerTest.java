@@ -128,9 +128,9 @@ public class ShopControllerTest {
 		Item itemToSearch = new Item("1", ITEM_NAME);
 		when(itemsRepository.findByName(ITEM_NAME)).thenReturn(itemToSearch);
 		// exercise
-		shopController.searchItem(ITEM_NAME);
+		shopController.searchItem(itemToSearch.getName());
 		// verify
-		verify(itemsView).showSearchResult(ITEM_NAME);
+		verify(itemsView).showSearchResult(itemToSearch);
 	}
 
 	@Test
