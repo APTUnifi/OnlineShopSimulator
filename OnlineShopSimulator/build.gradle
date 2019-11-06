@@ -74,7 +74,7 @@ task integrationTest(type: Test) {
     classpath = sourceSets.integrationTest.runtimeClasspath
 }
 
-task jacocoTestReport {	
+jacocoTestReport {	
 	executionData(file("${buildDir}/jacoco/test.exec"), file("${buildDir}/jacoco/integrationTest.exec"))
 	
     reports {
@@ -84,11 +84,11 @@ task jacocoTestReport {
     }
 }
 
-task coveralls {
+coveralls {
     sourceDirs += ['${buildDir}/coverallsXML', "src/main"]
 }
 
-task sonarqube {
+sonarqube {
   	properties {
   		property "sonar.projectKey", "APTUnifi_OnlineShopSimulator"
   		property "sonar.coverage.jacoco.xmlReportPaths", jacocoTestReport.reports.xml.destination
@@ -100,7 +100,7 @@ integrationTest.mustRunAfter test
 sonarqube.dependsOn jacocoTestReport
 
 //This task is essential for skipping the terms of service terminal procedure
-task buildScan {
+buildScan {
     termsOfServiceUrl = 'https://gradle.com/terms-of-service'
     termsOfServiceAgree = 'yes'
 }
