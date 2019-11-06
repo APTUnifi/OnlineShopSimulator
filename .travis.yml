@@ -9,8 +9,7 @@ matrix:
   include:
     - jdk: openjdk8
     - jdk: openjdk9
-    - os: osx
-      osx_image: xcode10.1
+    - jdk: openjdk11
 
 notifications:
   email:
