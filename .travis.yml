@@ -1,16 +1,23 @@
 language: java
+
 install: true
 
 env:
   global:
     - HOME="OnlineShopSimulator"
 
+
+dist: xenial
+services:
+  - xvfb
+  
 matrix:
   include:
     - jdk: openjdk11
     - os: osx
       osx_image: xcode10.1
 
+  
 notifications:
   email:
     recipients:
@@ -25,6 +32,7 @@ addons:
     organization: "aptunifi"
     token:
       secure: "78b12374ff8b4634024364a7df9b660d7a91939f" # encrypted value of your token
+
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
