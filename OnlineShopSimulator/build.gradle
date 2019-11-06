@@ -97,7 +97,6 @@ sonarqube {
 
 check.dependsOn integrationTest
 integrationTest.mustRunAfter test
-sonarqube.dependsOn jacocoTestReport
 
 //This task is essential for skipping the terms of service terminal procedure
 buildScan {
