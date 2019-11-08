@@ -24,7 +24,7 @@ addons:
   sonarcloud:
     organization: "aptunifi"
     token:
-      secure: ${SONAR_TOKEN}
+      secure: $SONAR_TOKEN
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
@@ -39,7 +39,7 @@ before_script: cd $HOME/
 
 script:
   - ./gradlew build --scan -s
-  - ./gradlew sonarqube
+  - ./gradlew sonarqube -Dsonar.login="3a59cd7138a693df1db4c23fc7aee8dbf818bf68"
 
 after_success:
   - ./gradlew jacocoTestReport coveralls
