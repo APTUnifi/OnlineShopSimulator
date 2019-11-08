@@ -19,12 +19,9 @@ notifications:
       - ale.venturi95@yahoo.it
     on_success: never # default: change
     on_failure: always # default: always
-
-addons:
-  sonarcloud:
-    organization: "aptunifi"
-    token:
-      secure: "78b12374ff8b4634024364a7df9b660d7a91939f" # encrypted value of your token
+    
+sonarqube:
+  token: $SONAR_TOKEN
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
