@@ -20,8 +20,11 @@ notifications:
     on_success: never # default: change
     on_failure: always # default: always
     
-sonarqube:
-  token: $SONAR_TOKEN
+addons:
+  sonarcloud:
+    organization: "aptunifi"
+    token:
+      secure: $SONAR_TOKEN
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
