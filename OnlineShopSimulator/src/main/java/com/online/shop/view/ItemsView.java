@@ -17,4 +17,6 @@ public interface ItemsView {
 
 	void showSearchResult(Item item);
 
+	void addItemToCart(Item item);
+
 }
