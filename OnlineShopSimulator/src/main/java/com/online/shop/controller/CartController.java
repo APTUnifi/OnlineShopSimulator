@@ -22,12 +22,14 @@ public class CartController {
 			items.add(item);
 		} else {
 			if (items.get(items.indexOf(item)).getQuantity() < item.getQuantity())
-				items.get(items.indexOf(item)).setQuantity(items.get(items.indexOf(item)).getQuantity() + 1);
+				items.get(items.indexOf(item)).
+				setQuantity(items.get(items.indexOf(item)).
+						getQuantity() + 1);
 			else
 				return;
 		}
 
-		itemsView.addItemToCart(item);
+		itemsView.itemAddedToCart(item);
 	}
 
 	public int cartSize() {
@@ -46,6 +48,21 @@ public class CartController {
 		}
 
 		return 0;
+	}
+
+	public void remove(Item item) {
+		List<Item> items = cart.getItems();
+		
+		if (items.get(items.indexOf(item)).getQuantity() == 1) {
+			items.remove(items.indexOf(item));
+		}
+		else {
+			items.get(items.indexOf(item)).
+			setQuantity(items.get(items.indexOf(item)).
+					getQuantity() - 1);
+		}
+		
+		itemsView.itemRemovedFromCart(item);
 	}
 
 }
