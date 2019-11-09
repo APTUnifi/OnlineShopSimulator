@@ -5,6 +5,8 @@
  * For more details take a look at the Java Libraries chapter in the Gradle
  * User Manual available at https://docs.gradle.org/5.6.1/userguide/java_library_plugin.html
  */
+ 
+// CONFIGURATION
 
 plugins {
     // Apply the java-library plugin to add support for Java Library
@@ -33,7 +35,7 @@ sourceSets {
     }
 }
 
-configurations {
+configurations { 
     integrationTestCompile.extendsFrom testCompile
     integrationTestRuntime.extendsFrom testRuntime
     integrationTestImplementation.extendsFrom testImplementation
@@ -50,39 +52,52 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     
     // https://mvnrepository.com/artifact/org.mockito/mockito-core
-	testCompile group: 'org.mockito', name: 'mockito-core', version: '2.16.0'
+	testCompile group: 'org.mockito', name: 'mockito-core', version: '2.23.4'
 	
 	// https://mvnrepository.com/artifact/org.assertj/assertj-swing-junit
 	compile group: 'org.assertj', name: 'assertj-swing-junit', version: '3.9.2'
+	
+	// https://mvnrepository.com/artifact/de.bwaldvogel/mongo-java-server
+	testCompile group: 'de.bwaldvogel', name: 'mongo-java-server', version: '1.21.0'
 	
 	// https://mvnrepository.com/artifact/org.mongodb/mongodb-driver
 	compile group: 'org.mongodb', name: 'mongodb-driver', version: '3.11.1'
 	
 	// https://mvnrepository.com/artifact/org.testcontainers/testcontainers
-	compile group: 'org.testcontainers', name: 'testcontainers', version: '1.12.2'
-	
-	// https://mvnrepository.com/artifact/de.bwaldvogel/mongo-java-server
-	testCompile group: 'de.bwaldvogel', name: 'mongo-java-server', version: '1.21.0'
-	
+	compile group: 'org.testcontainers', name: 'testcontainers', version: '1.12.2'	
 }
 
-sonarqube {
-  	properties {
-    	property "sonar.projectKey", "APTUnifi_OnlineShopSimulator"
-  }
+// TASKS
+
+task integrationTest(type: Test) {
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
+    classpath = sourceSets.integrationTest.runtimeClasspath
 }
 
-jacocoTestReport {
+jacocoTestReport {	
+	executionData(file("${buildDir}/jacoco/test.exec"), file("${buildDir}/jacoco/integrationTest.exec"))
+	
     reports {
         xml.enabled = true // coveralls plugin depends on xml format report
+        xml.destination file("${buildDir}/coverallsXML")
         html.enabled = true
     }
 }
 
-//This task is essential for making travis.ci working
 coveralls {
-    sourceDirs += ['src/main/kotlin']
+    jacocoReportPath "${buildDir}/coverallsXML"
 }
+
+sonarqube {
+  	properties {
+  		property "sonar.projectKey", "APTUnifi_OnlineShopSimulator"
+  		property "sonar.coverage.jacoco.xmlReportPaths", jacocoTestReport.reports.xml.destination
+  }
+}
+
+check.dependsOn integrationTest
+integrationTest.mustRunAfter test
+project.tasks["sonarqube"].dependsOn "jacocoTestReport"
 
 //This task is essential for skipping the terms of service terminal procedure
 buildScan {
