@@ -15,6 +15,7 @@ import com.online.shop.view.ItemsView;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
+ 
 
 public class ShopControllerTest {
 
@@ -35,7 +36,7 @@ public class ShopControllerTest {
 	public void setUp() throws Exception {
 		MockitoAnnotations.initMocks(this);
 	}
-
+ 
 	@Test
 	public void testAllItems() {
 		// setup
@@ -47,10 +48,10 @@ public class ShopControllerTest {
 		verify(itemsView).showItems(items);
 	}
 
-	@Test 
+	@Test
 	public void testNewItemWhenQuantityIsNegative() {
 		// setup
-		Item item = new Item(PRODUCT_CODE, -1);
+		Item item = new Item(PRODUCT_CODE, ITEM_NAME, -1);
 		when(itemsRepository.findByProductCode(PRODUCT_CODE)).thenReturn(null);
 		// exercise + verify
 		assertThatThrownBy(() -> shopController.newItem(item)).isInstanceOf(IllegalArgumentException.class)
@@ -61,7 +62,7 @@ public class ShopControllerTest {
 	@Test
 	public void testNewItemWhenQuantityIsZero() {
 		// setup
-		Item item = new Item(PRODUCT_CODE, 0);
+		Item item = new Item(PRODUCT_CODE, ITEM_NAME, 0);
 		when(itemsRepository.findByProductCode(PRODUCT_CODE)).thenReturn(null);
 		// exercise + verify
 		assertThatThrownBy(() -> shopController.newItem(item)).isInstanceOf(IllegalArgumentException.class)
@@ -72,7 +73,7 @@ public class ShopControllerTest {
 	@Test
 	public void testNewItemWhenItemDoesNotAlreadyExists() {
 		// setup
-		Item item = new Item(PRODUCT_CODE, 1);
+		Item item = new Item(PRODUCT_CODE, ITEM_NAME);
 		when(itemsRepository.findByProductCode(PRODUCT_CODE)).thenReturn(null);
 		// exercise
 		shopController.newItem(item);
@@ -85,8 +86,8 @@ public class ShopControllerTest {
 	@Test
 	public void testNewItemWhenItemAlreadyExists() {
 		// setup
-		Item itemToAdd = new Item(PRODUCT_CODE, 1);
-		Item existingItem = new Item(PRODUCT_CODE, 2);
+		Item itemToAdd = new Item(PRODUCT_CODE, ITEM_NAME, 1);
+		Item existingItem = new Item(PRODUCT_CODE, ITEM_NAME, 2);
 		when(itemsRepository.findByProductCode(PRODUCT_CODE)).thenReturn(existingItem);
 		// exercise
 		shopController.newItem(itemToAdd);
@@ -99,7 +100,7 @@ public class ShopControllerTest {
 	@Test
 	public void testRemoveItemWhenItemAlreadyExists() {
 		// setup
-		Item itemToRemove = new Item(PRODUCT_CODE, 1);
+		Item itemToRemove = new Item(PRODUCT_CODE, ITEM_NAME);
 		when(itemsRepository.findByProductCode(PRODUCT_CODE)).thenReturn(itemToRemove);
 		// exercise
 		shopController.removeItem(itemToRemove);
@@ -113,7 +114,7 @@ public class ShopControllerTest {
 	@Test
 	public void testRemoveItemWhenItemDoesNotAlreadyExists() {
 		// setup
-		Item itemToRemove = new Item(PRODUCT_CODE, 1);
+		Item itemToRemove = new Item(PRODUCT_CODE, ITEM_NAME);
 		when(itemsRepository.findByProductCode(PRODUCT_CODE)).thenReturn(null);
 		// exercise
 		shopController.removeItem(itemToRemove);
@@ -125,10 +126,10 @@ public class ShopControllerTest {
 	@Test
 	public void testSearchItemWhenItemAlreadyExists() {
 		// setup
-		Item itemToSearch = new Item(ITEM_NAME);
+		Item itemToSearch = new Item("1", ITEM_NAME);
 		when(itemsRepository.findByName(ITEM_NAME)).thenReturn(itemToSearch);
 		// exercise
-		shopController.searchItem(itemToSearch);
+		shopController.searchItem(itemToSearch.getName());
 		// verify
 		verify(itemsView).showSearchResult(itemToSearch);
 	}
@@ -136,19 +137,18 @@ public class ShopControllerTest {
 	@Test
 	public void testSearchItemWhenItemDoestNotExists() {
 		// setup
-		Item itemToSearch = new Item(ITEM_NAME);
 		when(itemsRepository.findByName(ITEM_NAME)).thenReturn(null);
 		// exercise
-		shopController.searchItem(itemToSearch);
+		shopController.searchItem(ITEM_NAME);
 		// verify
-		verify(itemsView).errorLog("Item with name battery doest not exists", itemToSearch);
+		verify(itemsView).errorLog("Item with name battery doest not exists", null);
 		verifyNoMoreInteractions(ignoreStubs(itemsRepository));
 	}
 
 	@Test
 	public void testModifyQuantityWhenModifierIsLessThanItemQuantity() {
 		// setup
-		Item itemToModify = new Item(PRODUCT_CODE, 2);
+		Item itemToModify = new Item(PRODUCT_CODE, ITEM_NAME, 2);
 		// exercise
 		shopController.modifyItemQuantity(itemToModify, -1);
 		// verify
@@ -158,7 +158,7 @@ public class ShopControllerTest {
 	@Test
 	public void testModifyQuantityWhenModifierIsEqualToItemQuantity() {
 		// Setup
-		Item itemToModify = new Item(PRODUCT_CODE, 2);
+		Item itemToModify = new Item(PRODUCT_CODE, ITEM_NAME, 2);
 		// exercise
 		shopController.modifyItemQuantity(itemToModify, -2);
 		// verify
@@ -169,7 +169,7 @@ public class ShopControllerTest {
 	@Test
 	public void testModifyQuantityWhenModifierIsGreaterThanItemQuantity() {
 		// setup
-		Item itemToModify = new Item(PRODUCT_CODE, 2);
+		Item itemToModify = new Item(PRODUCT_CODE, ITEM_NAME, 2);
 		// exercise
 		shopController.modifyItemQuantity(itemToModify, -3);
 		// verify

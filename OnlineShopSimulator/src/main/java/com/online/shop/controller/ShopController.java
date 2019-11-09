@@ -45,19 +45,18 @@ public class ShopController {
 		itemsView.itemRemoved(item);
 	}
 
-	public void searchItem(Item item) {
-		Item retrievedItem = itemsRepository.findByName(item.getName());
+	public void searchItem(String itemName) {
+		Item retrievedItem = itemsRepository.findByName(itemName);
 
 		if (retrievedItem == null) {
-			itemsView.errorLog("Item with name " + item.getName() + " doest not exists", item);
+			itemsView.errorLog("Item with name " + itemName + " doest not exists", null);
 			return;
 		}
 
-		itemsView.showSearchResult(item);
+		itemsView.showSearchResult(retrievedItem);
 	}
 
 	public void modifyItemQuantity(Item item, int modifier) {
-		// TODO Information is already obtained from database, is the control necessary?
 		if (modifier + item.getQuantity() == 0) {
 			itemsRepository.remove(item.getProductCode());
 			return;
