@@ -14,8 +14,9 @@ public class ShopController {
 		this.itemsRepository = itemsRepository;
 	}
 
+
 	public void allItems() {
-		itemsView.showItems(itemsRepository.findAll());
+		itemsView.showItemsShop(itemsRepository.findAll());
 	}
 
 	public void newItem(Item item) {
@@ -34,9 +35,34 @@ public class ShopController {
 		itemsRepository.store(item);
 		itemsView.itemAdded(item);
 	}
+	//for testing
+	public void addItemToCart(Item item) {
+		Item retrievedItem = itemsRepository.findByProductCode(item.getProductCode());
+		
+		if (item.getQuantity() <= 0) {
+			throw new IllegalArgumentException("Negative amount: " + item.getQuantity());
+		}
 
+		if (retrievedItem != null) {
+			itemsRepository.modifyQuantity(retrievedItem, item.getQuantity());
+			itemsView.itemQuantityAdded(retrievedItem);
+			return;
+		}
+		itemsRepository.store(item);
+		itemsView.itemAddedToCart(item);
+	}
+
+	//for testing
+	public void removeItemFromCart(Item item) {
+		if (itemsRepository.findByProductCode(item.getProductCode()) == null) {
+			itemsView.errorLog("Item with product code " + item.getProductCode() + " does not exists", item);
+			return;
+		}
+		itemsRepository.remove(item.getProductCode());
+		itemsView.itemRemovedToCart(item);
+	}
+	
 	public void removeItem(Item item) {
-
 		if (itemsRepository.findByProductCode(item.getProductCode()) == null) {
 			itemsView.errorLog("Item with product code " + item.getProductCode() + " does not exists", item);
 			return;
@@ -54,9 +80,11 @@ public class ShopController {
 		}
 
 		itemsView.showSearchResult(retrievedItem);
-	}
+	} 
+
 
 	public void modifyItemQuantity(Item item, int modifier) {
+		// TODO Information is already obtained from database, is the control necessary?
 		if (modifier + item.getQuantity() == 0) {
 			itemsRepository.remove(item.getProductCode());
 			return;

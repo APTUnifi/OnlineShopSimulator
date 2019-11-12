@@ -45,7 +45,7 @@ public class ShopControllerTest {
 		// exercise
 		shopController.allItems();
 		// verify
-		verify(itemsView).showItems(items);
+		verify(itemsView).showItemsShop(items);
 	}
 
 	@Test
