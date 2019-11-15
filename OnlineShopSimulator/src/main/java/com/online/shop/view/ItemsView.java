@@ -5,7 +5,7 @@ import java.util.List;
 import com.online.shop.model.Item;
 
 public interface ItemsView {
-	void showItems(List<Item> items);
+	void showItemsShop(List<Item> items);
 
 	void itemAdded(Item item);
 
@@ -17,6 +17,10 @@ public interface ItemsView {
 
 	void showSearchResult(Item item);
 
-	void updateCart(List<Item> items);
+	void showItemsCart(List<Item> items);
+
+	void itemAddedToCart(Item item);
+
+	void itemRemovedFromCart(Item item);
 
 }
