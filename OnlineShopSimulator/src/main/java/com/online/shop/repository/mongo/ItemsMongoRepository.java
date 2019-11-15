@@ -10,6 +10,7 @@ import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
+import com.online.shop.model.Cart;
 import com.online.shop.model.Item;
 import com.online.shop.repository.ItemsRepository;
 
@@ -67,5 +68,10 @@ public class ItemsMongoRepository implements ItemsRepository {
 	public void modifyQuantity(Item itemToBeModified, int modifier) {
 		int newQuantity = itemToBeModified.getQuantity() + modifier;
 		items.updateOne(Filters.eq("productCode", itemToBeModified.getProductCode()), Updates.set("quantity", newQuantity));	
+	}
+	@Override
+	public void saveCart(Cart cart) {
+		// TODO Auto-generated method stub
+		 
 	}
 }
