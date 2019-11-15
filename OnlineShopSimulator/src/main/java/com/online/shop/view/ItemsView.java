@@ -9,13 +9,10 @@ public interface ItemsView {
 	
 	void showItemsShop(List<Item> items);
 	void showItemsCart(List<Item> items);
-	void itemAdded(Item item);
-	void itemQuantityAdded(Item item);
-	void itemRemoved(Item item);
 	void errorLog(String error, Item item);
 	void showSearchResult(Item item);
 	//For testing?
 	void itemAddedToCart(Item item);
-	void itemRemovedToCart(Item item);
+	void itemRemovedFromCart(Item item);
 
 }
