@@ -15,7 +15,7 @@ public class ShopController {
 	}
 
 	public void allItems() {
-		itemsView.showItems(itemsRepository.findAll());
+		itemsView.showItemsShop(itemsRepository.findAll());
 	}
 
 	public void newItem(Item item) {
