@@ -80,7 +80,6 @@ public class ShopControllerTest {
 		// verify
 		InOrder inOrder = inOrder(itemsRepository, itemsView);
 		inOrder.verify(itemsRepository).store(item);
-		inOrder.verify(itemsView).itemAdded(item);
 	}
 
 	@Test
@@ -94,7 +93,6 @@ public class ShopControllerTest {
 		// verify
 		InOrder inOrder = inOrder(itemsRepository, itemsView);
 		inOrder.verify(itemsRepository).modifyQuantity(existingItem, 1);
-		inOrder.verify(itemsView).itemQuantityAdded(existingItem);
 	}
 
 	@Test
@@ -107,7 +105,6 @@ public class ShopControllerTest {
 		// verify
 		InOrder inOrder = inOrder(itemsRepository, itemsView);
 		inOrder.verify(itemsRepository).remove(PRODUCT_CODE);
-		inOrder.verify(itemsView).itemRemoved(itemToRemove);
 
 	}
 
