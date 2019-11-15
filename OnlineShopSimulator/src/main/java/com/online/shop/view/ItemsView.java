@@ -17,8 +17,6 @@ public interface ItemsView {
 
 	void showSearchResult(Item item);
 
-	void itemAddedToCart(Item item);
-
-	void itemRemovedFromCart(Item item);
+	void updateCart(List<Item> items);
 
 }
