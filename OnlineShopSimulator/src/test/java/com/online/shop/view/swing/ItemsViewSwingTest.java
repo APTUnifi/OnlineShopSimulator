@@ -16,6 +16,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import com.online.shop.controller.CartController;
 import com.online.shop.controller.ShopController;
 import com.online.shop.model.Item;
 
@@ -30,6 +31,9 @@ public class ItemsViewSwingTest extends AssertJSwingJUnitTestCase{
 
 	@Mock
 	private ShopController shopController;
+	
+	@Mock
+	private CartController cartController;
 
 	@Override
 	protected void onSetUp() {
@@ -37,6 +41,7 @@ public class ItemsViewSwingTest extends AssertJSwingJUnitTestCase{
 		GuiActionRunner.execute(() -> {
 			itemsViewSwing = new ItemsViewSwing();
 			itemsViewSwing.setShopController(shopController);
+			itemsViewSwing.setCartController(cartController);
 			return itemsViewSwing;
 		});
 		window = new FrameFixture(robot(), itemsViewSwing);
@@ -153,6 +158,19 @@ public class ItemsViewSwingTest extends AssertJSwingJUnitTestCase{
 		assertThat(listContents).containsExactly(item1.toString(),item2.toString());
 	}
 	@Test
+	public void testShowItemsCartShouldAddItemsToTheItemShopList() {
+		//setup
+		Item item1 = new Item("1","Iphone");
+		Item item2 = new Item("3","Samsung");
+		//execute
+		GuiActionRunner.execute(() ->
+			itemsViewSwing.showItemsCart(Arrays.asList(item1,item2))
+		);
+		//verify
+		String[] listContents = window.list("itemListCart").contents();
+		assertThat(listContents).containsExactly(item1.toString(),item2.toString());
+	}
+	@Test
 	public void testErrorLogShouldShowTheMessageInTheErrorMessageLabel() {
 		Item item = new Item("1","Iphone");
 		GuiActionRunner.execute(
@@ -173,28 +191,10 @@ public class ItemsViewSwingTest extends AssertJSwingJUnitTestCase{
 		assertThat(listContents).containsExactly(item.toString());
 		window.label("errorMessageLabel").requireText(" ");
 	}
-	@Test
-	public void testItemAddedToCartShouldIncreseQuantityIfThereIsThatItemInTheCart() {
-		//setup
-		Item item = new Item("1","Iphone");
 
-		GuiActionRunner.execute(
-				()-> {
-					DefaultListModel<Item> itemListCartModel = itemsViewSwing.getItemListCartModel();
-					itemListCartModel.addElement(item);
-		});
-
-		//execute
-		GuiActionRunner.execute(
-				()-> itemsViewSwing.itemAddedToCart(item)
-		);
-		//verify
-		String[] listContents = window.list("itemListCart").contents();
-		assertThat(listContents).containsExactly(item.toString());
-		window.label("errorMessageLabel").requireText(" ");
-	}
+	
 	@Test
-	public void testItemRemovedToCartShouldRemoveTheItemFromTheItemListCartIfQuantityIsZeroAndResetErrorLabel() {
+	public void testItemRemovedToCartShouldRemoveTheItemFromTheItemListCartAndResetErrorLabel() {
 		//setup
 		Item item1 = new Item("1","Iphone",1);
 		Item item2 = new Item("3","Samsung",1);
@@ -208,34 +208,16 @@ public class ItemsViewSwingTest extends AssertJSwingJUnitTestCase{
 		);
 		//execute
 		GuiActionRunner.execute(
-				()-> itemsViewSwing.itemRemovedToCart(item1)
+				()-> itemsViewSwing.itemRemovedFromCart(item1)
 		);
 		//verify
 		String[] listContents = window.list("itemListCart").contents();
 		assertThat(listContents).containsExactly(item2.toString());
 	}
-	@Test
-	public void testItemRemovedToCartShouldDecreseQuantityIfQuantityIsntZeroAndResetErrorLabel() {
-		//setup
-		Item item = new Item("1","Iphone",2);
 
-		GuiActionRunner.execute(
-				()-> {
-					DefaultListModel<Item> itemListCartModel = itemsViewSwing.getItemListCartModel();
-					itemListCartModel.addElement(item);
-				}
-		);
-		//execute
-		GuiActionRunner.execute(
-				()-> itemsViewSwing.itemRemovedToCart(item)
-		);
-		//verify
-		String[] listContents = window.list("itemListCart").contents();
-		assertThat(listContents).containsExactly(item.toString());
-	}
 
 	@Test
-	public void testAddButtonShouldDelegateToTheShopControllerAddElement() {
+	public void testAddButtonShouldDelegateToTheCartControllerAddElement() {
 		//setup
 		Item item = new Item("1","Iphone");
 		GuiActionRunner.execute(
@@ -245,12 +227,12 @@ public class ItemsViewSwingTest extends AssertJSwingJUnitTestCase{
 		window.list("itemListShop").selectItem(0);
 		window.button(JButtonMatcher.withText("Add")).click();
 		//verify
-		verify(shopController).addItemToCart(item);
+		verify(cartController).add(item);
 		
 	}
 
 	@Test
-	public void testRemoveButtonShouldDelegateToTheShopControllerRemoveElement() {
+	public void testRemoveButtonShouldDelegateToTheCartControllerRemoveElement() {
 		//setup
 		Item item = new Item("1","Iphone");
 		GuiActionRunner.execute(
@@ -260,7 +242,7 @@ public class ItemsViewSwingTest extends AssertJSwingJUnitTestCase{
 		window.list("itemListCart").selectItem(0);
 		window.button(JButtonMatcher.withText("Remove")).click();
 		//verify
-		verify(shopController).removeItemFromCart(item);
+		verify(cartController).remove(item);
 	}
 	
 	@Test
@@ -281,62 +263,22 @@ public class ItemsViewSwingTest extends AssertJSwingJUnitTestCase{
 		verify(shopController).searchItem(window.textBox("itemName").text());	
 
 	}
-	
 	@Test
-	public void testSearchButtonShouldReturnShopListIfTextFieldIsEmpty() {
+	public void testBuyButtonShouldDelegateToTheCartControllerCompletePurchase() {
+		//setup
 		Item item1 = new Item("1","Iphone");
 		Item item2 = new Item("2", "Nokia");
 		GuiActionRunner.execute(
 				()-> {
-					DefaultListModel<Item> itemListShopModel = itemsViewSwing.getItemListShopModel();
-					itemListShopModel.addElement(item1);
-					itemListShopModel.addElement(item2);
-				}
-		);
-		window.textBox("itemName").enterText("");
-		//execute
-		window.button(JButtonMatcher.withText("Search")).click();
-		//verify
-		verify(shopController).searchItem(window.textBox("itemName").text());	
-
-	}
-	
-	@Test
-	public void testAddButtonShouldDelegateToTheShopControllerModifyQuantity() {
-		//setup
-		Item item = new Item("1","Iphone",5);
-		GuiActionRunner.execute(
-				()-> {
-					DefaultListModel<Item> itemListShopModel = itemsViewSwing.getItemListShopModel();
-					itemListShopModel.addElement(item);
 					DefaultListModel<Item> itemListCartModel = itemsViewSwing.getItemListCartModel();
-					itemListCartModel.addElement(item);
-				}
-		);
-		window.list("itemListShop").selectItem(0);
-		//execute
-		window.button(JButtonMatcher.withText("Add")).click();
-		//verify
-		verify(shopController).addItemToCart(item);
-	}
-	@Test
-	public void testDeleteButtonShouldDelegateToTheShopControllerModifyQuantity() {
-		//setup
-		Item item = new Item("1","Iphone",5);
-		GuiActionRunner.execute(
-				()-> {
-					DefaultListModel<Item> itemListShopModel = itemsViewSwing.getItemListShopModel();
-					itemListShopModel.addElement(item);
-					DefaultListModel<Item> itemListCartModel = itemsViewSwing.getItemListCartModel();
-					itemListCartModel.addElement(item);
-				}
-		);
+					itemListCartModel.addElement(item1);
+					itemListCartModel.addElement(item2);
+		});
 		window.list("itemListCart").selectItem(0);
-		//execute
-		window.button(JButtonMatcher.withText("Remove")).click();
+		//execute	
+		window.button(JButtonMatcher.withText("Buy")).click();
 		//verify
-		verify(shopController).removeItemFromCart(item);
+		verify(cartController).completePurchase();
 	}
-	
 
 }

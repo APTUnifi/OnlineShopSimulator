@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import com.online.shop.controller.CartController;
 import com.online.shop.controller.ShopController;
 import com.online.shop.model.Item;
 import com.online.shop.view.ItemsView;
@@ -31,6 +32,7 @@ public class ItemsViewSwing extends JFrame implements ItemsView {
 	private JPanel contentPane;
 	private JTextField itemName;
 	private ShopController shopController;
+	private CartController cartController;
 	private JButton btnRemove;
 	private JButton btnAdd;
 	private JButton btnSearch;
@@ -41,6 +43,7 @@ public class ItemsViewSwing extends JFrame implements ItemsView {
 	private DefaultListModel<Item> itemListCartModel;
 	private JLabel lblErrorMessageLabel;
 	private JButton btnBuy;
+	private JButton btnHistory;
 
 
 	DefaultListModel<Item> getItemListShopModel(){
@@ -51,6 +54,10 @@ public class ItemsViewSwing extends JFrame implements ItemsView {
 	}
 	public void setShopController(ShopController shopController) {
 		this.shopController = shopController;
+	}
+	
+	public void setCartController(CartController cartController) {
+		this.cartController = cartController;
 	}
 	/**
 	 * Launch the application.
@@ -169,7 +176,7 @@ public class ItemsViewSwing extends JFrame implements ItemsView {
 		contentPane.add(btnAdd, gbc_btnAdd);
 
 		btnAdd.addActionListener(
-				e -> shopController.addItemToCart(itemListShop.getSelectedValue())
+				e -> cartController.add(itemListShop.getSelectedValue())
 			
 		);
 
@@ -182,12 +189,19 @@ public class ItemsViewSwing extends JFrame implements ItemsView {
 		contentPane.add(btnRemove, gbc_btnRemove);
 
 		btnRemove.addActionListener(
-				e -> shopController.removeItemFromCart(itemListCart.getSelectedValue())
+				e -> cartController.remove(itemListCart.getSelectedValue())
 				);
 
 		btnSearch.addActionListener(
 				e -> shopController.searchItem(itemName.getText())
 				);
+		
+		btnHistory = new JButton("History");
+		GridBagConstraints gbc_btnHistory = new GridBagConstraints();
+		gbc_btnHistory.insets = new Insets(0, 0, 5, 5);
+		gbc_btnHistory.gridx = 4;
+		gbc_btnHistory.gridy = 8;
+		contentPane.add(btnHistory, gbc_btnHistory);
 
 		btnBuy = new JButton("Buy");
 		btnBuy.setEnabled(false);
@@ -196,6 +210,10 @@ public class ItemsViewSwing extends JFrame implements ItemsView {
 		gbc_btnBuy.gridx = 4;
 		gbc_btnBuy.gridy = 10;
 		contentPane.add(btnBuy, gbc_btnBuy);
+		
+		btnBuy.addActionListener(
+				e -> cartController.completePurchase()
+				);
 
 	}
 
@@ -209,18 +227,6 @@ public class ItemsViewSwing extends JFrame implements ItemsView {
 		items.stream().forEach(itemListCartModel::addElement);
 	}
 
-	@Override
-	public void itemAdded(Item item) {
-	}
-
-	@Override
-	public void itemQuantityAdded(Item item) {
-		
-	}
-
-	@Override
-	public void itemRemoved(Item item) {
-	}
 
 	@Override
 	public void errorLog(String error, Item item) {
@@ -243,30 +249,25 @@ public class ItemsViewSwing extends JFrame implements ItemsView {
 				});	
 	}
 
+	@Override
 	public void itemAddedToCart(Item item) {
 		SwingUtilities.invokeLater(
-				()-> {
-					if(!itemListCartModel.contains(item)){
-						itemListCartModel.addElement(item);
-						resetErrorLabel();
-					}else {
-						item.setQuantity(item.getQuantity()+1);
-						resetErrorLabel();
-					}
-				});			
+			()-> {
+			
+			itemListCartModel.addElement(item);
+			resetErrorLabel();
+			});
+	
+	}
+	@Override
+	public void itemRemovedFromCart(Item item) {
+			itemListCartModel.removeElement(item);
 	}
 
-	public void itemRemovedToCart(Item item) {
-		if(item.getQuantity() > 1) {
-			item.setQuantity(item.getQuantity()-1);
-			resetErrorLabel();
-		}else {
-			itemListCartModel.removeElement(item);
-			resetErrorLabel();
-		}
-	}
 
 	private void resetErrorLabel() {
 		lblErrorMessageLabel.setText(" ");
 	}
+
+
 }
