@@ -51,7 +51,7 @@ public class CartControllerTest {
 		// verify
 		assertThat(cartController.cartSize()).isEqualTo(1);
 		assertThat(cartController.findItemQuantity(itemToAdd)).isEqualTo(1);
-		verify(itemsView).itemAddedToCart(itemToAdd);
+		verify(itemsView).updateCart(cartController.cartItems());
 	}
 
 	@Test
@@ -67,7 +67,7 @@ public class CartControllerTest {
 		// verify
 		assertThat(cartController.cartSize()).isEqualTo(1);
 		assertThat(cartController.findItemQuantity(existingItem)).isEqualTo(2);
-		verify(itemsView).itemAddedToCart(itemToAdd);
+		verify(itemsView).updateCart(cartController.cartItems());
 	}
 
 	@Test
@@ -98,11 +98,12 @@ public class CartControllerTest {
 		// verify
 		assertThat(cartController.cartSize()).isEqualTo(0);
 		assertThat(cartController.findItemQuantity(itemToRemove)).isEqualTo(0);
-		verify(itemsView).itemRemovedFromCart(itemToRemove);
+		verify(itemsView).updateCart(cartController.cartItems());
 	}
 
-	@Test
+	@Test   
 	public void testRemoveItemFromCartWhenQuantityIsAboveOne() {
+		// setup
 		Item itemToRemove = new Item("1", "test1", 2);
 		List<Item> items = new ArrayList<>();
 		items.add(itemToRemove);
@@ -112,6 +113,6 @@ public class CartControllerTest {
 		// verify
 		assertThat(cartController.cartSize()).isEqualTo(1);
 		assertThat(cartController.findItemQuantity(itemToRemove)).isEqualTo(1);
-		verify(itemsView).itemRemovedFromCart(itemToRemove);
+		verify(itemsView).updateCart(cartController.cartItems()); 
 	}
 }
