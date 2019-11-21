@@ -65,6 +65,11 @@ dependencies {
 	
 	// https://mvnrepository.com/artifact/org.testcontainers/testcontainers
 	compile group: 'org.testcontainers', name: 'testcontainers', version: '1.12.2'	
+	
+	testImplementation('org.testcontainers:postgresql:1.12.3')
+	
+	compile group: 'org.postgresql', name: 'postgresql', version:  '42.2.8'
+	compile group: 'org.postgresql', name: 'postgresql', version: '9.0-801.jdbc4'
 }
 
 // TASKS

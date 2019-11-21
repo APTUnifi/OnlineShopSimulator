@@ -6,16 +6,19 @@ import java.util.List;
 import com.online.shop.model.Cart;
 import com.online.shop.model.Item;
 import com.online.shop.repository.ItemsRepository;
+import com.online.shop.view.HistoryView;
 import com.online.shop.view.ItemsView;
 
 public class CartController {
 	private ItemsView itemsView;
 	private ItemsRepository itemsRepository;
 	private Cart cart;
+	private HistoryView historyView;
 
-	public CartController(ItemsView itemsView, ItemsRepository itemsRepository) {
+	public CartController(ItemsView itemsView, ItemsRepository itemsRepository,HistoryView historyView) {
 		this.itemsView = itemsView;
 		this.itemsRepository = itemsRepository;
+		this.historyView = historyView;
 	}
 
 	public void add(Item item) {
@@ -87,6 +90,14 @@ public class CartController {
 		
 		itemsView.showItemsCart(null);
 		itemsView.showItemsShop(itemsRepository.findAll());
+	}
+
+	public void removeFromHistory(Cart cart) {
+		//TODO
+		historyView.removeCart(cart);
+
+		
+		
 	}
 
 }

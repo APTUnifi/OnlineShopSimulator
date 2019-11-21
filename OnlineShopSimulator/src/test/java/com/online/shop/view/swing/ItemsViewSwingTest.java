@@ -58,6 +58,7 @@ public class ItemsViewSwingTest extends AssertJSwingJUnitTestCase{
 		window.button(JButtonMatcher.withText("Search")).requireEnabled();
 		window.label("errorMessageLabel").requireText(" ");
 		window.button(JButtonMatcher.withText("Buy")).requireDisabled();
+		window.button(JButtonMatcher.withText("History")).requireEnabled();
 	}
 
 
@@ -137,12 +138,12 @@ public class ItemsViewSwingTest extends AssertJSwingJUnitTestCase{
 				}
 		);
 		//execute
-		window.list("itemListCart").selectItem(0);
-		//verify
-		JButtonFixture deleteButton = window.button(JButtonMatcher.withText("Remove"));	
-		deleteButton.requireEnabled();
-		window.list("itemListCart").clearSelection();
-		deleteButton.requireDisabled();
+			window.list("itemListCart").selectItem(0);
+			//verify
+			JButtonFixture deleteButton = window.button(JButtonMatcher.withText("Remove"));	
+			deleteButton.requireEnabled();
+			window.list("itemListCart").clearSelection();
+			deleteButton.requireDisabled();
 	}
 	@Test
 	public void testShowItemsShopShouldAddItemsToTheItemShopList() {
@@ -215,6 +216,7 @@ public class ItemsViewSwingTest extends AssertJSwingJUnitTestCase{
 		assertThat(listContents).containsExactly(item2.toString());
 	}
 
+	//TODO : test for history button and new frame.
 
 	@Test
 	public void testAddButtonShouldDelegateToTheCartControllerAddElement() {

@@ -15,19 +15,21 @@ import com.online.shop.view.ItemsView;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import java.awt.GridBagLayout;
+import java.awt.EventQueue;
 import java.awt.GridBagConstraints;
 import javax.swing.JTextField;
 import java.awt.Insets;
 import javax.swing.JList;
 import javax.swing.JLabel;
 import javax.swing.event.ListSelectionListener;
-
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 @SuppressWarnings("serial")
-public class ItemsViewSwing extends JFrame implements ItemsView {
+public class ItemsViewSwing extends JFrame implements ItemsView {	
 
 	private JPanel contentPane;
 	private JTextField itemName;
@@ -60,28 +62,30 @@ public class ItemsViewSwing extends JFrame implements ItemsView {
 		this.cartController = cartController;
 	}
 	/**
-	 * Launch the application.
+	 * Launch the application.	
 	 */
-//	public static void main(String[] args) {
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				try {
-//					ItemsViewSwing frame = new ItemsViewSwing();
-//					frame.setVisible(true);
-//					Item item = new Item("1","Iphone");
-//					frame.itemListShopModel.addElement(item);
-//					frame.itemListCartModel.addElement(item);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-//	}
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					ItemsViewSwing frame = new ItemsViewSwing();
+					frame.setVisible(true);
+					Item item = new Item("1","Iphone");
+					frame.itemListShopModel.addElement(item);
+					frame.itemListCartModel.addElement(item);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
 
 	/**
 	 * Create the frame.
 	 */
 	public ItemsViewSwing() {
+		
+		
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("ShopOnline");
@@ -197,11 +201,20 @@ public class ItemsViewSwing extends JFrame implements ItemsView {
 				);
 		
 		btnHistory = new JButton("History");
+		btnHistory.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				HistoryViewSwing historyframe = new HistoryViewSwing();
+				historyframe.setVisible(true);
+				//TODO : How to test new frame?
+			}
+		});
 		GridBagConstraints gbc_btnHistory = new GridBagConstraints();
 		gbc_btnHistory.insets = new Insets(0, 0, 5, 5);
 		gbc_btnHistory.gridx = 4;
 		gbc_btnHistory.gridy = 8;
 		contentPane.add(btnHistory, gbc_btnHistory);
+		
+
 
 		btnBuy = new JButton("Buy");
 		btnBuy.setEnabled(false);
