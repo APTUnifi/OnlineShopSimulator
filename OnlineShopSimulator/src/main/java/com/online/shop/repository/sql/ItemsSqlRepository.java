@@ -47,7 +47,10 @@ public class ItemsSqlRepository {
 			
 			try {
 				
-				rs.close();
+				if (rs != null) {
+					rs.close();
+				}
+				
 				stmt.close();
 				conn.close();
 				
