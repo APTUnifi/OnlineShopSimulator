@@ -18,7 +18,7 @@ public class ItemsSqlRepository {
 		this.password = password;		
 	}
 	
-	public long count() throws SQLException {	
+	public long count() {	
 		
 		long numItems = 0;
 		Connection conn = null;
@@ -30,13 +30,13 @@ public class ItemsSqlRepository {
 			rs.next();
 			numItems = rs.getInt(1);			
 		} catch (SQLException e) {
-			throw new SQLException(e);
+			e.printStackTrace();
 		} finally {
 			try {
 				rs.close();
 				conn.close();
 			} catch (SQLException e) {
-				throw new SQLException(e);
+				e.printStackTrace();
 			}
 		}
 		
