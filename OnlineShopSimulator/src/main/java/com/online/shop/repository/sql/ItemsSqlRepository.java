@@ -17,14 +17,23 @@ public class ItemsSqlRepository {
 		this.password = password;		
 	}
 	
-	public long count() {
-		try (Connection c = DriverManager.getConnection(jdbcUrl, username, password)) {
-			ResultSet rs = c.createStatement().executeQuery("SELECT COUNT (*) FROM items");
+	public long count() {	
+		
+		long numItems = 0;
+		
+		try {
+			
+			Connection conn = DriverManager.getConnection(jdbcUrl, username, password);
+			ResultSet rs = conn.createStatement().executeQuery("SELECT COUNT (*) FROM items");
 			rs.next();
-			return rs.getInt(1);
+			numItems = rs.getInt(1);
+			rs.close();
+			conn.close();
+			
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
+		
+		return numItems;
 	}
-
 }
