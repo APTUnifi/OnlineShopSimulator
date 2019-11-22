@@ -69,12 +69,10 @@ dependencies {
 	
 	// postgresql dependencies	
 	testImplementation('org.testcontainers:postgresql:1.12.3')
-	compile group: 'org.postgresql', name: 'postgresql', version: '9.0-801.jdbc4'
+	compile group: 'postgresql', name: 'postgresql', version: '9.1-901-1.jdbc4'
 	runtime group: 'org.postgresql', name: 'postgresql', version: '42.2.8'
-	
-	// https://mvnrepository.com/artifact/org.flywaydb/flyway-gradle-plugin
-	runtime group: 'org.flywaydb', name: 'flyway-gradle-plugin', version: '4.2.0'
-
+	compile 'org.flywaydb:flyway-core:6.0.8'
+    compile 'org.sqldroid:sqldroid:1.1.0-rc1'
 }
 
 // TASKS

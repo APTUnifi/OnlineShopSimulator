@@ -15,10 +15,9 @@ public class ItemsSqlRepositoryIT {
 	
 	@Before
 	public void setup() {
-		// setting up sql database
-		Flyway flyway = new Flyway();
-		flyway.setDataSource(postgreSQLContainer.getJdbcUrl(), postgreSQLContainer.getUsername(),
-				postgreSQLContainer.getPassword());
+		// setting up SQLDatabase
+		Flyway flyway = Flyway.configure().dataSource(postgreSQLContainer.getJdbcUrl(), postgreSQLContainer.getUsername(),
+				postgreSQLContainer.getPassword()).load();
 		// TODO drop method to clean database
 		flyway.migrate();
 	}
