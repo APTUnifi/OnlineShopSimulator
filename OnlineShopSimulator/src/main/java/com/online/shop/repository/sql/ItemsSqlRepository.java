@@ -47,12 +47,11 @@ public class ItemsSqlRepository {
 			
 			try {
 				
-				if (rs != null) {
+				if (rs != null && stmt != null && conn != null) {
 					rs.close();
+					stmt.close();
+					conn.close();
 				}
-				
-				stmt.close();
-				conn.close();
 				
 			} catch (NullPointerException e) {
 				
