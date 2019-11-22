@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class ItemsSqlRepository {
 	
@@ -17,21 +18,26 @@ public class ItemsSqlRepository {
 		this.password = password;		
 	}
 	
-	public long count() {	
+	public long count() throws SQLException {	
 		
 		long numItems = 0;
+		Connection conn = null;
+		ResultSet rs = null;
 		
 		try {
-			
-			Connection conn = DriverManager.getConnection(jdbcUrl, username, password);
-			ResultSet rs = conn.createStatement().executeQuery("SELECT COUNT (*) FROM items");
+			conn = DriverManager.getConnection(jdbcUrl, username, password);
+			rs = conn.createStatement().executeQuery("SELECT COUNT (*) FROM items");
 			rs.next();
-			numItems = rs.getInt(1);
-			rs.close();
-			conn.close();
-			
+			numItems = rs.getInt(1);			
 		} catch (SQLException e) {
-			throw new RuntimeException(e);
+			throw new SQLException(e);
+		} finally {
+			try {
+				rs.close();
+				conn.close();
+			} catch (SQLException e) {
+				throw new SQLException(e);
+			}
 		}
 		
 		return numItems;
