@@ -73,6 +73,8 @@ dependencies {
 	runtime group: 'org.postgresql', name: 'postgresql', version: '42.2.8'
 	compile 'org.flywaydb:flyway-core:6.0.8'
     compile 'org.sqldroid:sqldroid:1.1.0-rc1'
+    // https://mvnrepository.com/artifact/org.springframework/spring-jdbc
+	compile group: 'org.springframework', name: 'spring-jdbc', version: '5.2.1.RELEASE'
 }
 
 // TASKS
