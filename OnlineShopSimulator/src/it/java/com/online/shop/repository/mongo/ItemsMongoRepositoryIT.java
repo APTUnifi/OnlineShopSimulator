@@ -51,6 +51,27 @@ public class ItemsMongoRepositoryIT {
 		client.close();
 	}
 	
+	private Item retrieveItem(String productCode) {
+		Document d = items.find(Filters.eq("productCode", productCode)).first();
+		if (d != null)
+			return new Item(""+d.get("productCode"), ""+d.get("name"), (int)d.get("quantity"));
+		return null;
+	}
+
+	private List<Item> retrieveAllItems() {
+		return StreamSupport.stream(items.find().spliterator(), false)
+				.map(d -> new Item(""+d.get("productCode"), ""+d.get("name"), (int)d.get("quantity")))
+				.collect(Collectors.toList());
+	}
+	
+	private void addTestItemToRepository(String productCode, String name) {
+		items.insertOne(new Document().append("productCode", productCode).append("name", name).append("quantity", 1));		
+	}
+
+	private void addTestItemToRepository(String productCode, String name, int quantity) {
+		items.insertOne(new Document().append("productCode", productCode).append("name", name).append("quantity", quantity));		
+	}
+	
 	@Test
 	public void testFindAll() {
 		addTestItemToRepository("1", "test1");
@@ -94,26 +115,5 @@ public class ItemsMongoRepositoryIT {
 								itemToBeModified.getQuantity());
 		itemsRepository.modifyQuantity(itemToBeModified, QUANTITY_MODIFIER);
 		assertThat(retrieveItem("1").getQuantity()).isEqualTo(STARTER_QUANTITY + QUANTITY_MODIFIER);
-	}
-
-	private Item retrieveItem(String productCode) {
-		Document d = items.find(Filters.eq("productCode", productCode)).first();
-		if (d != null)
-			return new Item(""+d.get("productCode"), ""+d.get("name"), (int)d.get("quantity"));
-		return null;
-	}
-
-	private List<Item> retrieveAllItems() {
-		return StreamSupport.stream(items.find().spliterator(), false)
-				.map(d -> new Item(""+d.get("productCode"), ""+d.get("name"), (int)d.get("quantity")))
-				.collect(Collectors.toList());
-	}
-	
-	private void addTestItemToRepository(String productCode, String name) {
-		items.insertOne(new Document().append("productCode", productCode).append("name", name).append("quantity", 1));		
-	}
-
-	private void addTestItemToRepository(String productCode, String name, int quantity) {
-		items.insertOne(new Document().append("productCode", productCode).append("name", name).append("quantity", quantity));		
 	}
 }
