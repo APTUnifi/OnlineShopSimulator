@@ -80,8 +80,7 @@ public class CartController {
 				itemsRepository.modifyQuantity(retrievedItem, item.getQuantity());
 			}
 		}
-		
-		itemsRepository.storeCart(cart);
+	
 		
 		cart.setItems(new ArrayList<Item>());
 		

@@ -211,25 +211,4 @@ public class CartControllerTest {
 		assertThat(cartController.cartItems()).isEmpty();
 	}
 
-	@Test
-	public void testPurchaseItemsShouldSaveCartDetails() {
-		// setup
-		List<Item> items = new ArrayList<>();
-		Cart cart = spy(new Cart());
-		Item firstExistingItem = new Item("1", "test1", 2);
-		Item secondExistingItem = new Item("2", "test2", 3);
-		items.add(new Item("1", "test1", 1));
-		items.add(new Item("2", "test2", 2));
-		cart.setItems(items);
-		cartController.setCart(cart);
-		when(itemsRepository.findByProductCode("1")).thenReturn(firstExistingItem);
-		when(itemsRepository.findByProductCode("2")).thenReturn(secondExistingItem);
-		// exercise
-		cartController.completePurchase();
-		// verify
-		InOrder inOrder = Mockito.inOrder(itemsRepository, cart);
-		inOrder.verify(itemsRepository).storeCart(cart);
-		inOrder.verify(cart).setItems(new ArrayList<Item>());
-
-	}
 }
