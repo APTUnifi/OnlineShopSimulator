@@ -74,8 +74,13 @@ public class ItemsSqlRepositoryIT {
 	}
 	
 	@Test
-	public void testEmptyRepository() {
-		assertThat(repository.count()).isEqualTo(0);
+	public void testCountItemsWhenTableItemsIsEmpy() {
+		assertThat(repository.countItems()).isEqualTo(0);
+	}
+	
+	@Test
+	public void testCountCartsWhenTableCartsIsEmpy() {
+		assertThat(repository.countCarts()).isEqualTo(0);
 	}
 	
 	@Test

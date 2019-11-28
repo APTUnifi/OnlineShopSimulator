@@ -5,6 +5,7 @@ import java.util.List;
 import com.online.shop.model.Cart;
 import com.online.shop.model.Item;
 
+//TODO change ItemsRepository name to something like ShopRepository and methods referring to Items 
 public interface ItemsRepository {
 	public List<Item> findAll();
 
@@ -18,4 +19,12 @@ public interface ItemsRepository {
 
 	public void modifyQuantity(Item itemToBeModified, int modifier);
 	
+	//TODO implements cart methods
+	public void storeCart(Cart cartToStore);
+	
+	public void findCart(Cart cartToFind);
+	
+	public List<Cart> findAllCarts();
+	
+	public void removeCart(Cart cartToRemove);
 }
