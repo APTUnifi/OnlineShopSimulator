@@ -71,7 +71,7 @@ public class ItemsMongoRepository implements ItemsRepository {
 	}
 
 	@Override
-	public void saveCart(Cart cart) {
+	public void storeCart(Cart cart) {
 		// TODO Auto-generated method stub
 		 
 	}

@@ -16,11 +16,11 @@ public class CartController {
 	public CartController(ItemsView itemsView, ItemsRepository itemsRepository) {
 		this.itemsView = itemsView;
 		this.itemsRepository = itemsRepository;
+		// per IT cart = new Cart
 	}
 
 	public void add(Item item) {
 		List<Item> items = cart.getItems();
-
 		if (!items.contains(item)) {
 			item.setQuantity(1);
 			items.add(item);
@@ -81,7 +81,7 @@ public class CartController {
 			}
 		}
 		
-		itemsRepository.saveCart(cart);
+		itemsRepository.storeCart(cart);
 		
 		cart.setItems(new ArrayList<Item>());
 		

@@ -69,7 +69,7 @@ public class CartControllerTest {
 		Item existingItem = new Item("1", "test1", 1);
 		List<Item> items = new ArrayList<>();
 		items.add(existingItem);
-		cartController.setCart(new Cart(items));
+		cartController.setCart(new Cart(items, "test"));
 		// exercise
 		cartController.add(itemToAdd);
 		// verify
@@ -85,7 +85,7 @@ public class CartControllerTest {
 		Item existingItem = new Item("1", "test1", 3);
 		List<Item> items = new ArrayList<>();
 		items.add(existingItem);
-		cartController.setCart(new Cart(items));
+		cartController.setCart(new Cart(items, "test"));
 		// exercise
 		cartController.add(itemToAdd);
 		// verify
@@ -100,7 +100,7 @@ public class CartControllerTest {
 		Item itemToRemove = new Item("1", "test1");
 		List<Item> items = new ArrayList<>();
 		items.add(itemToRemove);
-		cartController.setCart(new Cart(items));
+		cartController.setCart(new Cart(items, "test"));
 		// exercise
 		cartController.remove(itemToRemove);
 		// verify
@@ -115,7 +115,7 @@ public class CartControllerTest {
 		Item itemToRemove = new Item("1", "test1", 2);
 		List<Item> items = new ArrayList<>();
 		items.add(itemToRemove);
-		cartController.setCart(new Cart(items));
+		cartController.setCart(new Cart(items, "test"));
 		// exercise
 		cartController.remove(itemToRemove);
 		// verify
@@ -132,7 +132,7 @@ public class CartControllerTest {
 		Item secondExistingItem = new Item("2", "test2", 2);
 		items.add(new Item("1", "test1", 1));
 		items.add(new Item("2", "test2", 2));
-		cartController.setCart(new Cart(items));
+		cartController.setCart(new Cart(items, "test"));
 		when(itemsRepository.findByProductCode("1")).thenReturn(firstExistingItem);
 		when(itemsRepository.findByProductCode("2")).thenReturn(secondExistingItem);
 		// exercise
@@ -150,7 +150,7 @@ public class CartControllerTest {
 		Item secondExistingItem = new Item("2", "test2", 3);
 		items.add(new Item("1", "test1", 1));
 		items.add(new Item("2", "test2", 2));
-		cartController.setCart(new Cart(items));
+		cartController.setCart(new Cart(items, "test"));
 		when(itemsRepository.findByProductCode("1")).thenReturn(firstExistingItem);
 		when(itemsRepository.findByProductCode("2")).thenReturn(secondExistingItem);
 		// exercise
@@ -168,7 +168,7 @@ public class CartControllerTest {
 		Item secondExistingItem = new Item("2", "test2", 3);
 		items.add(new Item("1", "test1", 1));
 		items.add(new Item("2", "test2", 2));
-		cartController.setCart(new Cart(items));
+		cartController.setCart(new Cart(items, "test"));
 		when(itemsRepository.findByProductCode("1")).thenReturn(firstExistingItem);
 		when(itemsRepository.findByProductCode("2")).thenReturn(secondExistingItem);
 		// exercise
@@ -185,7 +185,7 @@ public class CartControllerTest {
 		Item secondExistingItem = new Item("2", "test2", 3);
 		items.add(new Item("1", "test1", 1));
 		items.add(new Item("2", "test2", 2));
-		cartController.setCart(new Cart(items));
+		cartController.setCart(new Cart(items, "test"));
 		when(itemsRepository.findByProductCode("1")).thenReturn(firstExistingItem);
 		when(itemsRepository.findByProductCode("2")).thenReturn(secondExistingItem);
 		// exercise
@@ -202,7 +202,7 @@ public class CartControllerTest {
 		Item secondExistingItem = new Item("2", "test2", 3);
 		items.add(new Item("1", "test1", 1));
 		items.add(new Item("2", "test2", 2));
-		cartController.setCart(new Cart(items));
+		cartController.setCart(new Cart(items, "test"));
 		when(itemsRepository.findByProductCode("1")).thenReturn(firstExistingItem);
 		when(itemsRepository.findByProductCode("2")).thenReturn(secondExistingItem);
 		// exercise
@@ -228,7 +228,7 @@ public class CartControllerTest {
 		cartController.completePurchase();
 		// verify
 		InOrder inOrder = Mockito.inOrder(itemsRepository, cart);
-		inOrder.verify(itemsRepository).saveCart(cart);
+		inOrder.verify(itemsRepository).storeCart(cart);
 		inOrder.verify(cart).setItems(new ArrayList<Item>());
 
 	}
