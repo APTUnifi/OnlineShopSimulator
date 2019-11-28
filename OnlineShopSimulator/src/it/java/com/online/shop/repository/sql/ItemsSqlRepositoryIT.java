@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.*;
 
 import java.util.List;
 
+import com.online.shop.model.Cart;
 import org.flywaydb.core.Flyway;
 import org.junit.Before;
 import org.junit.ClassRule;
@@ -127,6 +128,11 @@ public class ItemsSqlRepositoryIT {
 		
 		repository.modifyQuantity(itemToBeModified, QUANTITY_MODIFIER);
 		assertThat(retrieveItem("1").getQuantity()).isEqualTo(STARTER_QUANTITY + QUANTITY_MODIFIER);
+	}
+	
+	public void storeCart(Cart cart) {
+		// TODO Auto-generated method stub
+		 
 	}
 
 }

@@ -8,6 +8,7 @@ import javax.sql.DataSource;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import com.online.shop.model.Cart;
 import com.online.shop.model.Item;
 import com.online.shop.repository.ItemsRepository;
 
@@ -76,6 +77,12 @@ public class ItemsSqlRepository implements ItemsRepository {
 	
 	public JdbcTemplate getJdbcTemplate() {
 		return jdbcTemplate;
+	}
+
+	@Override
+	public void storeCart(Cart cartToStore) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

@@ -70,4 +70,8 @@ public class ItemsMongoRepository implements ItemsRepository {
 		items.updateOne(Filters.eq("productCode", itemToBeModified.getProductCode()), Updates.set("quantity", newQuantity));	
 	}
 	
+	public void storeCart(Cart cart) {
+		// TODO Auto-generated method stub
+		 
+	}
 }
