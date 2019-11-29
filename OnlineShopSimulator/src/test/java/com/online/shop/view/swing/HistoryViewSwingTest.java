@@ -68,7 +68,7 @@ public class HistoryViewSwingTest extends AssertJSwingJUnitTestCase{
 	public void testShowItemsCartShouldShowItemsWhenACartIsSelected() {
 		Item item1 = new Item("2","Iphone");
 		Item item2 = new Item("1","Sa");
-		Cart cart = new Cart(Arrays.asList(item1,item2));
+		Cart cart = new Cart(Arrays.asList(item1,item2),"test");
 		GuiActionRunner.execute(
 				()-> {
 					DefaultListModel<Cart> listCartModel = historyViewSwing.getListCartModel();
@@ -88,8 +88,8 @@ public class HistoryViewSwingTest extends AssertJSwingJUnitTestCase{
 		//setup
 		Item item1 = new Item("2","Iphone");
 		Item item2 = new Item("1","Sa");
-		Cart cart1 = new Cart(Arrays.asList(item1,item2));
-		Cart cart2 = new Cart(Arrays.asList(item2));
+		Cart cart1 = new Cart(Arrays.asList(item1,item2),"test1");
+		Cart cart2 = new Cart(Arrays.asList(item2),"test2");
 
 		GuiActionRunner.execute(
 				()-> {
@@ -112,8 +112,8 @@ public class HistoryViewSwingTest extends AssertJSwingJUnitTestCase{
 		//setup
 		Item item1 = new Item("1","Iphone");
 		Item item2 = new Item("3","Samsung");
-		Cart cart1 = new Cart(Arrays.asList(item1));
-		Cart cart2 = new Cart(Arrays.asList(item2));
+		Cart cart1 = new Cart(Arrays.asList(item1),"test1");
+		Cart cart2 = new Cart(Arrays.asList(item2),"test2");
 
 		//execute
 		GuiActionRunner.execute(() ->
@@ -127,7 +127,7 @@ public class HistoryViewSwingTest extends AssertJSwingJUnitTestCase{
 	public void testRemoveButtonShouldDelegateTheCartControllerRemoveCart() {
 		//setup
 		Item item1 = new Item("1","Iphone");
-		Cart cart1 = new Cart(Arrays.asList(item1));
+		Cart cart1 = new Cart(Arrays.asList(item1),"test1");
 		GuiActionRunner.execute(
 				()-> historyViewSwing.getListCartModel().addElement(cart1)
 		);

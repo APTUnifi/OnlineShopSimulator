@@ -85,7 +85,6 @@ public class CartController {
 			}
 		}
 		
-		itemsRepository.saveCart(cart);
 		
 		cart.setItems(new ArrayList<Item>());
 		

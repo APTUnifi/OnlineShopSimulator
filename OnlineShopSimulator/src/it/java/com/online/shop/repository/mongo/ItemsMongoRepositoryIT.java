@@ -1,4 +1,4 @@
-package com.online.shop.repository;
+package com.online.shop.repository.mongo;
 
 import static org.assertj.core.api.Assertions.*;
 

@@ -15,6 +15,7 @@ plugins {
     id 'jacoco'
 	id 'com.github.kt3k.coveralls' version '2.8.4'
 	id 'com.gradle.build-scan' version '2.1'	
+	id "org.flywaydb.flyway" version "6.0.8"
 }
 
 repositories {
@@ -50,26 +51,30 @@ dependencies {
 
     // https://mvnrepository.com/artifact/junit/junit/4.12
     testImplementation 'junit:junit:4.12'
-    
-    // https://mvnrepository.com/artifact/org.mockito/mockito-core
-	testCompile group: 'org.mockito', name: 'mockito-core', version: '2.23.4'
 	
 	// https://mvnrepository.com/artifact/org.assertj/assertj-swing-junit
 	compile group: 'org.assertj', name: 'assertj-swing-junit', version: '3.9.2'
-	
-	// https://mvnrepository.com/artifact/de.bwaldvogel/mongo-java-server
-	testCompile group: 'de.bwaldvogel', name: 'mongo-java-server', version: '1.21.0'
 	
 	// https://mvnrepository.com/artifact/org.mongodb/mongodb-driver
 	compile group: 'org.mongodb', name: 'mongodb-driver', version: '3.11.1'
 	
 	// https://mvnrepository.com/artifact/org.testcontainers/testcontainers
-	compile group: 'org.testcontainers', name: 'testcontainers', version: '1.12.2'	
+	compile group: 'org.testcontainers', name: 'testcontainers', version: '1.12.3'
 	
+	// https://mvnrepository.com/artifact/org.mockito/mockito-core
+	testCompile group: 'org.mockito', name: 'mockito-core', version: '2.23.4'	
+	
+	// https://mvnrepository.com/artifact/de.bwaldvogel/mongo-java-server
+	testCompile group: 'de.bwaldvogel', name: 'mongo-java-server', version: '1.21.0'
+	
+	// postgresql dependencies	
 	testImplementation('org.testcontainers:postgresql:1.12.3')
-	
-	compile group: 'org.postgresql', name: 'postgresql', version:  '42.2.8'
-	compile group: 'org.postgresql', name: 'postgresql', version: '9.0-801.jdbc4'
+	compile group: 'postgresql', name: 'postgresql', version: '9.1-901-1.jdbc4'
+	runtime group: 'org.postgresql', name: 'postgresql', version: '42.2.8'
+	compile 'org.flywaydb:flyway-core:6.0.8'
+    compile 'org.sqldroid:sqldroid:1.1.0-rc1'
+    // https://mvnrepository.com/artifact/org.springframework/spring-jdbc
+	compile group: 'org.springframework', name: 'spring-jdbc', version: '5.2.1.RELEASE'
 }
 
 // TASKS
