@@ -32,8 +32,8 @@ public class ItemsViewSwing extends JFrame implements ItemsView {
 
 	private JPanel contentPane;
 	private JTextField itemName;
-	private ShopController shopController;
-	private CartController cartController;
+	private transient ShopController shopController;
+	private transient CartController cartController;
 	private JButton btnRemove;
 	private JButton btnAdd;
 	private JButton btnSearch;
@@ -60,28 +60,7 @@ public class ItemsViewSwing extends JFrame implements ItemsView {
 	public void setCartController(CartController cartController) {
 		this.cartController = cartController;
 	}
-	/**
-	 * Launch the application.	
-	 */
-//	public static void main(String[] args) {
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				try {
-//					ItemsViewSwing frame = new ItemsViewSwing();
-//					frame.setVisible(true);
-//					Item item = new Item("1","Iphone");
-//					frame.itemListShopModel.addElement(item);
-//					frame.itemListCartModel.addElement(item);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-//	}
 
-	/**
-	 * Create the frame.
-	 */
 	public ItemsViewSwing() {
 		
 		
@@ -93,41 +72,41 @@ public class ItemsViewSwing extends JFrame implements ItemsView {
 		contentPane.setName("");
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
-		GridBagLayout gbl_contentPane = new GridBagLayout();
-		gbl_contentPane.columnWidths = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 36, 0};
-		gbl_contentPane.rowHeights = new int[] {0, 30, 30, 30, 0, 0, 0, 0, 0, 30, 30, 0};
-		gbl_contentPane.columnWeights = new double[]{0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, Double.MIN_VALUE};
-		gbl_contentPane.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		contentPane.setLayout(gbl_contentPane);
+		GridBagLayout gblcontentPane = new GridBagLayout();
+		gblcontentPane.columnWidths = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 36, 0};
+		gblcontentPane.rowHeights = new int[] {0, 30, 30, 30, 0, 0, 0, 0, 0, 30, 30, 0};
+		gblcontentPane.columnWeights = new double[]{0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, Double.MIN_VALUE};
+		gblcontentPane.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		contentPane.setLayout(gblcontentPane);
 
 		itemName = new JTextField();
 		itemName.setName("itemName");
-		GridBagConstraints gbc_itemName = new GridBagConstraints();
-		gbc_itemName.gridwidth = 8;
-		gbc_itemName.insets = new Insets(0, 0, 5, 5);
-		gbc_itemName.fill = GridBagConstraints.HORIZONTAL;
-		gbc_itemName.gridx = 1;
-		gbc_itemName.gridy = 0;
-		contentPane.add(itemName, gbc_itemName);
+		GridBagConstraints gbcitemName = new GridBagConstraints();
+		gbcitemName.gridwidth = 8;
+		gbcitemName.insets = new Insets(0, 0, 5, 5);
+		gbcitemName.fill = GridBagConstraints.HORIZONTAL;
+		gbcitemName.gridx = 1;
+		gbcitemName.gridy = 0;
+		contentPane.add(itemName, gbcitemName);
 		itemName.setColumns(10);
 
 		btnSearch = new JButton("Search");
 		btnSearch.setEnabled(true);
-		GridBagConstraints gbc_btnSearch = new GridBagConstraints();
-		gbc_btnSearch.insets = new Insets(0, 0, 5, 5);
-		gbc_btnSearch.gridx = 0;
-		gbc_btnSearch.gridy = 0;
-		contentPane.add(btnSearch, gbc_btnSearch);
+		GridBagConstraints gbcbtnSearch = new GridBagConstraints();
+		gbcbtnSearch.insets = new Insets(0, 0, 5, 5);
+		gbcbtnSearch.gridx = 0;
+		gbcbtnSearch.gridy = 0;
+		contentPane.add(btnSearch, gbcbtnSearch);
 
 		lblErrorMessageLabel = new JLabel(" ");
 		lblErrorMessageLabel.setName("errorMessageLabel");
 		lblErrorMessageLabel.setOpaque(true);
-		GridBagConstraints gbc_lblErrorMessageLabel = new GridBagConstraints();
-		gbc_lblErrorMessageLabel.gridwidth = 8;
-		gbc_lblErrorMessageLabel.insets = new Insets(0, 0, 5, 5);
-		gbc_lblErrorMessageLabel.gridx = 1;
-		gbc_lblErrorMessageLabel.gridy = 1;
-		contentPane.add(lblErrorMessageLabel, gbc_lblErrorMessageLabel);
+		GridBagConstraints gbclblErrorMessageLabel = new GridBagConstraints();
+		gbclblErrorMessageLabel.gridwidth = 8;
+		gbclblErrorMessageLabel.insets = new Insets(0, 0, 5, 5);
+		gbclblErrorMessageLabel.gridx = 1;
+		gbclblErrorMessageLabel.gridy = 1;
+		contentPane.add(lblErrorMessageLabel, gbclblErrorMessageLabel);
 
 		itemListShopModel = new DefaultListModel<Item>();
 		itemListCartModel = new DefaultListModel<Item>();
@@ -142,14 +121,14 @@ public class ItemsViewSwing extends JFrame implements ItemsView {
 		});
 		itemListShop.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		itemListShop.setName("itemListShop");
-		GridBagConstraints gbc_itemListShop = new GridBagConstraints();
-		gbc_itemListShop.gridwidth = 4;
-		gbc_itemListShop.gridheight = 8;
-		gbc_itemListShop.insets = new Insets(0, 0, 5, 5);
-		gbc_itemListShop.fill = GridBagConstraints.BOTH;
-		gbc_itemListShop.gridx = 0;
-		gbc_itemListShop.gridy = 2;
-		contentPane.add(itemListShop, gbc_itemListShop);
+		GridBagConstraints gbcitemListShop = new GridBagConstraints();
+		gbcitemListShop.gridwidth = 4;
+		gbcitemListShop.gridheight = 8;
+		gbcitemListShop.insets = new Insets(0, 0, 5, 5);
+		gbcitemListShop.fill = GridBagConstraints.BOTH;
+		gbcitemListShop.gridx = 0;
+		gbcitemListShop.gridy = 2;
+		contentPane.add(itemListShop, gbcitemListShop);
 
 		itemListCart = new JList<>(itemListCartModel);
 		itemListCart.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -161,23 +140,23 @@ public class ItemsViewSwing extends JFrame implements ItemsView {
 			}
 		});
 		itemListCart.setName("itemListCart");
-		GridBagConstraints gbc_itemListCart = new GridBagConstraints();
-		gbc_itemListCart.insets = new Insets(0, 0, 5, 0);
-		gbc_itemListCart.gridheight = 8;
-		gbc_itemListCart.gridwidth = 5;
-		gbc_itemListCart.fill = GridBagConstraints.BOTH;
-		gbc_itemListCart.gridx = 5;
-		gbc_itemListCart.gridy = 2;
-		contentPane.add(itemListCart, gbc_itemListCart);
+		GridBagConstraints gbcitemListCart = new GridBagConstraints();
+		gbcitemListCart.insets = new Insets(0, 0, 5, 0);
+		gbcitemListCart.gridheight = 8;
+		gbcitemListCart.gridwidth = 5;
+		gbcitemListCart.fill = GridBagConstraints.BOTH;
+		gbcitemListCart.gridx = 5;
+		gbcitemListCart.gridy = 2;
+		contentPane.add(itemListCart, gbcitemListCart);
 
 		btnAdd = new JButton("Add");
 		btnAdd.setEnabled(false);
 		btnAdd.setName("Add");
-		GridBagConstraints gbc_btnAdd = new GridBagConstraints();
-		gbc_btnAdd.insets = new Insets(0, 0, 5, 5);
-		gbc_btnAdd.gridx = 4;
-		gbc_btnAdd.gridy = 4;
-		contentPane.add(btnAdd, gbc_btnAdd);
+		GridBagConstraints gbcbtnAdd = new GridBagConstraints();
+		gbcbtnAdd.insets = new Insets(0, 0, 5, 5);
+		gbcbtnAdd.gridx = 4;
+		gbcbtnAdd.gridy = 4;
+		contentPane.add(btnAdd, gbcbtnAdd);
 
 		btnAdd.addActionListener(
 				e -> new Thread(
@@ -187,11 +166,11 @@ public class ItemsViewSwing extends JFrame implements ItemsView {
 
 		btnRemove = new JButton("Remove");
 		btnRemove.setEnabled(false);
-		GridBagConstraints gbc_btnRemove = new GridBagConstraints();
-		gbc_btnRemove.insets = new Insets(0, 0, 5, 5);
-		gbc_btnRemove.gridx = 4;
-		gbc_btnRemove.gridy = 5;
-		contentPane.add(btnRemove, gbc_btnRemove);
+		GridBagConstraints gbcbtnRemove = new GridBagConstraints();
+		gbcbtnRemove.insets = new Insets(0, 0, 5, 5);
+		gbcbtnRemove.gridx = 4;
+		gbcbtnRemove.gridy = 5;
+		contentPane.add(btnRemove, gbcbtnRemove);
 
 		btnRemove.addActionListener(
 				e -> cartController.removeFromCart(itemListCart.getSelectedValue())
@@ -208,21 +187,21 @@ public class ItemsViewSwing extends JFrame implements ItemsView {
 				historyframe.setVisible(true);
 			}
 		});
-		GridBagConstraints gbc_btnHistory = new GridBagConstraints();
-		gbc_btnHistory.insets = new Insets(0, 0, 5, 5);
-		gbc_btnHistory.gridx = 4;
-		gbc_btnHistory.gridy = 8;
-		contentPane.add(btnHistory, gbc_btnHistory);
+		GridBagConstraints gbcbtnHistory = new GridBagConstraints();
+		gbcbtnHistory.insets = new Insets(0, 0, 5, 5);
+		gbcbtnHistory.gridx = 4;
+		gbcbtnHistory.gridy = 8;
+		contentPane.add(btnHistory, gbcbtnHistory);
 		
 
 
 		btnBuy = new JButton("Buy");
 		btnBuy.setEnabled(false);
-		GridBagConstraints gbc_btnBuy = new GridBagConstraints();
-		gbc_btnBuy.insets = new Insets(0, 0, 0, 5);
-		gbc_btnBuy.gridx = 4;
-		gbc_btnBuy.gridy = 10;
-		contentPane.add(btnBuy, gbc_btnBuy);
+		GridBagConstraints gbcbtnBuy = new GridBagConstraints();
+		gbcbtnBuy.insets = new Insets(0, 0, 0, 5);
+		gbcbtnBuy.gridx = 4;
+		gbcbtnBuy.gridy = 10;
+		contentPane.add(btnBuy, gbcbtnBuy);
 		
 		btnBuy.addActionListener(
 				e -> cartController.completePurchase()
@@ -253,7 +232,7 @@ public class ItemsViewSwing extends JFrame implements ItemsView {
 		SwingUtilities.invokeLater(
 				()-> {
 					if(!itemName.getText().trim().isEmpty()) {
-						DefaultListModel<Item> itemFiltered = new DefaultListModel<Item>();
+						DefaultListModel<Item> itemFiltered = new DefaultListModel<>();
 						itemFiltered.addElement(item);
 						itemListShop.setModel(itemFiltered);
 						resetErrorLabel();		
@@ -287,7 +266,7 @@ public class ItemsViewSwing extends JFrame implements ItemsView {
 	@Override
 	public void updateItemsCart(List<Item> items) {
 	
-		DefaultListModel<Item> model = new DefaultListModel<Item>();
+		DefaultListModel<Item> model = new DefaultListModel<>();
 	    for(Item p : items){
 	         model.addElement(p);
 	    }    

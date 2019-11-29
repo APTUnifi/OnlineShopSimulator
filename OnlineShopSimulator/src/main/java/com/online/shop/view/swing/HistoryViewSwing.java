@@ -30,7 +30,7 @@ public class HistoryViewSwing extends JFrame implements HistoryView {
 	private JList<Cart> listCart;
 	private JList<Item> listItemsCart;
 	
-	private CartController cartController;
+	private transient CartController cartController;
 
 	private JButton btnRemove;
 
@@ -50,12 +50,12 @@ public class HistoryViewSwing extends JFrame implements HistoryView {
 		contentPane.setName("history");
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
-		GridBagLayout gbl_contentPane = new GridBagLayout();
-		gbl_contentPane.columnWidths = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 36, 0};
-		gbl_contentPane.rowHeights = new int[] {0, 30, 30, 30, 0, 0, 0, 0, 0, 30, 30, 0};
-		gbl_contentPane.columnWeights = new double[]{0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, Double.MIN_VALUE};
-		gbl_contentPane.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		contentPane.setLayout(gbl_contentPane);
+		GridBagLayout gblcontentPane = new GridBagLayout();
+		gblcontentPane.columnWidths = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 36, 0};
+		gblcontentPane.rowHeights = new int[] {0, 30, 30, 30, 0, 0, 0, 0, 0, 30, 30, 0};
+		gblcontentPane.columnWeights = new double[]{0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, Double.MIN_VALUE};
+		gblcontentPane.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		contentPane.setLayout(gblcontentPane);
 
 		listItemsCartModel = new DefaultListModel<Item>();
 		listCartModel = new DefaultListModel<Cart>();
@@ -70,37 +70,37 @@ public class HistoryViewSwing extends JFrame implements HistoryView {
 
 		listCart.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listCart.setName("listCart");	
-		GridBagConstraints gbc_itemListShop = new GridBagConstraints();
-		gbc_itemListShop.gridwidth = 4;
-		gbc_itemListShop.gridheight = 8;
-		gbc_itemListShop.insets = new Insets(0, 0, 5, 5);
-		gbc_itemListShop.fill = GridBagConstraints.BOTH;
-		gbc_itemListShop.gridx = 0;
-		gbc_itemListShop.gridy = 2;
-		contentPane.add(listCart, gbc_itemListShop);
+		GridBagConstraints gbcitemListShop = new GridBagConstraints();
+		gbcitemListShop.gridwidth = 4;
+		gbcitemListShop.gridheight = 8;
+		gbcitemListShop.insets = new Insets(0, 0, 5, 5);
+		gbcitemListShop.fill = GridBagConstraints.BOTH;
+		gbcitemListShop.gridx = 0;
+		gbcitemListShop.gridy = 2;
+		contentPane.add(listCart, gbcitemListShop);
 
 		listItemsCart = new JList<>(listItemsCartModel);
 		listItemsCart.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		listItemsCart.setName("listItemsCart");
-		GridBagConstraints gbc_itemListCart = new GridBagConstraints();
-		gbc_itemListCart.insets = new Insets(0, 0, 5, 0);
-		gbc_itemListCart.gridheight = 8;
-		gbc_itemListCart.gridwidth = 5;
-		gbc_itemListCart.fill = GridBagConstraints.BOTH;
-		gbc_itemListCart.gridx = 5;
-		gbc_itemListCart.gridy = 2;
-		contentPane.add(listItemsCart, gbc_itemListCart);
+		GridBagConstraints gbcitemListCart = new GridBagConstraints();
+		gbcitemListCart.insets = new Insets(0, 0, 5, 0);
+		gbcitemListCart.gridheight = 8;
+		gbcitemListCart.gridwidth = 5;
+		gbcitemListCart.fill = GridBagConstraints.BOTH;
+		gbcitemListCart.gridx = 5;
+		gbcitemListCart.gridy = 2;
+		contentPane.add(listItemsCart, gbcitemListCart);
 
 
 
 		btnRemove = new JButton("Remove");
 		btnRemove.setEnabled(false);
-		GridBagConstraints gbc_btnRemove = new GridBagConstraints();
-		gbc_btnRemove.insets = new Insets(0, 0, 5, 5);
-		gbc_btnRemove.gridx = 4;
-		gbc_btnRemove.gridy = 5;
-		contentPane.add(btnRemove, gbc_btnRemove);
+		GridBagConstraints gbcbtnRemove = new GridBagConstraints();
+		gbcbtnRemove.insets = new Insets(0, 0, 5, 5);
+		gbcbtnRemove.gridx = 4;
+		gbcbtnRemove.gridy = 5;
+		contentPane.add(btnRemove, gbcbtnRemove);
 
 		btnRemove.addActionListener(
 				e -> cartController.removeFromHistory(listCart.getSelectedValue())
