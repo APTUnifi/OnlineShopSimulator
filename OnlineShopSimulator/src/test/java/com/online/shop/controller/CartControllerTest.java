@@ -74,7 +74,7 @@ public class CartControllerTest {
 		// verify
 		assertThat(cartController.cartSize()).isEqualTo(1);
 		assertThat(cartController.findItemQuantity(existingItem)).isEqualTo(2);
-		verify(itemsView).showItemsCart(cartController.cartItems());
+		verify(itemsView).updateItemsCart(cartController.cartItems());
 	}
 
 	@Test
@@ -120,7 +120,7 @@ public class CartControllerTest {
 		// verify
 		assertThat(cartController.cartSize()).isEqualTo(1);
 		assertThat(cartController.findItemQuantity(itemToRemove)).isEqualTo(1);
-		verify(itemsView).showItemsCart(cartController.cartItems());
+		verify(itemsView).updateItemsCart(cartController.cartItems());
 	}
 
 	@Test
