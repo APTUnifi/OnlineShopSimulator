@@ -2,8 +2,6 @@ package com.online.shop.model;
 
 import java.util.Objects;
 
-import org.testcontainers.shaded.org.apache.commons.lang.builder.EqualsBuilder;
-
 public class Item {
 
 	private String productCode;
@@ -26,18 +24,18 @@ public class Item {
 		this.name = name;
 		this.quantity = quantity;
 	}
-
+	
+	//TODO update with the other methods
 	@Override
-	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-
-		if (o == null || getClass() != o.getClass())
-			return false;
-
-		Item item = (Item) o;
-
-		return new EqualsBuilder().append(productCode, item.productCode).append(name, item.name).isEquals();
+	public boolean equals(final Object obj){
+	    if(obj instanceof Item){
+	        final Item other = (Item) obj;
+	        return Objects.equals(productCode, other.productCode)
+	            && Objects.equals(name, other.name)
+	            && quantity == other.quantity;
+	    } else{
+	        return false;
+	    }
 	}
 
 	@Override

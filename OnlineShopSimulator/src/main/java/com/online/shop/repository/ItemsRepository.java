@@ -22,9 +22,9 @@ public interface ItemsRepository {
 	//TODO implements cart methods
 	public void storeCart(Cart cartToStore);
 	
-	public void findCart(Cart cartToFind);
+	public Cart findCart(String label, String data);
 	
 	public List<Cart> findAllCarts();
 	
-	public void removeCart(Cart cartToRemove);
+	public void removeCart(String label, String data);
 }
