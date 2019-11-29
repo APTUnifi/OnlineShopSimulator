@@ -85,7 +85,6 @@ public class CartController {
 			}
 		}
 		
-		
 		cart.setItems(new ArrayList<Item>());
 		
 		itemsView.showItemsCart(null);
@@ -95,9 +94,5 @@ public class CartController {
 	public void removeFromHistory(Cart cart) {
 		//TODO
 		historyView.removeCart(cart);
-
-		
-		
 	}
-
 }
