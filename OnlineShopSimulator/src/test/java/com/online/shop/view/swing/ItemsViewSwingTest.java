@@ -9,6 +9,7 @@ import org.assertj.swing.junit.runner.GUITestRunner;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
 import org.assertj.swing.annotation.GUITest;
 import org.assertj.swing.core.matcher.JButtonMatcher;
+import org.assertj.swing.core.matcher.JLabelMatcher;
 import org.assertj.swing.edt.GuiActionRunner;
 import org.assertj.swing.fixture.FrameFixture;
 import org.assertj.swing.fixture.JButtonFixture;
@@ -184,8 +185,10 @@ public class ItemsViewSwingTest extends AssertJSwingJUnitTestCase{
 		Item item = new Item("1","Iphone");
 		GuiActionRunner.execute(
 				() -> itemsViewSwing.errorLog("error Message", item)
-		);
+		);		
 		window.label("errorMessageLabel").requireText("error Message: " + item);
+	    assertThat(JLabelMatcher.withText("errorMessageLabel").andShowing());
+
 	}
 	@Test
 	public void testItemAddedToCartShouldAddTheItemToTheItemListCartAndResetTheErrorLabel() {

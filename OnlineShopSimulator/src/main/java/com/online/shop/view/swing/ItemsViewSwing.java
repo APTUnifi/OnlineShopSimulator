@@ -24,6 +24,8 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -65,7 +67,7 @@ public class ItemsViewSwing extends JFrame implements ItemsView {
 		
 		
 
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setTitle("ShopOnline");
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -107,18 +109,34 @@ public class ItemsViewSwing extends JFrame implements ItemsView {
 		gbclblErrorMessageLabel.gridx = 1;
 		gbclblErrorMessageLabel.gridy = 1;
 		contentPane.add(lblErrorMessageLabel, gbclblErrorMessageLabel);
+		
+		ListSelectionListener btnAddEnabler = new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent e) {
+					btnAdd.setEnabled(itemListShop.getSelectedIndex() != -1);
 
-		itemListShopModel = new DefaultListModel<Item>();
-		itemListCartModel = new DefaultListModel<Item>();
+				}
+		};
+		
+		ListSelectionListener btnBuyRemoveEnabler = new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent e) {
+				btnBuy.setEnabled(itemListCart.getSelectedIndex() != -1);
+				btnRemove.setEnabled(itemListCart.getSelectedIndex() != -1);
+			}
+		};
+		
+		ActionListener btnHistoryClick = new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				HistoryViewSwing historyframe = new HistoryViewSwing();
+				historyframe.setVisible(true);
+			}
+		};
+
+		itemListShopModel = new DefaultListModel<>();
+		itemListCartModel = new DefaultListModel<>();
 
 		itemListShop = new JList<>();
 		itemListShop.setModel(itemListShopModel);
-		itemListShop.addListSelectionListener(new ListSelectionListener() {
-			public void valueChanged(ListSelectionEvent e) {
-				btnAdd.setEnabled(itemListShop.getSelectedIndex() != -1);
-
-			}
-		});
+		itemListShop.addListSelectionListener(btnAddEnabler);
 		itemListShop.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		itemListShop.setName("itemListShop");
 		GridBagConstraints gbcitemListShop = new GridBagConstraints();
@@ -129,16 +147,10 @@ public class ItemsViewSwing extends JFrame implements ItemsView {
 		gbcitemListShop.gridx = 0;
 		gbcitemListShop.gridy = 2;
 		contentPane.add(itemListShop, gbcitemListShop);
-
+		
 		itemListCart = new JList<>(itemListCartModel);
 		itemListCart.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		itemListCart.addListSelectionListener(new ListSelectionListener() {
-			@Override
-			public void valueChanged(ListSelectionEvent e) {
-				btnRemove.setEnabled(itemListCart.getSelectedIndex() != -1);
-				btnBuy.setEnabled(itemListCart.getSelectedIndex() != -1);
-			}
-		});
+		itemListCart.addListSelectionListener(btnBuyRemoveEnabler);		
 		itemListCart.setName("itemListCart");
 		GridBagConstraints gbcitemListCart = new GridBagConstraints();
 		gbcitemListCart.insets = new Insets(0, 0, 5, 0);
@@ -181,20 +193,14 @@ public class ItemsViewSwing extends JFrame implements ItemsView {
 				);
 		
 		btnHistory = new JButton("History");
-		btnHistory.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				HistoryViewSwing historyframe = new HistoryViewSwing();
-				historyframe.setVisible(true);
-			}
-		});
+		btnHistory.addActionListener(btnHistoryClick);
+		
 		GridBagConstraints gbcbtnHistory = new GridBagConstraints();
 		gbcbtnHistory.insets = new Insets(0, 0, 5, 5);
 		gbcbtnHistory.gridx = 4;
 		gbcbtnHistory.gridy = 8;
 		contentPane.add(btnHistory, gbcbtnHistory);
 		
-
-
 		btnBuy = new JButton("Buy");
 		btnBuy.setEnabled(false);
 		GridBagConstraints gbcbtnBuy = new GridBagConstraints();

@@ -18,6 +18,7 @@ import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.ListSelectionModel;
+import javax.swing.WindowConstants;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
 
@@ -43,7 +44,7 @@ public class HistoryViewSwing extends JFrame implements HistoryView {
 	}
 	public HistoryViewSwing() {
 
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setTitle("History");
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -57,15 +58,18 @@ public class HistoryViewSwing extends JFrame implements HistoryView {
 		gblcontentPane.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		contentPane.setLayout(gblcontentPane);
 
-		listItemsCartModel = new DefaultListModel<Item>();
-		listCartModel = new DefaultListModel<Cart>();
-
-		listCart = new JList<>();
-		listCart.addListSelectionListener(new ListSelectionListener() {
+		listItemsCartModel = new DefaultListModel<>();
+		listCartModel = new DefaultListModel<>();
+		
+		ListSelectionListener btnAddEnabler = new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
 				btnRemove.setEnabled(listCart.getSelectedIndex() != -1);
-			}
-		});
+
+				}
+		};
+
+		listCart = new JList<>();
+		listCart.addListSelectionListener(btnAddEnabler);
 		listCart.setModel(listCartModel);
 
 		listCart.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);

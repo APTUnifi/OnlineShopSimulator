@@ -92,7 +92,6 @@ public class CartController {
 	}
 
 	public void removeFromHistory(Cart cart) {
-		//TODO
 		historyView.removeCart(cart);
 	}
 }
