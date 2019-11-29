@@ -28,6 +28,7 @@ public class ItemsViewSwingTest extends AssertJSwingJUnitTestCase{
 	
 	private FrameFixture window;
 	private	ItemsViewSwing itemsViewSwing;
+	private HistoryViewSwing historyViewSwing;
 
 	@Mock
 	private ShopController shopController;
@@ -129,6 +130,13 @@ public class ItemsViewSwingTest extends AssertJSwingJUnitTestCase{
 
 	}
 	@Test
+	public void testHistoryButtonShouldShowHistoryFrameWhenClicked() {
+		window.button(JButtonMatcher.withText("History")).click();
+		assertThat(HistoryViewSwing.class.cast(historyViewSwing));
+
+	}
+
+	@Test
 	public void testDeleteButtonShouldBeEnabledWhenAnItemIsSelectedInItemListCart() {
 		//setup
 		GuiActionRunner.execute(
@@ -192,6 +200,27 @@ public class ItemsViewSwingTest extends AssertJSwingJUnitTestCase{
 		assertThat(listContents).containsExactly(item.toString());
 		window.label("errorMessageLabel").requireText(" ");
 	}
+	
+	@Test
+	public void testUpdateItemsCartShouldUpdateTheItemsCartList() {
+		//setup
+		Item item1 = new Item("1","Iphone",10);
+		Item item2 = new Item("1","Iphone",2);
+		GuiActionRunner.execute(
+				()-> {
+					itemsViewSwing.getItemListCartModel().addElement(item2);
+					itemsViewSwing.getItemListShopModel().addElement(item1);
+				}
+		);
+		//execute
+		GuiActionRunner.execute(
+				()-> itemsViewSwing.updateItemsCart(Arrays.asList(item2))
+		);
+		//verify
+		String[] listContents = window.list("itemListCart").contents();
+		assertThat(listContents).containsExactly(item2.toString());
+		
+	}
 
 	
 	@Test
@@ -216,7 +245,6 @@ public class ItemsViewSwingTest extends AssertJSwingJUnitTestCase{
 		assertThat(listContents).containsExactly(item2.toString());
 	}
 
-	//TODO : test for history button and new frame.
 
 	@Test
 	public void testAddButtonShouldDelegateToTheCartControllerAddElement() {
@@ -229,7 +257,7 @@ public class ItemsViewSwingTest extends AssertJSwingJUnitTestCase{
 		window.list("itemListShop").selectItem(0);
 		window.button(JButtonMatcher.withText("Add")).click();
 		//verify
-		verify(cartController).add(item);
+		verify(cartController).addToCart(item);
 		
 	}
 
@@ -244,7 +272,7 @@ public class ItemsViewSwingTest extends AssertJSwingJUnitTestCase{
 		window.list("itemListCart").selectItem(0);
 		window.button(JButtonMatcher.withText("Remove")).click();
 		//verify
-		verify(cartController).remove(item);
+		verify(cartController).removeFromCart(item);
 	}
 	
 	@Test

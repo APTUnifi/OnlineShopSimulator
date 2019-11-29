@@ -32,6 +32,7 @@ public class ShopController {
 		}
 
 		itemsRepository.store(item);
+		allItems();
 	}
 	
 	public void removeItem(Item item) {

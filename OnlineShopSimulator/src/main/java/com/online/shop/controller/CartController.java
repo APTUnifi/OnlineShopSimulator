@@ -19,19 +19,20 @@ public class CartController {
 		this.itemsView = itemsView;
 		this.itemsRepository = itemsRepository;
 		this.historyView = historyView;
+		this.cart = new Cart();
 	}
 
-	public void add(Item item) {
+	public void addToCart(Item item) {
 		List<Item> items = cart.getItems();
-
+		
 		if (!items.contains(item)) {
 			item.setQuantity(1);
-			items.add(item);
 			itemsView.itemAddedToCart(item);
+			items.add(item);
 		} else {
 			if (items.get(items.indexOf(item)).getQuantity() < item.getQuantity()) {
-				items.get(items.indexOf(item)).setQuantity(items.get(items.indexOf(item)).getQuantity() + 1);
-				itemsView.showItemsCart(items);
+				items.get(items.indexOf(item)).setQuantity((items.get(items.indexOf(item)).getQuantity()+1));
+				itemsView.updateItemsCart(items);
 			} else
 				return;
 		}
@@ -59,7 +60,7 @@ public class CartController {
 		return 0;
 	}
 
-	public void remove(Item item) {
+	public void removeFromCart(Item item) {
 		List<Item> items = cart.getItems();
 
 		if (items.get(items.indexOf(item)).getQuantity() == 1) {
@@ -67,7 +68,7 @@ public class CartController {
 			itemsView.itemRemovedFromCart(item);
 		} else {
 			items.get(items.indexOf(item)).setQuantity(items.get(items.indexOf(item)).getQuantity() - 1);
-			itemsView.showItemsCart(items);
+			itemsView.updateItemsCart(items);
 		}
 	}
 

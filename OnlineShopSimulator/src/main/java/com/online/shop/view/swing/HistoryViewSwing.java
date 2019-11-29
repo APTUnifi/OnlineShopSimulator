@@ -44,10 +44,10 @@ public class HistoryViewSwing extends JFrame implements HistoryView {
 	public HistoryViewSwing() {
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setTitle("ShopOnline");
+		setTitle("History");
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
-		contentPane.setName("");
+		contentPane.setName("history");
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		GridBagLayout gbl_contentPane = new GridBagLayout();

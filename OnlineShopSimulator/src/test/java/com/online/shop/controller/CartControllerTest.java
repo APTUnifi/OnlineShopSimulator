@@ -54,7 +54,7 @@ public class CartControllerTest {
 		Item itemToAdd = new Item("1", "test1", 3);
 		cartController.setCart(new Cart());
 		// exercise
-		cartController.add(itemToAdd);
+		cartController.addToCart(itemToAdd);
 		// verify
 		assertThat(cartController.cartSize()).isEqualTo(1);
 		assertThat(cartController.findItemQuantity(itemToAdd)).isEqualTo(1);
@@ -70,7 +70,7 @@ public class CartControllerTest {
 		items.add(existingItem);
 		cartController.setCart(new Cart(items));
 		// exercise
-		cartController.add(itemToAdd);
+		cartController.addToCart(itemToAdd);
 		// verify
 		assertThat(cartController.cartSize()).isEqualTo(1);
 		assertThat(cartController.findItemQuantity(existingItem)).isEqualTo(2);
@@ -86,7 +86,7 @@ public class CartControllerTest {
 		items.add(existingItem);
 		cartController.setCart(new Cart(items));
 		// exercise
-		cartController.add(itemToAdd);
+		cartController.addToCart(itemToAdd);
 		// verify
 		assertThat(cartController.cartSize()).isEqualTo(1);
 		assertThat(cartController.findItemQuantity(existingItem)).isEqualTo(3);
@@ -101,7 +101,7 @@ public class CartControllerTest {
 		items.add(itemToRemove);
 		cartController.setCart(new Cart(items));
 		// exercise
-		cartController.remove(itemToRemove);
+		cartController.removeFromCart(itemToRemove);
 		// verify
 		assertThat(cartController.cartSize()).isEqualTo(0);
 		assertThat(cartController.findItemQuantity(itemToRemove)).isEqualTo(0);
@@ -116,7 +116,7 @@ public class CartControllerTest {
 		items.add(itemToRemove);
 		cartController.setCart(new Cart(items));
 		// exercise
-		cartController.remove(itemToRemove);
+		cartController.removeFromCart(itemToRemove);
 		// verify
 		assertThat(cartController.cartSize()).isEqualTo(1);
 		assertThat(cartController.findItemQuantity(itemToRemove)).isEqualTo(1);

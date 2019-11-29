@@ -3,7 +3,6 @@ package com.online.shop.repository;
 import static org.assertj.core.api.Assertions.*;
 
 import java.util.List;
-import java.util.function.IntPredicate;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 

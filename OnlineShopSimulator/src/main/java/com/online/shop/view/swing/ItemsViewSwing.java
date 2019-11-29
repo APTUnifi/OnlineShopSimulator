@@ -15,7 +15,6 @@ import com.online.shop.view.ItemsView;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import java.awt.GridBagLayout;
-import java.awt.EventQueue;
 import java.awt.GridBagConstraints;
 import javax.swing.JTextField;
 import java.awt.Insets;
@@ -64,21 +63,21 @@ public class ItemsViewSwing extends JFrame implements ItemsView {
 	/**
 	 * Launch the application.	
 	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ItemsViewSwing frame = new ItemsViewSwing();
-					frame.setVisible(true);
-					Item item = new Item("1","Iphone");
-					frame.itemListShopModel.addElement(item);
-					frame.itemListCartModel.addElement(item);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+//	public static void main(String[] args) {
+//		EventQueue.invokeLater(new Runnable() {
+//			public void run() {
+//				try {
+//					ItemsViewSwing frame = new ItemsViewSwing();
+//					frame.setVisible(true);
+//					Item item = new Item("1","Iphone");
+//					frame.itemListShopModel.addElement(item);
+//					frame.itemListCartModel.addElement(item);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		});
+//	}
 
 	/**
 	 * Create the frame.
@@ -122,6 +121,7 @@ public class ItemsViewSwing extends JFrame implements ItemsView {
 
 		lblErrorMessageLabel = new JLabel(" ");
 		lblErrorMessageLabel.setName("errorMessageLabel");
+		lblErrorMessageLabel.setOpaque(true);
 		GridBagConstraints gbc_lblErrorMessageLabel = new GridBagConstraints();
 		gbc_lblErrorMessageLabel.gridwidth = 8;
 		gbc_lblErrorMessageLabel.insets = new Insets(0, 0, 5, 5);
@@ -180,7 +180,8 @@ public class ItemsViewSwing extends JFrame implements ItemsView {
 		contentPane.add(btnAdd, gbc_btnAdd);
 
 		btnAdd.addActionListener(
-				e -> cartController.add(itemListShop.getSelectedValue())
+				e -> new Thread(
+						()-> cartController.addToCart(itemListShop.getSelectedValue())).start()
 			
 		);
 
@@ -193,7 +194,7 @@ public class ItemsViewSwing extends JFrame implements ItemsView {
 		contentPane.add(btnRemove, gbc_btnRemove);
 
 		btnRemove.addActionListener(
-				e -> cartController.remove(itemListCart.getSelectedValue())
+				e -> cartController.removeFromCart(itemListCart.getSelectedValue())
 				);
 
 		btnSearch.addActionListener(
@@ -205,7 +206,6 @@ public class ItemsViewSwing extends JFrame implements ItemsView {
 			public void actionPerformed(ActionEvent e) {
 				HistoryViewSwing historyframe = new HistoryViewSwing();
 				historyframe.setVisible(true);
-				//TODO : How to test new frame?
 			}
 		});
 		GridBagConstraints gbc_btnHistory = new GridBagConstraints();
@@ -243,7 +243,9 @@ public class ItemsViewSwing extends JFrame implements ItemsView {
 
 	@Override
 	public void errorLog(String error, Item item) {
-		lblErrorMessageLabel.setText(error + ": " + item);
+		SwingUtilities.invokeLater(
+				()->lblErrorMessageLabel.setText(error + ": " + item));
+		
 	}
 
 	@Override
@@ -269,17 +271,28 @@ public class ItemsViewSwing extends JFrame implements ItemsView {
 			
 			itemListCartModel.addElement(item);
 			resetErrorLabel();
-			});
+		});
 	
 	}
 	@Override
 	public void itemRemovedFromCart(Item item) {
 			itemListCartModel.removeElement(item);
+			resetErrorLabel();
 	}
 
 
 	private void resetErrorLabel() {
 		lblErrorMessageLabel.setText(" ");
+	}
+	@Override
+	public void updateItemsCart(List<Item> items) {
+	
+		DefaultListModel<Item> model = new DefaultListModel<Item>();
+	    for(Item p : items){
+	         model.addElement(p);
+	    }    
+	    itemListCart.setModel(model);  
+	   
 	}
 
 

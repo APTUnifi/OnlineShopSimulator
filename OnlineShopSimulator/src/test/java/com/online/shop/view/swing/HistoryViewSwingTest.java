@@ -84,7 +84,7 @@ public class HistoryViewSwingTest extends AssertJSwingJUnitTestCase{
 		assertThat(listContents).containsExactly(item1.toString(),item2.toString());
 	}
 	@Test
-	public void testRemoveCartShouldRemoveTheItemFromTheItemListCartAndResetErrorLabel() {
+	public void testRemoveCartShouldRemoveTheCartFromTheListCartAndResetErrorLabel() {
 		//setup
 		Item item1 = new Item("2","Iphone");
 		Item item2 = new Item("1","Sa");
@@ -138,4 +138,5 @@ public class HistoryViewSwingTest extends AssertJSwingJUnitTestCase{
 		verify(cartController).removeFromHistory(cart1);
 	
 	}
+	
 }

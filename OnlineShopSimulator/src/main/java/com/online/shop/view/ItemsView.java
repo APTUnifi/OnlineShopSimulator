@@ -14,5 +14,6 @@ public interface ItemsView {
 	//For testing?
 	void itemAddedToCart(Item item);
 	void itemRemovedFromCart(Item item);
+	void updateItemsCart(List<Item> items);
 
 }
