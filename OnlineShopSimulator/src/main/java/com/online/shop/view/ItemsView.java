@@ -2,6 +2,7 @@ package com.online.shop.view;
 
 import java.util.List;
 
+import com.online.shop.model.Cart;
 import com.online.shop.model.Item;
 
 public interface ItemsView {
@@ -22,5 +23,4 @@ public interface ItemsView {
 	void itemAddedToCart(Item item);
 
 	void itemRemovedFromCart(Item item);
-
 }

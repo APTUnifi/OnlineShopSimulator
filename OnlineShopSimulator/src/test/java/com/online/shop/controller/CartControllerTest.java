@@ -1,6 +1,8 @@
 package com.online.shop.controller;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.ignoreStubs;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -8,6 +10,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Arrays;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -20,6 +23,7 @@ import org.mockito.MockitoAnnotations;
 import com.online.shop.model.Cart;
 import com.online.shop.model.Item;
 import com.online.shop.repository.ItemsRepository;
+import com.online.shop.view.HistoryView;
 import com.online.shop.view.ItemsView;
 
 import static org.assertj.core.api.Assertions.*;
@@ -28,6 +32,9 @@ public class CartControllerTest {
 
 	@Mock
 	ItemsView itemsView;
+
+	@Mock
+	HistoryView historyView;
 
 	@Mock
 	ItemsRepository itemsRepository;
@@ -227,10 +234,49 @@ public class CartControllerTest {
 		// exercise
 		cartController.completePurchase();
 		// verify
-		InOrder inOrder = Mockito.inOrder(itemsRepository, cart);
+		InOrder inOrder = inOrder(itemsRepository, cart);
 		inOrder.verify(itemsRepository).storeCart(cart);
 		inOrder.verify(cart).setItems(new ArrayList<Item>());
+	}
+
+	@Test
+	public void testAllCarts() {
+		List<Cart> carts = Arrays.asList(new Cart());
+		when(itemsRepository.findAllCarts()).thenReturn(carts);
+		cartController.allCarts();
+		verify(historyView).showHistory(carts);
 
 	}
 
+	@Test
+	public void testRemoveCartWhenCartExists() {
+		// setup
+		List<Item> items = new ArrayList<>();
+		Item item = new Item("1", "test1");
+		items.add(item);
+		Cart cartToRemove = new Cart(items, "test");
+		cartController.setCart(cartToRemove);
+		when(itemsRepository.findCart("2019-11-29", "test")).thenReturn(cartToRemove);
+		// exercise
+		cartController.removeCart(cartToRemove);
+		// verify
+		InOrder inOrder = inOrder(itemsRepository, historyView);
+		inOrder.verify(itemsRepository).removeCart("2019-11-29", "test");
+		inOrder.verify(historyView).removeCart(cartToRemove);
+	}
+
+	@Test
+	public void testRemoveCartWhenCartDoesNotExists() {
+		// setup
+		List<Item> items = new ArrayList<>();
+		Item item = new Item("1", "test1");
+		items.add(item);
+		Cart cartToRemove = new Cart(items, "test");
+		when(itemsRepository.findCart("2019-11-29", "test")).thenReturn(null);
+		// exercise
+		assertThatThrownBy(() -> cartController.removeCart(cartToRemove)).isInstanceOf(IllegalArgumentException.class)
+				.hasMessage("Cart does not exists");
+		// verify
+		verifyNoMoreInteractions(ignoreStubs(historyView));
+	}
 }

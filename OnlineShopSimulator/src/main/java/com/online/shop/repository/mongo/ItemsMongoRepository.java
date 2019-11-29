@@ -74,4 +74,22 @@ public class ItemsMongoRepository implements ItemsRepository {
 		// TODO Auto-generated method stub
 		 
 	}
+
+	@Override
+	public void removeCart(String date, String label) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Cart findCart(String date, String label) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Cart> findAllCarts() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

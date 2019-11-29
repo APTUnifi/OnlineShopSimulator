@@ -6,16 +6,19 @@ import java.util.List;
 import com.online.shop.model.Cart;
 import com.online.shop.model.Item;
 import com.online.shop.repository.ItemsRepository;
+import com.online.shop.view.HistoryView;
 import com.online.shop.view.ItemsView;
 
 public class CartController {
 	private ItemsView itemsView;
 	private ItemsRepository itemsRepository;
+	private HistoryView historyView;
 	private Cart cart;
 
-	public CartController(ItemsView itemsView, ItemsRepository itemsRepository) {
+	public CartController(ItemsView itemsView, ItemsRepository itemsRepository, HistoryView historyView) {
 		this.itemsView = itemsView;
 		this.itemsRepository = itemsRepository;
+		this.historyView = historyView;
 		// per IT cart = new Cart
 	}
 
@@ -80,13 +83,26 @@ public class CartController {
 				itemsRepository.modifyQuantity(retrievedItem, item.getQuantity());
 			}
 		}
-	
+
 		itemsRepository.storeCart(cart);
-		
+
 		cart.setItems(new ArrayList<Item>());
-		
+
 		itemsView.showItemsCart(null);
 		itemsView.showItemsShop(itemsRepository.findAll());
+	}
+
+	public void allCarts() {
+		historyView.showHistory(itemsRepository.findAllCarts());
+	}
+
+	public void removeCart(Cart cartToRemove) {
+		if (itemsRepository.findCart(cartToRemove.getDate(), cartToRemove.getLabel()) == null) {
+			throw new IllegalArgumentException("Cart does not exists");
+		}
+
+		itemsRepository.removeCart(cartToRemove.getDate(), cartToRemove.getLabel());
+		historyView.removeCart(cartToRemove);
 	}
 
 }

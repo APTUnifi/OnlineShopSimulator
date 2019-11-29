@@ -20,4 +20,10 @@ public interface ItemsRepository {
 	
 	public void storeCart(Cart cartToStore);
 	
+	public void removeCart(String date, String label);
+	
+	public Cart findCart(String date, String label);
+	
+	public List<Cart> findAllCarts();
+	
 }
