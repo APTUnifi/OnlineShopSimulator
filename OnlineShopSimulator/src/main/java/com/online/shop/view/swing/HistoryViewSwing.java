@@ -57,8 +57,8 @@ public class HistoryViewSwing extends JFrame implements HistoryView {
 		gblcontentPane.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		contentPane.setLayout(gblcontentPane);
 
-		listItemsCartModel = new DefaultListModel<Item>();
-		listCartModel = new DefaultListModel<Cart>();
+		listItemsCartModel = new DefaultListModel<>();
+		listCartModel = new DefaultListModel<>();
 
 		listCart = new JList<>();
 		listCart.addListSelectionListener(new ListSelectionListener() {

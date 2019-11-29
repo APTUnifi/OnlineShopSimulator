@@ -108,8 +108,8 @@ public class ItemsViewSwing extends JFrame implements ItemsView {
 		gbclblErrorMessageLabel.gridy = 1;
 		contentPane.add(lblErrorMessageLabel, gbclblErrorMessageLabel);
 
-		itemListShopModel = new DefaultListModel<Item>();
-		itemListCartModel = new DefaultListModel<Item>();
+		itemListShopModel = new DefaultListModel<>();
+		itemListCartModel = new DefaultListModel<	>();
 
 		itemListShop = new JList<>();
 		itemListShop.setModel(itemListShopModel);

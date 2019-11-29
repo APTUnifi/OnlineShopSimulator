@@ -56,7 +56,6 @@ public class ShopController {
 
 
 	public void modifyItemQuantity(Item item, int modifier) {
-		// TODO Information is already obtained from database, is the control necessary?
 		if (modifier + item.getQuantity() == 0) {
 			itemsRepository.remove(item.getProductCode());
 			return;
