@@ -12,10 +12,10 @@ import com.online.shop.view.ItemsView;
 public class CartController {
 	private ItemsView itemsView;
 	private ItemsRepository itemsRepository;
-	private Cart cart;
 	private HistoryView historyView;
+	private Cart cart;
 
-	public CartController(ItemsView itemsView, ItemsRepository itemsRepository,HistoryView historyView) {
+	public CartController(ItemsView itemsView, ItemsRepository itemsRepository, HistoryView historyView) {
 		this.itemsView = itemsView;
 		this.itemsRepository = itemsRepository;
 		this.historyView = historyView;
@@ -24,14 +24,13 @@ public class CartController {
 
 	public void addToCart(Item item) {
 		List<Item> items = cart.getItems();
-		
 		if (!items.contains(item)) {
 			item.setQuantity(1);
 			itemsView.itemAddedToCart(item);
 			items.add(item);
 		} else {
 			if (items.get(items.indexOf(item)).getQuantity() < item.getQuantity()) {
-				items.get(items.indexOf(item)).setQuantity((items.get(items.indexOf(item)).getQuantity()+1));
+				items.get(items.indexOf(item)).setQuantity(items.get(items.indexOf(item)).getQuantity() + 1);
 				itemsView.updateItemsCart(items);
 			} else
 				return;
