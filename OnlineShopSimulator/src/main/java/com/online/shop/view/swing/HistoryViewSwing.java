@@ -60,8 +60,14 @@ public class HistoryViewSwing extends JFrame implements HistoryView {
 
 		listItemsCartModel = new DefaultListModel<>();
 		listCartModel = new DefaultListModel<>();
+<<<<<<< HEAD
 		
 		ListSelectionListener btnAddEnabler = new ListSelectionListener() {
+=======
+
+		listCart = new JList<>();
+		listCart.addListSelectionListener(new ListSelectionListener() {
+>>>>>>> branch 'viewswing_testing' of https://github.com/APTUnifi/OnlineShopSimulator.git
 			public void valueChanged(ListSelectionEvent e) {
 				btnRemove.setEnabled(listCart.getSelectedIndex() != -1);
 

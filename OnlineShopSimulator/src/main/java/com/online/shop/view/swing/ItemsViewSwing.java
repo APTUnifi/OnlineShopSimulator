@@ -114,6 +114,7 @@ public class ItemsViewSwing extends JFrame implements ItemsView {
 			public void valueChanged(ListSelectionEvent e) {
 					btnAdd.setEnabled(itemListShop.getSelectedIndex() != -1);
 
+<<<<<<< HEAD
 				}
 		};
 		
@@ -133,6 +134,10 @@ public class ItemsViewSwing extends JFrame implements ItemsView {
 
 		itemListShopModel = new DefaultListModel<>();
 		itemListCartModel = new DefaultListModel<>();
+=======
+		itemListShopModel = new DefaultListModel<>();
+		itemListCartModel = new DefaultListModel<	>();
+>>>>>>> branch 'viewswing_testing' of https://github.com/APTUnifi/OnlineShopSimulator.git
 
 		itemListShop = new JList<>();
 		itemListShop.setModel(itemListShopModel);
