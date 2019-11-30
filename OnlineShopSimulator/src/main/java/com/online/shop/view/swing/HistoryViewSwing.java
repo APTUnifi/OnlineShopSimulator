@@ -60,8 +60,10 @@ public class HistoryViewSwing extends JFrame implements HistoryView {
 
 		listItemsCartModel = new DefaultListModel<>();
 		listCartModel = new DefaultListModel<>();
+
 		
 		ListSelectionListener btnAddEnabler = new ListSelectionListener() {
+
 			public void valueChanged(ListSelectionEvent e) {
 				btnRemove.setEnabled(listCart.getSelectedIndex() != -1);
 

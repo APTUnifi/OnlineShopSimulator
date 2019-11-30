@@ -134,6 +134,7 @@ public class ItemsViewSwing extends JFrame implements ItemsView {
 		itemListShopModel = new DefaultListModel<>();
 		itemListCartModel = new DefaultListModel<>();
 
+
 		itemListShop = new JList<>();
 		itemListShop.setModel(itemListShopModel);
 		itemListShop.addListSelectionListener(btnAddEnabler);
