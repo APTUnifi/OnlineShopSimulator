@@ -136,7 +136,7 @@ public class HistoryViewSwingTest extends AssertJSwingJUnitTestCase{
 		window.list("listCart").selectItem(0);
 		window.button(JButtonMatcher.withText("Remove")).click();
 		//verify
-		verify(cartController).removeFromHistory(cart1);
+		verify(cartController).removeCart(cart1);
 	
 	}
 	
