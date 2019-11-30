@@ -19,13 +19,11 @@ import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.ListSelectionModel;
 import javax.swing.WindowConstants;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.ListSelectionEvent;
 
 @SuppressWarnings("serial")
 public class HistoryViewSwing extends JFrame implements HistoryView {
 
-	private JPanel contentPane;
+	private JPanel contentPanel;
 	private DefaultListModel<Cart> listCartModel;
 	private DefaultListModel<Item> listItemsCartModel;
 	private JList<Cart> listCart;
@@ -47,33 +45,26 @@ public class HistoryViewSwing extends JFrame implements HistoryView {
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setTitle("History");
 		setBounds(100, 100, 450, 300);
-		contentPane = new JPanel();
-		contentPane.setName("history");
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
-		GridBagLayout gblcontentPane = new GridBagLayout();
-		gblcontentPane.columnWidths = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 36, 0};
-		gblcontentPane.rowHeights = new int[] {0, 30, 30, 30, 0, 0, 0, 0, 0, 30, 30, 0};
-		gblcontentPane.columnWeights = new double[]{0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, Double.MIN_VALUE};
-		gblcontentPane.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		contentPane.setLayout(gblcontentPane);
+		contentPanel = new JPanel();
+		contentPanel.setName("history");
+		contentPanel.setBorder(new EmptyBorder(6, 6, 6, 6));
+		setContentPane(contentPanel);
+		GridBagLayout gblcontentPanel = new GridBagLayout();
+		gblcontentPanel.columnWidths = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 36, 0};
+		gblcontentPanel.rowHeights = new int[] {0, 30, 30, 30, 0, 0, 0, 0, 0, 30, 30, 0};
+		gblcontentPanel.columnWeights = new double[]{0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, Double.MIN_VALUE};
+		gblcontentPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		contentPanel.setLayout(gblcontentPanel);
 
 		listItemsCartModel = new DefaultListModel<>();
 		listCartModel = new DefaultListModel<>();
 
-		
-		ListSelectionListener btnAddEnabler = new ListSelectionListener() {
-
-			public void valueChanged(ListSelectionEvent e) {
-				btnRemove.setEnabled(listCart.getSelectedIndex() != -1);
-
-				}
-		};
-
 		listCart = new JList<>();
-		listCart.addListSelectionListener(btnAddEnabler);
+		listCart.addListSelectionListener(e -> 
+				btnRemove.setEnabled(listCart.getSelectedIndex() != -1)		
+		);
+		
 		listCart.setModel(listCartModel);
-
 		listCart.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listCart.setName("listCart");	
 		GridBagConstraints gbcitemListShop = new GridBagConstraints();
@@ -83,7 +74,7 @@ public class HistoryViewSwing extends JFrame implements HistoryView {
 		gbcitemListShop.fill = GridBagConstraints.BOTH;
 		gbcitemListShop.gridx = 0;
 		gbcitemListShop.gridy = 2;
-		contentPane.add(listCart, gbcitemListShop);
+		contentPanel.add(listCart, gbcitemListShop);
 
 		listItemsCart = new JList<>(listItemsCartModel);
 		listItemsCart.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -96,7 +87,7 @@ public class HistoryViewSwing extends JFrame implements HistoryView {
 		gbcitemListCart.fill = GridBagConstraints.BOTH;
 		gbcitemListCart.gridx = 5;
 		gbcitemListCart.gridy = 2;
-		contentPane.add(listItemsCart, gbcitemListCart);
+		contentPanel.add(listItemsCart, gbcitemListCart);
 
 
 
@@ -106,7 +97,7 @@ public class HistoryViewSwing extends JFrame implements HistoryView {
 		gbcbtnRemove.insets = new Insets(0, 0, 5, 5);
 		gbcbtnRemove.gridx = 4;
 		gbcbtnRemove.gridy = 5;
-		contentPane.add(btnRemove, gbcbtnRemove);
+		contentPanel.add(btnRemove, gbcbtnRemove);
 
 		btnRemove.addActionListener(
 				e -> cartController.removeFromHistory(listCart.getSelectedValue())
