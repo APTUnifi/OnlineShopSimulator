@@ -72,6 +72,7 @@ public class CartController {
 		}
 	}
 
+
 	public void completePurchase() {
 		List<Item> items = cart.getItems();
 		Item retrievedItem;
@@ -84,14 +85,26 @@ public class CartController {
 				itemsRepository.modifyQuantity(retrievedItem, item.getQuantity());
 			}
 		}
-		
+
+		itemsRepository.storeCart(cart);
+
 		cart.setItems(new ArrayList<Item>());
-		
+
 		itemsView.showItemsCart(null);
 		itemsView.showItemsShop(itemsRepository.findAll());
 	}
 
-	public void removeFromHistory(Cart cart) {
-		historyView.removeCart(cart);
+	public void allCarts() {
+		historyView.showHistory(itemsRepository.findAllCarts());
 	}
+
+	public void removeCart(Cart cartToRemove) {
+		if (itemsRepository.findCart(cartToRemove.getDate(), cartToRemove.getLabel()) == null) {
+			throw new IllegalArgumentException("Cart does not exists");
+		}
+
+		itemsRepository.removeCart(cartToRemove.getDate(), cartToRemove.getLabel());
+		historyView.removeCart(cartToRemove);
+	}
+
 }

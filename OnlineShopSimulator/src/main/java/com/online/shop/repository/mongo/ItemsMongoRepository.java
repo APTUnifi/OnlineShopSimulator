@@ -70,4 +70,26 @@ public class ItemsMongoRepository implements ItemsRepository {
 		items.updateOne(Filters.eq("productCode", itemToBeModified.getProductCode()), Updates.set("quantity", newQuantity));	
 	}
 	
+	public void storeCart(Cart cart) {
+		// TODO Auto-generated method stub
+		 
+	}
+
+	@Override
+	public void removeCart(String date, String label) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Cart findCart(String date, String label) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Cart> findAllCarts() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
