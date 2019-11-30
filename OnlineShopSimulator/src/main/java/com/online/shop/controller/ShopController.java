@@ -14,6 +14,7 @@ public class ShopController {
 		this.itemsRepository = itemsRepository;
 	}
 
+
 	public void allItems() {
 		itemsView.showItemsShop(itemsRepository.findAll());
 	}
@@ -27,22 +28,19 @@ public class ShopController {
 
 		if (retrievedItem != null) {
 			itemsRepository.modifyQuantity(retrievedItem, item.getQuantity());
-			itemsView.itemQuantityAdded(retrievedItem);
 			return;
 		}
 
 		itemsRepository.store(item);
-		itemsView.itemAdded(item);
+		allItems();
 	}
-
+	
 	public void removeItem(Item item) {
-
 		if (itemsRepository.findByProductCode(item.getProductCode()) == null) {
 			itemsView.errorLog("Item with product code " + item.getProductCode() + " does not exists", item);
 			return;
 		}
 		itemsRepository.remove(item.getProductCode());
-		itemsView.itemRemoved(item);
 	}
 
 	public void searchItem(String itemName) {
@@ -54,7 +52,8 @@ public class ShopController {
 		}
 
 		itemsView.showSearchResult(retrievedItem);
-	}
+	} 
+
 
 	public void modifyItemQuantity(Item item, int modifier) {
 		if (modifier + item.getQuantity() == 0) {

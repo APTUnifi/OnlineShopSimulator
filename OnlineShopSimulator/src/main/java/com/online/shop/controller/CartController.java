@@ -6,29 +6,33 @@ import java.util.List;
 import com.online.shop.model.Cart;
 import com.online.shop.model.Item;
 import com.online.shop.repository.ItemsRepository;
+import com.online.shop.view.HistoryView;
 import com.online.shop.view.ItemsView;
 
 public class CartController {
 	private ItemsView itemsView;
 	private ItemsRepository itemsRepository;
 	private Cart cart;
+	private HistoryView historyView;
 
-	public CartController(ItemsView itemsView, ItemsRepository itemsRepository) {
+	public CartController(ItemsView itemsView, ItemsRepository itemsRepository,HistoryView historyView) {
 		this.itemsView = itemsView;
 		this.itemsRepository = itemsRepository;
-		// per IT cart = new Cart
+		this.historyView = historyView;
+		this.cart = new Cart();
 	}
 
-	public void add(Item item) {
+	public void addToCart(Item item) {
 		List<Item> items = cart.getItems();
+		
 		if (!items.contains(item)) {
 			item.setQuantity(1);
-			items.add(item);
 			itemsView.itemAddedToCart(item);
+			items.add(item);
 		} else {
 			if (items.get(items.indexOf(item)).getQuantity() < item.getQuantity()) {
-				items.get(items.indexOf(item)).setQuantity(items.get(items.indexOf(item)).getQuantity() + 1);
-				itemsView.showItemsCart(items);
+				items.get(items.indexOf(item)).setQuantity((items.get(items.indexOf(item)).getQuantity()+1));
+				itemsView.updateItemsCart(items);
 			} else
 				return;
 		}
@@ -56,7 +60,7 @@ public class CartController {
 		return 0;
 	}
 
-	public void remove(Item item) {
+	public void removeFromCart(Item item) {
 		List<Item> items = cart.getItems();
 
 		if (items.get(items.indexOf(item)).getQuantity() == 1) {
@@ -64,7 +68,7 @@ public class CartController {
 			itemsView.itemRemovedFromCart(item);
 		} else {
 			items.get(items.indexOf(item)).setQuantity(items.get(items.indexOf(item)).getQuantity() - 1);
-			itemsView.showItemsCart(items);
+			itemsView.updateItemsCart(items);
 		}
 	}
 
@@ -80,7 +84,6 @@ public class CartController {
 				itemsRepository.modifyQuantity(retrievedItem, item.getQuantity());
 			}
 		}
-	
 		
 		cart.setItems(new ArrayList<Item>());
 		
@@ -88,4 +91,7 @@ public class CartController {
 		itemsView.showItemsShop(itemsRepository.findAll());
 	}
 
+	public void removeFromHistory(Cart cart) {
+		historyView.removeCart(cart);
+	}
 }
