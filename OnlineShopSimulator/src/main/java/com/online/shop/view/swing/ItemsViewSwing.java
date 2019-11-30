@@ -171,6 +171,7 @@ public class ItemsViewSwing extends JFrame implements ItemsView {
 		gbcbtnAdd.gridy = 4;
 		contentPane.add(btnAdd, gbcbtnAdd);
 
+	
 		btnAdd.addActionListener(
 				e -> new Thread(
 						()-> cartController.addToCart(itemListShop.getSelectedValue())).start()
