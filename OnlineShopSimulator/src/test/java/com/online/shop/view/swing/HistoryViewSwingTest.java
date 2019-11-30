@@ -61,6 +61,7 @@ public class HistoryViewSwingTest extends AssertJSwingJUnitTestCase{
 		//verify
 		JButtonFixture deleteButton = window.button(JButtonMatcher.withText("Remove"));
 		deleteButton.requireEnabled();
+		assertThat(deleteButton).matches(p -> p.isEnabled());
 		window.list("listCart").clearSelection();
 		deleteButton.requireDisabled();
 	}

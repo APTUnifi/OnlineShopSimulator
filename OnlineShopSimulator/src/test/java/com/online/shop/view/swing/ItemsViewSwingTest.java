@@ -29,7 +29,6 @@ public class ItemsViewSwingTest extends AssertJSwingJUnitTestCase{
 	
 	private FrameFixture window;
 	private	ItemsViewSwing itemsViewSwing;
-	private HistoryViewSwing historyViewSwing;
 
 	@Mock
 	private ShopController shopController;
@@ -61,8 +60,8 @@ public class ItemsViewSwingTest extends AssertJSwingJUnitTestCase{
 		window.label("errorMessageLabel").requireText(" ");
 		window.button(JButtonMatcher.withText("Buy")).requireDisabled();
 		window.button(JButtonMatcher.withText("History")).requireEnabled();
-	}
 
+	}
 
 	@Test
 	public void testAddButtonShouldBeEnabledWhenAnItemIsSelectedInItemListShop() {
@@ -72,6 +71,7 @@ public class ItemsViewSwingTest extends AssertJSwingJUnitTestCase{
 		window.list("itemListShop").selectItem(0);
 		JButtonFixture addButton = window.button(JButtonMatcher.withText("Add"));
 		addButton.requireEnabled();
+		assertThat(addButton).matches(p -> p.isEnabled());
 		window.list("itemListShop").clearSelection();
 		addButton.requireDisabled();
 	}
@@ -88,7 +88,7 @@ public class ItemsViewSwingTest extends AssertJSwingJUnitTestCase{
 					itemListShopModel.addElement(item2);
 				}
 		);
-		//execute
+		//exercise
 		window.textBox("itemName").setText("Iphone");
 		GuiActionRunner.execute(() ->
 			itemsViewSwing.showSearchResult(item1)
@@ -97,6 +97,7 @@ public class ItemsViewSwingTest extends AssertJSwingJUnitTestCase{
 		String[] listContents = window.list("itemListShop").contents();
 		assertThat(listContents).containsExactly(item1.toString());
 	}
+	
 	@Test
 	public void testSearchButtonShouldShowShopListIfTheSearchBoxIsEmpty() {
 		//setup
@@ -109,7 +110,7 @@ public class ItemsViewSwingTest extends AssertJSwingJUnitTestCase{
 					itemListShopModel.addElement(item2);
 				}
 		);
-		//execute
+		//exercise
 		window.textBox("itemName").setText("");
 		GuiActionRunner.execute(() ->
 			itemsViewSwing.showSearchResult(item1)
@@ -126,6 +127,7 @@ public class ItemsViewSwingTest extends AssertJSwingJUnitTestCase{
 		window.list("itemListCart").selectItem(0);
 		JButtonFixture buyButton = window.button(JButtonMatcher.withText("Remove"));	
 		buyButton.requireEnabled();
+		assertThat(buyButton).matches(p -> p.isEnabled());
 		window.list("itemListCart").clearSelection();
 		buyButton.requireDisabled();
 
@@ -133,7 +135,7 @@ public class ItemsViewSwingTest extends AssertJSwingJUnitTestCase{
 	@Test
 	public void testHistoryButtonShouldShowHistoryFrameWhenClicked() {
 		window.button(JButtonMatcher.withText("History")).click();
-		assertThat(HistoryViewSwing.class.cast(historyViewSwing));
+		
 
 	}
 
@@ -146,11 +148,12 @@ public class ItemsViewSwingTest extends AssertJSwingJUnitTestCase{
 					itemsViewSwing.getItemListShopModel().addElement(new Item("1","Iphone", 19));
 				}
 		);
-		//execute
+		//exercise
 			window.list("itemListCart").selectItem(0);
 			//verify
 			JButtonFixture deleteButton = window.button(JButtonMatcher.withText("Remove"));	
 			deleteButton.requireEnabled();
+			assertThat(deleteButton).matches(p -> p.isEnabled());
 			window.list("itemListCart").clearSelection();
 			deleteButton.requireDisabled();
 	}
@@ -159,7 +162,7 @@ public class ItemsViewSwingTest extends AssertJSwingJUnitTestCase{
 		//setup
 		Item item1 = new Item("1","Iphone");
 		Item item2 = new Item("3","Samsung");
-		//execute
+		//exercise
 		GuiActionRunner.execute(() ->
 			itemsViewSwing.showItemsShop(Arrays.asList(item1,item2))
 		);
@@ -172,7 +175,7 @@ public class ItemsViewSwingTest extends AssertJSwingJUnitTestCase{
 		//setup
 		Item item1 = new Item("1","Iphone");
 		Item item2 = new Item("3","Samsung");
-		//execute
+		//exercise
 		GuiActionRunner.execute(() ->
 			itemsViewSwing.showItemsCart(Arrays.asList(item1,item2))
 		);
@@ -194,7 +197,7 @@ public class ItemsViewSwingTest extends AssertJSwingJUnitTestCase{
 	public void testItemAddedToCartShouldAddTheItemToTheItemListCartAndResetTheErrorLabel() {
 		//setup
 		Item item = new Item("1","Iphone");
-		//execute
+		//exercise
 		GuiActionRunner.execute(
 				()-> itemsViewSwing.itemAddedToCart(item)
 		);
@@ -215,7 +218,7 @@ public class ItemsViewSwingTest extends AssertJSwingJUnitTestCase{
 					itemsViewSwing.getItemListShopModel().addElement(item1);
 				}
 		);
-		//execute
+		//exercise
 		GuiActionRunner.execute(
 				()-> itemsViewSwing.updateItemsCart(Arrays.asList(item2))
 		);
@@ -239,7 +242,7 @@ public class ItemsViewSwingTest extends AssertJSwingJUnitTestCase{
 					itemListCartModel.addElement(item2);
 				}
 		);
-		//execute
+		//exercise
 		GuiActionRunner.execute(
 				()-> itemsViewSwing.itemRemovedFromCart(item1)
 		);
@@ -256,7 +259,7 @@ public class ItemsViewSwingTest extends AssertJSwingJUnitTestCase{
 		GuiActionRunner.execute(
 				()-> itemsViewSwing.getItemListShopModel().addElement(item)
 		);
-		//execute
+		//exercise
 		window.list("itemListShop").selectItem(0);
 		window.button(JButtonMatcher.withText("Add")).click();
 		//verify
@@ -271,7 +274,7 @@ public class ItemsViewSwingTest extends AssertJSwingJUnitTestCase{
 		GuiActionRunner.execute(
 				()-> itemsViewSwing.getItemListCartModel().addElement(item)
 		);
-		//execute
+		//exercise
 		window.list("itemListCart").selectItem(0);
 		window.button(JButtonMatcher.withText("Remove")).click();
 		//verify
@@ -290,7 +293,7 @@ public class ItemsViewSwingTest extends AssertJSwingJUnitTestCase{
 					itemListShopModel.addElement(item2);
 		});
 		window.textBox("itemName").enterText("Nokia");
-		//execute
+		//exercise
 		window.button(JButtonMatcher.withText("Search")).click();
 		//verify
 		verify(shopController).searchItem(window.textBox("itemName").text());	
@@ -308,7 +311,7 @@ public class ItemsViewSwingTest extends AssertJSwingJUnitTestCase{
 					itemListCartModel.addElement(item2);
 		});
 		window.list("itemListCart").selectItem(0);
-		//execute	
+		//exercise	
 		window.button(JButtonMatcher.withText("Buy")).click();
 		//verify
 		verify(cartController).completePurchase();
