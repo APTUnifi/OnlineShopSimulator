@@ -77,9 +77,9 @@ public class ItemsMongoRepository implements ItemsRepository {
 	}
 
 	@Override
-	public void findCart(Cart cartToFind) {
+	public Cart findCart(String label, String date) {
 		// TODO Auto-generated method stub
-		
+		return null;
 	}
 
 	@Override
@@ -89,7 +89,7 @@ public class ItemsMongoRepository implements ItemsRepository {
 	}
 
 	@Override
-	public void removeCart(Cart cartToRemove) {
+	public void removeCart(String label, String date) {
 		// TODO Auto-generated method stub
 		
 	}

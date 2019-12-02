@@ -31,8 +31,7 @@ public class Item {
 	    if(obj instanceof Item){
 	        final Item other = (Item) obj;
 	        return Objects.equals(productCode, other.productCode)
-	            && Objects.equals(name, other.name)
-	            && quantity == other.quantity;
+	            && Objects.equals(name, other.name);
 	    } else{
 	        return false;
 	    }
