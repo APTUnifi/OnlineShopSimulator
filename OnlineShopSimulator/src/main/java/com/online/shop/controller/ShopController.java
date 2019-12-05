@@ -56,6 +56,9 @@ public class ShopController {
 
 
 	public void modifyItemQuantity(Item item, int modifier) {
+		if (modifier == 0) {
+			return;
+		}
 		if (modifier + item.getQuantity() == 0) {
 			itemsRepository.remove(item.getProductCode());
 			return;

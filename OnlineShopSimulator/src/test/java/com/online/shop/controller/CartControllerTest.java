@@ -157,8 +157,8 @@ public class CartControllerTest {
 		// exercise
 		cartController.completePurchase();
 		// verify
-		verify(itemsRepository).modifyQuantity(firstExistingItem, 1);
-		verify(itemsRepository).modifyQuantity(secondExistingItem, 2);
+		verify(itemsRepository).modifyQuantity(firstExistingItem, -1);
+		verify(itemsRepository).modifyQuantity(secondExistingItem, -2);
 	}
 
 	@Test
