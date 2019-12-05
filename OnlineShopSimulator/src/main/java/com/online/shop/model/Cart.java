@@ -10,17 +10,23 @@ public class Cart {
 	private List<Item> items;
 	private String label;
 	private String date;
-	
+
 	public Cart() {
 		items = new ArrayList<>();
 		label = "";
 		date = LocalDate.now().toString();
 	}
-	
+
 	public Cart(String label, String date) {
 		items = new ArrayList<>();
 		this.label = label;
 		this.date = date;
+	}
+
+	public Cart(String label, String date, List<Item> items) {
+		this.label = label;
+		this.date = date;
+		this.items = items;
 	}
 
 	public Cart(List<Item> items, String label) {
@@ -32,11 +38,11 @@ public class Cart {
 	public List<Item> getItems() {
 		return items;
 	}
-	
+
 	public void setItems(List<Item> items) {
 		this.items = items;
 	}
-	
+
 	public String getDate() {
 		return date;
 	}
@@ -44,21 +50,25 @@ public class Cart {
 	public String getLabel() {
 		return label;
 	}
-	
+
 	@Override
-	public boolean equals(final Object obj){
-	    if(obj instanceof Cart){
-	        final Cart other = (Cart) obj;
-	        return Objects.equals(label, other.label)
-	            && Objects.equals(date, other.date)
-	            && Objects.equals(items, other.items);
-	    } else{
-	        return false;
-	    }
+	public boolean equals(final Object obj) {
+		if (obj instanceof Cart) {
+			final Cart other = (Cart) obj;
+			return Objects.equals(label, other.label) && Objects.equals(date, other.date);
+		} else {
+			return false;
+		}
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(label, date, items);
+		return Objects.hash(label, date);
 	}
+	
+	/*
+	@Override
+	public String toString() {
+		return "Cart{" + "Label = '" + label + "' Date = '" + date + "'}";
+	}*/
 }

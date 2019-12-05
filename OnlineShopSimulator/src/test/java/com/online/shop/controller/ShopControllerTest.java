@@ -165,6 +165,16 @@ public class ShopControllerTest {
 		verify(itemsRepository).remove(itemToModify.getProductCode());
 		verifyNoMoreInteractions(ignoreStubs(itemsRepository));
 	}
+	
+	@Test
+	public void testModifyQuantityWhenModifierIsZero() {
+		// Setup
+		Item itemToModify = new Item(PRODUCT_CODE, ITEM_NAME, 2);
+		// exercise
+		shopController.modifyItemQuantity(itemToModify, 0);
+		// verify
+		verifyNoMoreInteractions(ignoreStubs(itemsRepository));
+	}
 
 	@Test
 	public void testModifyQuantityWhenModifierIsGreaterThanItemQuantity() {

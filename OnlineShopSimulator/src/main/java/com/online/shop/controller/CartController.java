@@ -74,10 +74,11 @@ public class CartController {
 
 		for (Item item : items) {
 			retrievedItem = itemsRepository.findByProductCode(item.getProductCode());
+			
 			if (retrievedItem.getQuantity() == item.getQuantity()) {
 				itemsRepository.remove(item.getProductCode());
 			} else {
-				itemsRepository.modifyQuantity(retrievedItem, item.getQuantity());
+				itemsRepository.modifyQuantity(retrievedItem, -item.getQuantity());
 			}
 		}
 	
