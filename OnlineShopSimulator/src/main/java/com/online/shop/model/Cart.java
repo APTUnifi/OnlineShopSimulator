@@ -10,10 +10,9 @@ public class Cart {
 	private String date;
 	private String label;
 
-
 	public Cart() {
 		items = new ArrayList<>();
-		date = LocalDate.now().toString(); 
+		date = LocalDate.now().toString();
 		label = "";
 	}
 
@@ -26,7 +25,7 @@ public class Cart {
 	public List<Item> getItems() {
 		return items;
 	}
-	
+
 	public void setItems(List<Item> items) {
 		this.items = items;
 	}
@@ -37,5 +36,9 @@ public class Cart {
 
 	public String getLabel() {
 		return label;
+	}
+
+	public void setLabel(String label) {
+		this.label = label;
 	}
 }

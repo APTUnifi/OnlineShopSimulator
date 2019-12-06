@@ -22,7 +22,7 @@ public class CartController {
 		// per IT cart = new Cart
 	}
 
-	public void add(Item item) {
+	public void addToCart(Item item) {
 		List<Item> items = cart.getItems();
 		if (!items.contains(item)) {
 			item.setQuantity(1);
@@ -31,7 +31,7 @@ public class CartController {
 		} else {
 			if (items.get(items.indexOf(item)).getQuantity() < item.getQuantity()) {
 				items.get(items.indexOf(item)).setQuantity(items.get(items.indexOf(item)).getQuantity() + 1);
-				itemsView.showItemsCart(items);
+				itemsView.updateItemsCart(items);
 			} else
 				return;
 		}
@@ -67,36 +67,46 @@ public class CartController {
 			itemsView.itemRemovedFromCart(item);
 		} else {
 			items.get(items.indexOf(item)).setQuantity(items.get(items.indexOf(item)).getQuantity() - 1);
-			itemsView.showItemsCart(items);
+			itemsView.updateItemsCart(items);
 		}
 	}
 
-	public void completePurchase() {
+	public void completePurchase(String label) {
+		cart.setLabel(label);
 		List<Item> items = cart.getItems();
+		List<Item> itemsNotStored = new ArrayList<Item>();
 		Item retrievedItem;
+		boolean isStored = true;
 
 		for (Item item : items) {
 			retrievedItem = itemsRepository.findByProductCode(item.getProductCode());
-			if (retrievedItem.getQuantity() == item.getQuantity()) {
-				itemsRepository.remove(item.getProductCode());
+			if (retrievedItem == null) {
+				isStored = false;
+				itemsNotStored.add(item);
 			} else {
-				itemsRepository.modifyQuantity(retrievedItem, item.getQuantity());
+				if (retrievedItem.getQuantity() == item.getQuantity()) {
+					itemsRepository.remove(item.getProductCode());
+				} else {
+					itemsRepository.modifyQuantity(retrievedItem, -item.getQuantity());
+				}
 			}
 		}
-
-		itemsRepository.storeCart(cart);
-
-		cart.setItems(new ArrayList<Item>());
-
-		itemsView.showItemsCart(null);
-		itemsView.showItemsShop(itemsRepository.findAll());
+		if (isStored && !items.isEmpty()) {
+			itemsRepository.storeCart(cart);
+			cart.setItems(new ArrayList<Item>());
+			items = cart.getItems();
+			itemsView.updateItemsCart(items);
+			itemsView.updateItemsShop(itemsRepository.findAll());
+		} else {
+			itemsView.errorLog("Item/s not found", itemsNotStored);
+		}
 	}
 
 	public void allCarts() {
 		historyView.showHistory(itemsRepository.findAllCarts());
 	}
 
-	public void removeCart(Cart cartToRemove) {
+	public void removeFromCart(Cart cartToRemove) {
 		if (itemsRepository.findCart(cartToRemove.getDate(), cartToRemove.getLabel()) == null) {
 			throw new IllegalArgumentException("Cart does not exists");
 		}

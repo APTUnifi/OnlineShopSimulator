@@ -14,13 +14,15 @@ public interface ItemsView {
 
 	void itemRemoved(Item item);
 
-	void errorLog(String error, Item item);
+	void errorLog(String error, List<Item> items);
 
 	void showSearchResult(Item item);
-
-	void showItemsCart(List<Item> items);
 
 	void itemAddedToCart(Item item);
 
 	void itemRemovedFromCart(Item item);
+
+	void updateItemsCart(List<Item> items);
+
+	void updateItemsShop(List<Item> findAll);
 }
