@@ -28,4 +28,6 @@ public interface ItemsView {
 
 	void updateItemsShop(List<Item> findAll);
 
+	void showItemsShop(List<Item> items);
+
 }

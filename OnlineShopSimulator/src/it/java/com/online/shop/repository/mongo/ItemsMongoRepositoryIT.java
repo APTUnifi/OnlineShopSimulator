@@ -154,14 +154,14 @@ public class ItemsMongoRepositoryIT {
 	public void testFindCart() {
 		addTestCartToRepository("testCart1", LocalDate.now().toString(), Arrays.asList(new Item("1", "test1")));
 		addTestCartToRepository("testCart2", LocalDate.now().toString(), Arrays.asList(new Item("1", "test1")));
-		assertThat(itemsRepository.findCart("testCart2", LocalDate.now().toString()))
+		assertThat(itemsRepository.findCart(LocalDate.now().toString(), "testCart2"))
 				.isEqualTo(new Cart(Arrays.asList(new Item("1", "test1")), "testCart2"));
 	}
 
 	@Test
 	public void testRemoveCart() {
 		addTestCartToRepository("testCart", LocalDate.now().toString(), Arrays.asList(new Item("1", "test1")));
-		itemsRepository.removeCart("testCart", LocalDate.now().toString());
+		itemsRepository.removeCart(LocalDate.now().toString(), "testCart");
 		assertThat(retrieveAllCarts()).isEmpty();
 	}
 
