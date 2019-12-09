@@ -14,20 +14,22 @@ public class CartController {
 	private ItemsRepository itemsRepository;
 	private HistoryView historyView;
 	private Cart cart;
+	private HistoryView historyView;
 
-	public CartController(ItemsView itemsView, ItemsRepository itemsRepository, HistoryView historyView) {
+	public CartController(ItemsView itemsView, ItemsRepository itemsRepository,HistoryView historyView) {
 		this.itemsView = itemsView;
 		this.itemsRepository = itemsRepository;
 		this.historyView = historyView;
-		// per IT cart = new Cart
+		this.cart = new Cart();
 	}
 
 	public void addToCart(Item item) {
 		List<Item> items = cart.getItems();
+		
 		if (!items.contains(item)) {
 			item.setQuantity(1);
-			items.add(item);
 			itemsView.itemAddedToCart(item);
+			items.add(item);
 		} else {
 			if (items.get(items.indexOf(item)).getQuantity() < item.getQuantity()) {
 				items.get(items.indexOf(item)).setQuantity(items.get(items.indexOf(item)).getQuantity() + 1);
@@ -114,5 +116,5 @@ public class CartController {
 		itemsRepository.removeCart(cartToRemove.getDate(), cartToRemove.getLabel());
 		historyView.removeCart(cartToRemove);
 	}
-
+  
 }

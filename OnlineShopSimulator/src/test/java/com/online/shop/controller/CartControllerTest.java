@@ -64,7 +64,9 @@ public class CartControllerTest {
 	public void testAddItemToCartWhenItemIsNotPresent() {
 		Item itemToAdd = new Item(ITEM_PRODUCT_CODE, ITEM_NAME, 3);
 		cartController.setCart(new Cart());
+    
 		cartController.addToCart(itemToAdd);
+
 		assertThat(cartController.cartSize()).isEqualTo(1);
 		assertThat(cartController.findItemQuantity(itemToAdd)).isEqualTo(1);
 		verify(itemsView).itemAddedToCart(itemToAdd);
@@ -75,11 +77,13 @@ public class CartControllerTest {
 		Item itemToAdd = new Item(ITEM_PRODUCT_CODE, ITEM_NAME, EXISTING_QUANTITY);
 		Item existingCartItem = new Item(ITEM_PRODUCT_CODE, ITEM_NAME);
 		List<Item> items = new ArrayList<>();
+
 		items.add(existingCartItem);
 		cartController.setCart(new Cart(items, CART_LABEL));
 		cartController.addToCart(itemToAdd);
 		assertThat(cartController.cartSize()).isEqualTo(1);
 		assertThat(cartController.findItemQuantity(existingCartItem)).isEqualTo(EXISTING_QUANTITY - 1);
+
 		verify(itemsView).updateItemsCart(cartController.cartItems());
 	}
 
@@ -88,9 +92,11 @@ public class CartControllerTest {
 		Item itemToAdd = new Item(ITEM_PRODUCT_CODE, ITEM_NAME, EXISTING_QUANTITY);
 		Item existingCartItem = new Item(ITEM_PRODUCT_CODE, ITEM_NAME, EXISTING_QUANTITY);
 		List<Item> items = new ArrayList<>();
+
 		items.add(existingCartItem);
 		cartController.setCart(new Cart(items, CART_LABEL));
 		cartController.addToCart(itemToAdd);
+
 		assertThat(cartController.cartSize()).isEqualTo(1);
 		assertThat(cartController.findItemQuantity(existingCartItem)).isEqualTo(EXISTING_QUANTITY);
 		verifyNoMoreInteractions(itemsView);
@@ -101,8 +107,10 @@ public class CartControllerTest {
 		Item itemToRemove = new Item(ITEM_PRODUCT_CODE, ITEM_NAME);
 		List<Item> items = new ArrayList<>();
 		items.add(itemToRemove);
+
 		cartController.setCart(new Cart(items, CART_LABEL));
 		cartController.removeFromCart(itemToRemove);
+
 		assertThat(cartController.cartSize()).isEqualTo(0);
 		assertThat(cartController.findItemQuantity(itemToRemove)).isEqualTo(0);
 		verify(itemsView).itemRemovedFromCart(itemToRemove);
@@ -113,10 +121,12 @@ public class CartControllerTest {
 		Item itemToRemove = new Item(ITEM_PRODUCT_CODE, ITEM_NAME, EXISTING_QUANTITY);
 		List<Item> items = new ArrayList<>();
 		items.add(itemToRemove);
+
 		cartController.setCart(new Cart(items, CART_LABEL));
 		cartController.removeFromCart(itemToRemove);
 		assertThat(cartController.cartSize()).isEqualTo(1);
 		assertThat(cartController.findItemQuantity(itemToRemove)).isEqualTo(EXISTING_QUANTITY - 1);
+
 		verify(itemsView).updateItemsCart(cartController.cartItems());
 	}
 
@@ -145,7 +155,9 @@ public class CartControllerTest {
 		cartController.setCart(new Cart(items, CART_LABEL));
 		when(itemsRepository.findByProductCode(ITEM_PRODUCT_CODE)).thenReturn(firstExistingItem);
 		when(itemsRepository.findByProductCode("2")).thenReturn(secondExistingItem);
+
 		cartController.completePurchase(CART_LABEL);
+
 		verify(itemsRepository).modifyQuantity(firstExistingItem, -1);
 		verify(itemsRepository).modifyQuantity(secondExistingItem, -2);
 	}
@@ -257,4 +269,6 @@ public class CartControllerTest {
 				.isInstanceOf(IllegalArgumentException.class).hasMessage("Cart does not exists");
 		verifyNoMoreInteractions(ignoreStubs(historyView));
 	}
+
 }
+

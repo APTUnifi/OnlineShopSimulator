@@ -4,7 +4,11 @@ install: true
 env:
   global:
     - HOME="OnlineShopSimulator"
-
+    
+dist: xenial
+services:
+  - xvfb
+  
 matrix:
   include:
     - jdk: openjdk8
