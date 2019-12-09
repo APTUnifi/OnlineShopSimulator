@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.net.InetSocketAddress;
 
+import javax.swing.DefaultListModel;
+
 import org.assertj.swing.annotation.GUITest;
 import org.assertj.swing.core.matcher.JButtonMatcher;
 import org.assertj.swing.edt.GuiActionRunner;
@@ -25,7 +27,7 @@ import com.online.shop.repository.mongo.ItemsMongoRepository;
 import de.bwaldvogel.mongo.MongoServer;
 import de.bwaldvogel.mongo.backend.memory.MemoryBackend;
 
-public class ItemsViewSwingIT extends AssertJSwingJUnitTestCase {
+public class ShopViewSwingIT extends AssertJSwingJUnitTestCase {
 	
 	@SuppressWarnings("rawtypes")
 	public static final GenericContainer mongo = new GenericContainer("mongo:4.0.5").withExposedPorts(27017);
@@ -39,7 +41,7 @@ public class ItemsViewSwingIT extends AssertJSwingJUnitTestCase {
 	private ShopController shopController;
 	private CartController cartController;
 	private ItemsMongoRepository itemsRepository;
-	private ItemsViewSwing itemsViewSwing;
+	private ShopViewSwing shopViewSwing;
 	private HistoryViewSwing historyView;
 	
 
@@ -63,16 +65,16 @@ public class ItemsViewSwingIT extends AssertJSwingJUnitTestCase {
 		}
 		GuiActionRunner.execute(
 				()->{
-					itemsViewSwing = new ItemsViewSwing();
+					shopViewSwing = new ShopViewSwing();
 					historyView = new HistoryViewSwing();
-					shopController = new ShopController(itemsViewSwing,itemsRepository);
-					cartController = new CartController(itemsViewSwing,itemsRepository,historyView);
-					itemsViewSwing.setCartController(cartController);
-					itemsViewSwing.setShopController(shopController);
+					shopController = new ShopController(shopViewSwing,itemsRepository);
+					cartController = new CartController(shopViewSwing,itemsRepository,historyView);
+					shopViewSwing.setCartController(cartController);
+					shopViewSwing.setShopController(shopController);
 					historyView.setCartController(cartController);
-					return itemsViewSwing;
+					return shopViewSwing;
 			});
-		window = new FrameFixture(robot(),itemsViewSwing);
+		window = new FrameFixture(robot(),shopViewSwing);
 		window.show();
 	}		
 	
@@ -179,12 +181,32 @@ public class ItemsViewSwingIT extends AssertJSwingJUnitTestCase {
 	}
 	@Test @GUITest
 	public void testBuyButtonSuccess() {
-		
+		Item item1 = new Item("1","Iphone",10);
+		GuiActionRunner.execute(
+				()-> {
+					shopController.newItem(item1);
+					cartController.addToCart(item1);
+		});
+		window.textBox("cartNameText").enterText("happy");
+		window.list("itemListCart").selectItem(0);
+		window.button(JButtonMatcher.withText("Buy")).click();
+		//verify
+		assertThat(window.list("itemListCart").contents()).isEmpty();
+		assertThat(window.list("itemListShop").contents()).containsExactly(new Item("1","Iphone",9).toString());
 		
 	}
 	@Test @GUITest
 	public void testBuyButtonError() {
-		
+		Item item1 = new Item("1","Iphone",2);
+		GuiActionRunner.execute(
+				()->{ 
+					DefaultListModel<Item> items = shopViewSwing.getItemListCartModel();
+					items.addElement(item1);
+				});
+		window.textBox("cartNameText").enterText("happy");
+		window.list("itemListCart").selectItem(0);
+		window.button(JButtonMatcher.withText("Buy")).click();
+		assertThat(window.list("itemListCart").contents()).containsExactly(item1.toString());
 	}
 }
 

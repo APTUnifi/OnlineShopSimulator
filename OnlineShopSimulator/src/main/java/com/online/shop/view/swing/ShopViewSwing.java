@@ -10,7 +10,7 @@ import javax.swing.border.EmptyBorder;
 import com.online.shop.controller.CartController;
 import com.online.shop.controller.ShopController;
 import com.online.shop.model.Item;
-import com.online.shop.view.ItemsView;
+import com.online.shop.view.ShopView;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -26,7 +26,7 @@ import javax.swing.WindowConstants;
 
 
 @SuppressWarnings("serial")
-public class ItemsViewSwing extends JFrame implements ItemsView {	
+public class ShopViewSwing extends JFrame implements ShopView {	
 
 	private JPanel contentPane;
 	private JTextField itemName;
@@ -43,6 +43,8 @@ public class ItemsViewSwing extends JFrame implements ItemsView {
 	private JLabel lblErrorMessageLabel;
 	private JButton btnBuy;
 	private JButton btnHistory;
+	private JLabel lblCartName;
+	private JTextField cartNameText;
 
 
 	DefaultListModel<Item> getItemListShopModel(){
@@ -59,7 +61,7 @@ public class ItemsViewSwing extends JFrame implements ItemsView {
 		this.cartController = cartController;
 	}
 
-	public ItemsViewSwing() {
+	public ShopViewSwing() {
 
 
 
@@ -112,36 +114,58 @@ public class ItemsViewSwing extends JFrame implements ItemsView {
 		itemListShop = new JList<>();
 		itemListShop.setModel(itemListShopModel);
 		itemListShop.addListSelectionListener(e -> 
-				btnAdd.setEnabled(itemListShop.getSelectedIndex() != -1)
-		);
-		
+			btnAdd.setEnabled(itemListShop.getSelectedIndex() != -1)
+				);
+
+		lblCartName = new JLabel("Cart Name : ");
+		lblCartName.setName("lblCartName");
+		GridBagConstraints gbc_lblCartName = new GridBagConstraints();
+		gbc_lblCartName.insets = new Insets(0, 0, 5, 5);
+		gbc_lblCartName.gridx = 4;
+		gbc_lblCartName.gridy = 2;
+		contentPane.add(lblCartName, gbc_lblCartName);
+
+		cartNameText = new JTextField("");
+		cartNameText.setName("cartNameText");
+		GridBagConstraints gbc_cartNameText = new GridBagConstraints();
+		gbc_cartNameText.gridwidth = 5;
+		gbc_cartNameText.insets = new Insets(0, 0, 5, 5);
+		gbc_cartNameText.fill = GridBagConstraints.HORIZONTAL;
+		gbc_cartNameText.gridx = 5;
+		gbc_cartNameText.gridy = 2;
+		contentPane.add(cartNameText, gbc_cartNameText);
+		cartNameText.setColumns(10);
+
 		itemListShop.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		itemListShop.setName("itemListShop");
 		GridBagConstraints gbcitemListShop = new GridBagConstraints();
 		gbcitemListShop.gridwidth = 4;
-		gbcitemListShop.gridheight = 8;
+		gbcitemListShop.gridheight = 7;
 		gbcitemListShop.insets = new Insets(0, 0, 5, 5);
 		gbcitemListShop.fill = GridBagConstraints.BOTH;
 		gbcitemListShop.gridx = 0;
-		gbcitemListShop.gridy = 2;
+		gbcitemListShop.gridy = 3;
 		contentPane.add(itemListShop, gbcitemListShop);
 
 		itemListCart = new JList<>(itemListCartModel);
 		itemListCart.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		itemListCart.addListSelectionListener(e -> {
+			if(!cartNameText.getText().trim().isEmpty())
 				btnBuy.setEnabled(itemListCart.getSelectedIndex() != -1);
-				btnRemove.setEnabled(itemListCart.getSelectedIndex() != -1);	
+			btnRemove.setEnabled(itemListCart.getSelectedIndex() != -1);	
+			
 		});	
+		
 
 		itemListCart.setName("itemListCart");
 		GridBagConstraints gbcitemListCart = new GridBagConstraints();
 		gbcitemListCart.insets = new Insets(0, 0, 5, 0);
-		gbcitemListCart.gridheight = 8;
+		gbcitemListCart.gridheight = 7;
 		gbcitemListCart.gridwidth = 5;
 		gbcitemListCart.fill = GridBagConstraints.BOTH;
 		gbcitemListCart.gridx = 5;
-		gbcitemListCart.gridy = 2;
+		gbcitemListCart.gridy = 3;
 		contentPane.add(itemListCart, gbcitemListCart);
 
 		btnAdd = new JButton("Add");
@@ -152,7 +176,7 @@ public class ItemsViewSwing extends JFrame implements ItemsView {
 		gbcbtnAdd.gridx = 4;
 		gbcbtnAdd.gridy = 4;
 		contentPane.add(btnAdd, gbcbtnAdd);
-		
+
 		btnAdd.addActionListener(
 				e -> new Thread(
 						()-> cartController.addToCart(itemListShop.getSelectedValue())).start()
@@ -177,10 +201,10 @@ public class ItemsViewSwing extends JFrame implements ItemsView {
 
 		btnHistory = new JButton("History");
 		btnHistory.addActionListener(e -> {
-				HistoryViewSwing historyframe = new HistoryViewSwing();
-				historyframe.setVisible(true);
-			}
-		);
+			HistoryViewSwing historyframe = new HistoryViewSwing();
+			historyframe.setVisible(true);
+		}
+				);
 
 		GridBagConstraints gbcbtnHistory = new GridBagConstraints();
 		gbcbtnHistory.insets = new Insets(0, 0, 5, 5);
@@ -197,8 +221,10 @@ public class ItemsViewSwing extends JFrame implements ItemsView {
 		contentPane.add(btnBuy, gbcbtnBuy);
 
 		btnBuy.addActionListener(
-				e -> cartController.completePurchase()
-				);
+				e ->{
+					cartController.completePurchase(cartNameText.getText());
+					
+		});
 
 	}
 
@@ -207,17 +233,18 @@ public class ItemsViewSwing extends JFrame implements ItemsView {
 		items.stream().forEach(itemListShopModel::addElement);
 
 	}
-	@Override
-	public void showItemsCart(List<Item> items) {
-		items.stream().forEach(itemListCartModel::addElement);
-	}
 
 
 	@Override
-	public void errorLog(String error, Item item) {
+	public void errorLog(String error, List<Item> items) {
+		 String  names = "";
+		for (Item item : items){
+			names += item.getName() + " ";
+		}	
+		final String name = names;
 		SwingUtilities.invokeLater(
-				()->lblErrorMessageLabel.setText(error + ": " + item));
-
+				()->lblErrorMessageLabel.setText(error +": "+ name)
+		);
 	}
 
 	@Override
@@ -259,13 +286,27 @@ public class ItemsViewSwing extends JFrame implements ItemsView {
 	@Override
 	public void updateItemsCart(List<Item> items) {
 
-		DefaultListModel<Item> model = new DefaultListModel<>();
-		for(Item p : items){
-			model.addElement(p);
-		}    
-		itemListCart.setModel(model);  
+		DefaultListModel<Item> listCartUpdated = new DefaultListModel<>();
+		SwingUtilities.invokeLater(
+				()-> {
+					for(Item itemsCart : items){
+						listCartUpdated.addElement(itemsCart);
+					}    
+					itemListCart.setModel(listCartUpdated);  
+				});
 
 	}
+	@Override
+	public void updateItemsShop(List<Item> items) {
+
+		DefaultListModel<Item> listShopUpdated = new DefaultListModel<>();
+		for(Item itemsShop : items){
+			listShopUpdated.addElement(itemsShop);
+		}    
+		itemListShop.setModel(listShopUpdated);  
+
+	}
+
 
 
 }

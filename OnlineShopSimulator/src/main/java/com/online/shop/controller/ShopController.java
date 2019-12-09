@@ -2,14 +2,14 @@ package com.online.shop.controller;
 
 import com.online.shop.model.Item;
 import com.online.shop.repository.ItemsRepository;
-import com.online.shop.view.ItemsView;
+import com.online.shop.view.ShopView;
 
 public class ShopController {
 
-	private ItemsView itemsView;
+	private ShopView itemsView;
 	private ItemsRepository itemsRepository;
 
-	public ShopController(ItemsView itemsView, ItemsRepository itemsRepository) {
+	public ShopController(ShopView itemsView, ItemsRepository itemsRepository) {
 		this.itemsView = itemsView;
 		this.itemsRepository = itemsRepository;
 	}
@@ -37,7 +37,6 @@ public class ShopController {
 	
 	public void removeItem(Item item) {
 		if (itemsRepository.findByProductCode(item.getProductCode()) == null) {
-			itemsView.errorLog("Item with product code " + item.getProductCode() + " does not exists", item);
 			return;
 		}
 		itemsRepository.remove(item.getProductCode());
@@ -47,7 +46,7 @@ public class ShopController {
 		Item retrievedItem = itemsRepository.findByName(itemName);
 
 		if (retrievedItem == null) {
-			itemsView.errorLog("Item with name " + itemName + " doest not exists", null);
+//			itemsView.errorLog("Item with name " + itemName + " doest not exists", null);
 			return;
 		}
 
@@ -61,7 +60,7 @@ public class ShopController {
 			return;
 		}
 		if (modifier + item.getQuantity() < 0) {
-			itemsView.errorLog("Item has quantity " + item.getQuantity() + ", can't remove more items", item);
+//			itemsView.errorLog("Item has quantity " + item.getQuantity() + ", can't remove more items", item);
 			return;
 		}
 		itemsRepository.modifyQuantity(item, modifier);

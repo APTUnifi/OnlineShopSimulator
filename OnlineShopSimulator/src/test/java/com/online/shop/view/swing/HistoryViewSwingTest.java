@@ -77,10 +77,6 @@ public class HistoryViewSwingTest extends AssertJSwingJUnitTestCase{
 				}
 		);
 		window.list("listCart").selectItem(0);
-		GuiActionRunner.execute(
-				()-> historyViewSwing.showItemsCart(cart)
-		);
-		
 		String[] listContents = window.list("listItemsCart").contents();
 		assertThat(listContents).containsExactly(item1.toString(),item2.toString());
 	}

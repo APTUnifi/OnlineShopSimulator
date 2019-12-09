@@ -3,7 +3,10 @@ package com.online.shop.view.swing;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+
 import javax.swing.DefaultListModel;
 import org.assertj.swing.junit.runner.GUITestRunner;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
@@ -20,15 +23,17 @@ import org.mockito.MockitoAnnotations;
 import com.online.shop.controller.CartController;
 import com.online.shop.controller.ShopController;
 import com.online.shop.model.Item;
+import com.online.shop.view.HistoryView;
 
 import org.junit.Test;
 
 @RunWith(GUITestRunner.class)
-public class ItemsViewSwingTest extends AssertJSwingJUnitTestCase{
+public class ShopViewSwingTest extends AssertJSwingJUnitTestCase{
 
 	
 	private FrameFixture window;
-	private	ItemsViewSwing itemsViewSwing;
+	private	ShopViewSwing itemsViewSwing;
+	private HistoryViewSwing historyViewSwing;
 
 	@Mock
 	private ShopController shopController;
@@ -40,7 +45,7 @@ public class ItemsViewSwingTest extends AssertJSwingJUnitTestCase{
 	protected void onSetUp() {
 		MockitoAnnotations.initMocks(this);
 		GuiActionRunner.execute(() -> {
-			itemsViewSwing = new ItemsViewSwing();
+			itemsViewSwing = new ShopViewSwing();
 			itemsViewSwing.setShopController(shopController);
 			itemsViewSwing.setCartController(cartController);
 			return itemsViewSwing;
@@ -52,12 +57,13 @@ public class ItemsViewSwingTest extends AssertJSwingJUnitTestCase{
 	@Test @GUITest
 	public void testControlsInitialStates() {
 		window.textBox("itemName").requireEnabled();
+		window.textBox("cartNameText").requireEnabled();
 		window.button(JButtonMatcher.withText("Add")).requireDisabled();
 		window.button(JButtonMatcher.withText("Remove")).requireDisabled();
 		window.list("itemListShop");
 		window.list("itemListCart");
 		window.button(JButtonMatcher.withText("Search")).requireEnabled();
-		window.label("errorMessageLabel").requireText(" ");
+		window.label("lblCartName").requireText("Cart Name : ");
 		window.button(JButtonMatcher.withText("Buy")).requireDisabled();
 		window.button(JButtonMatcher.withText("History")).requireEnabled();
 
@@ -120,10 +126,11 @@ public class ItemsViewSwingTest extends AssertJSwingJUnitTestCase{
 		assertThat(listContents).containsExactly(item1.toString(),item2.toString());
 	}
 	@Test
-	public void testBuyButtonShouldBeEnabledWhenThereIsOneOrMoreItemsInItemListCart() {
+	public void testBuyButtonShouldBeEnabledWhenThereIsOneOrMoreItemsInItemListCartAndNameInCartNameText() {
 		GuiActionRunner.execute(
 				()-> itemsViewSwing.getItemListCartModel().addElement(new Item("1","Iphone"))
 		);
+		window.textBox("cartNameText").enterText("Happy");
 		window.list("itemListCart").selectItem(0);
 		JButtonFixture buyButton = window.button(JButtonMatcher.withText("Remove"));	
 		buyButton.requireEnabled();
@@ -135,7 +142,7 @@ public class ItemsViewSwingTest extends AssertJSwingJUnitTestCase{
 	@Test
 	public void testHistoryButtonShouldShowHistoryFrameWhenClicked() {
 		window.button(JButtonMatcher.withText("History")).click();
-		
+		assertThat(HistoryView.class.isInstance(historyViewSwing));		
 
 	}
 
@@ -170,26 +177,19 @@ public class ItemsViewSwingTest extends AssertJSwingJUnitTestCase{
 		String[] listContents = window.list("itemListShop").contents();
 		assertThat(listContents).containsExactly(item1.toString(),item2.toString());
 	}
-	@Test
-	public void testShowItemsCartShouldAddItemsToTheItemShopList() {
-		//setup
-		Item item1 = new Item("1","Iphone");
-		Item item2 = new Item("3","Samsung");
-		//exercise
-		GuiActionRunner.execute(() ->
-			itemsViewSwing.showItemsCart(Arrays.asList(item1,item2))
-		);
-		//verify
-		String[] listContents = window.list("itemListCart").contents();
-		assertThat(listContents).containsExactly(item1.toString(),item2.toString());
-	}
+
 	@Test
 	public void testErrorLogShouldShowTheMessageInTheErrorMessageLabel() {
+		List<Item> items = new ArrayList<Item>();
 		Item item = new Item("1","Iphone");
+		Item item1 = new Item("2","Samsung");
+
+		items.add(item);
+		items.add(item1);
 		GuiActionRunner.execute(
-				() -> itemsViewSwing.errorLog("error Message", item)
+				() -> itemsViewSwing.errorLog("error Message", items)
 		);		
-		window.label("errorMessageLabel").requireText("error Message: " + item);
+		window.label("errorMessageLabel").requireText("error Message: " + item.getName() + " "+ item1.getName() + " ");
 	    assertThat(JLabelMatcher.withText("errorMessageLabel").andShowing());
 
 	}
@@ -204,6 +204,7 @@ public class ItemsViewSwingTest extends AssertJSwingJUnitTestCase{
 		//verify
 		String[] listContents = window.list("itemListCart").contents();
 		assertThat(listContents).containsExactly(item.toString());
+		//TODO : manage the errors
 		window.label("errorMessageLabel").requireText(" ");
 	}
 	
@@ -249,6 +250,8 @@ public class ItemsViewSwingTest extends AssertJSwingJUnitTestCase{
 		//verify
 		String[] listContents = window.list("itemListCart").contents();
 		assertThat(listContents).containsExactly(item2.toString());
+		window.label("errorMessageLabel").requireText(" ");
+
 	}
 
 
@@ -310,11 +313,12 @@ public class ItemsViewSwingTest extends AssertJSwingJUnitTestCase{
 					itemListCartModel.addElement(item1);
 					itemListCartModel.addElement(item2);
 		});
+		window.textBox("cartNameText").enterText("happy");
 		window.list("itemListCart").selectItem(0);
 		//exercise	
 		window.button(JButtonMatcher.withText("Buy")).click();
 		//verify
-		verify(cartController).completePurchase();
+		verify(cartController).completePurchase(window.textBox("cartNameText").text());
 	}
 
 }

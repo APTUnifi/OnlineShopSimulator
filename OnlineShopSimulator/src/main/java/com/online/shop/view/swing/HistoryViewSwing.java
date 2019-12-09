@@ -18,6 +18,7 @@ import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
 @SuppressWarnings("serial")
@@ -28,7 +29,7 @@ public class HistoryViewSwing extends JFrame implements HistoryView {
 	private DefaultListModel<Item> listItemsCartModel;
 	private JList<Cart> listCart;
 	private JList<Item> listItemsCart;
-	
+
 	private transient CartController cartController;
 
 	private JButton btnRemove;
@@ -36,7 +37,7 @@ public class HistoryViewSwing extends JFrame implements HistoryView {
 	DefaultListModel<Cart> getListCartModel(){
 		return listCartModel;
 	}
-	
+
 	public void setCartController(CartController cartController) {
 		this.cartController = cartController;
 	}
@@ -60,10 +61,14 @@ public class HistoryViewSwing extends JFrame implements HistoryView {
 		listCartModel = new DefaultListModel<>();
 
 		listCart = new JList<>();
-		listCart.addListSelectionListener(e -> 
-				btnRemove.setEnabled(listCart.getSelectedIndex() != -1)		
-		);
-		
+		listCart.addListSelectionListener(e -> {
+			btnRemove.setEnabled(listCart.getSelectedIndex() != -1)	;
+			if(listCart.getSelectedValue() != null) {
+				showItemsCart(listCart.getSelectedValue());
+			}
+		}
+				);
+
 		listCart.setModel(listCartModel);
 		listCart.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listCart.setName("listCart");	
@@ -101,9 +106,9 @@ public class HistoryViewSwing extends JFrame implements HistoryView {
 
 		btnRemove.addActionListener(
 				e -> cartController.removeCart(listCart.getSelectedValue())
-		);
+				);
 	}
-		
+
 	@Override
 	public void showHistory(List<Cart> carts) {
 		carts.stream().forEach(listCartModel::addElement);
@@ -111,10 +116,20 @@ public class HistoryViewSwing extends JFrame implements HistoryView {
 
 	@Override
 	public void removeCart(Cart cart) {
-		listCartModel.removeElement(cart);		
+		SwingUtilities.invokeLater(
+				()-> listCartModel.removeElement(cart)			
+				);	
 	}
+
 	@Override
 	public void showItemsCart(Cart cart) {
-		cart.getItems().stream().forEach(listItemsCartModel::addElement);
+
+		DefaultListModel<Item> listItems= new DefaultListModel<>();
+		for(Item itemsShop : cart.getItems()){
+			listItems.addElement(itemsShop);
+		}    
+		listItemsCart.setModel(listItems);  
 	}
+
+
 }
