@@ -102,7 +102,7 @@ public class CartControllerTest {
 		List<Item> items = new ArrayList<>();
 		items.add(itemToRemove);
 		cartController.setCart(new Cart(items, CART_LABEL));
-		cartController.remove(itemToRemove);
+		cartController.removeFromCart(itemToRemove);
 		assertThat(cartController.cartSize()).isEqualTo(0);
 		assertThat(cartController.findItemQuantity(itemToRemove)).isEqualTo(0);
 		verify(itemsView).itemRemovedFromCart(itemToRemove);
@@ -114,7 +114,7 @@ public class CartControllerTest {
 		List<Item> items = new ArrayList<>();
 		items.add(itemToRemove);
 		cartController.setCart(new Cart(items, CART_LABEL));
-		cartController.remove(itemToRemove);
+		cartController.removeFromCart(itemToRemove);
 		assertThat(cartController.cartSize()).isEqualTo(1);
 		assertThat(cartController.findItemQuantity(itemToRemove)).isEqualTo(EXISTING_QUANTITY - 1);
 		verify(itemsView).updateItemsCart(cartController.cartItems());
@@ -240,7 +240,7 @@ public class CartControllerTest {
 		Cart cartToRemove = new Cart(items, CART_LABEL);
 		cartController.setCart(cartToRemove);
 		when(itemsRepository.findCart(LocalDate.now().toString(), CART_LABEL)).thenReturn(cartToRemove);
-		cartController.removeFromCart(cartToRemove);
+		cartController.remove(cartToRemove);
 		InOrder inOrder = inOrder(itemsRepository, historyView);
 		inOrder.verify(itemsRepository).removeCart(LocalDate.now().toString(), CART_LABEL);
 		inOrder.verify(historyView).removeCart(cartToRemove);
@@ -253,7 +253,7 @@ public class CartControllerTest {
 		items.add(item);
 		Cart cartToRemove = new Cart(items, CART_LABEL);
 		when(itemsRepository.findCart(LocalDate.now().toString(), CART_LABEL)).thenReturn(null);
-		assertThatThrownBy(() -> cartController.removeFromCart(cartToRemove))
+		assertThatThrownBy(() -> cartController.remove(cartToRemove))
 				.isInstanceOf(IllegalArgumentException.class).hasMessage("Cart does not exists");
 		verifyNoMoreInteractions(ignoreStubs(historyView));
 	}

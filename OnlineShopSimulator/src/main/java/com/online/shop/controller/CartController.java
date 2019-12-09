@@ -59,7 +59,7 @@ public class CartController {
 		return 0;
 	}
 
-	public void remove(Item item) {
+	public void removeFromCart(Item item) {
 		List<Item> items = cart.getItems();
 
 		if (items.get(items.indexOf(item)).getQuantity() == 1) {
@@ -106,7 +106,7 @@ public class CartController {
 		historyView.showHistory(itemsRepository.findAllCarts());
 	}
 
-	public void removeFromCart(Cart cartToRemove) {
+	public void remove(Cart cartToRemove) {
 		if (itemsRepository.findCart(cartToRemove.getDate(), cartToRemove.getLabel()) == null) {
 			throw new IllegalArgumentException("Cart does not exists");
 		}
