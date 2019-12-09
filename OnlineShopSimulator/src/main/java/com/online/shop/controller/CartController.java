@@ -12,8 +12,9 @@ import com.online.shop.view.ItemsView;
 public class CartController {
 	private ItemsView itemsView;
 	private ItemsRepository itemsRepository;
-	private Cart cart;
 	private HistoryView historyView;
+	private Cart cart;
+
 
 	public CartController(ItemsView itemsView, ItemsRepository itemsRepository,HistoryView historyView) {
 		this.itemsView = itemsView;
@@ -31,7 +32,7 @@ public class CartController {
 			items.add(item);
 		} else {
 			if (items.get(items.indexOf(item)).getQuantity() < item.getQuantity()) {
-				items.get(items.indexOf(item)).setQuantity((items.get(items.indexOf(item)).getQuantity()+1));
+				items.get(items.indexOf(item)).setQuantity(items.get(items.indexOf(item)).getQuantity() + 1);
 				itemsView.updateItemsCart(items);
 			} else
 				return;
@@ -72,27 +73,48 @@ public class CartController {
 		}
 	}
 
-	public void completePurchase() {
+	public void completePurchase(String label) {
+		cart.setLabel(label);
 		List<Item> items = cart.getItems();
+		List<Item> itemsNotStored = new ArrayList<Item>();
 		Item retrievedItem;
+		boolean isStored = true;
 
 		for (Item item : items) {
 			retrievedItem = itemsRepository.findByProductCode(item.getProductCode());
-			
-			if (retrievedItem.getQuantity() == item.getQuantity()) {
-				itemsRepository.remove(item.getProductCode());
+			if (retrievedItem == null) {
+				isStored = false;
+				itemsNotStored.add(item);
 			} else {
-				itemsRepository.modifyQuantity(retrievedItem, -item.getQuantity());
+				if (retrievedItem.getQuantity() == item.getQuantity()) {
+					itemsRepository.remove(item.getProductCode());
+				} else {
+					itemsRepository.modifyQuantity(retrievedItem, -item.getQuantity());
+				}
 			}
 		}
-		
-		cart.setItems(new ArrayList<Item>());
-		
-		itemsView.showItemsCart(null);
-		itemsView.showItemsShop(itemsRepository.findAll());
+		if (isStored && !items.isEmpty()) {
+			itemsRepository.storeCart(cart);
+			cart.setItems(new ArrayList<Item>());
+			items = cart.getItems();
+			itemsView.updateItemsCart(items);
+			itemsView.updateItemsShop(itemsRepository.findAll());
+		} else {
+			itemsView.errorLog("Item/s not found", itemsNotStored);
+		}
 	}
 
-	public void removeFromHistory(Cart cart) {
-		historyView.removeCart(cart);
+	public void allCarts() {
+		historyView.showHistory(itemsRepository.findAllCarts());
 	}
+
+	public void removeCart(Cart cartToRemove) {
+		if (itemsRepository.findCart(cartToRemove.getDate(), cartToRemove.getLabel()) == null) {
+			throw new IllegalArgumentException("Cart does not exists");
+		}
+
+		itemsRepository.removeCart(cartToRemove.getDate(), cartToRemove.getLabel());
+		historyView.removeCart(cartToRemove);
+	}
+  
 }

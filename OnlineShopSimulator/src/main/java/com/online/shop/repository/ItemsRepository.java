@@ -7,6 +7,7 @@ import com.online.shop.model.Item;
 
 //TODO change ItemsRepository name to something like ShopRepository and methods referring to Items 
 public interface ItemsRepository {
+  
 	public List<Item> findAll();
 
 	public Item findByProductCode(String productCode);
@@ -19,12 +20,12 @@ public interface ItemsRepository {
 
 	public void modifyQuantity(Item itemToBeModified, int modifier);
 	
-	//TODO implements cart methods
-	public void storeCart(Cart cartToStore);
+  public void storeCart(Cart cartToStore);
 	
-	public Cart findCart(String label, String date);
+	public void removeCart(String date, String label);
+	
+	public Cart findCart(String date, String label);
 	
 	public List<Cart> findAllCarts();
 	
-	public void removeCart(String label, String date);
 }

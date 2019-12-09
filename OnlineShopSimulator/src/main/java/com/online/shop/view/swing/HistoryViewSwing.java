@@ -100,7 +100,7 @@ public class HistoryViewSwing extends JFrame implements HistoryView {
 		contentPanel.add(btnRemove, gbcbtnRemove);
 
 		btnRemove.addActionListener(
-				e -> cartController.removeFromHistory(listCart.getSelectedValue())
+				e -> cartController.removeCart(listCart.getSelectedValue())
 		);
 	}
 		

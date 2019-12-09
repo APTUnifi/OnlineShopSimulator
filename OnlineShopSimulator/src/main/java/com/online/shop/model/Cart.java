@@ -9,8 +9,8 @@ import java.time.LocalDate;
 public class Cart {
 	private List<Item> items;
 	private String label;
-	private String date;
-
+  private String date;
+  
 	public Cart() {
 		items = new ArrayList<>();
 		label = "";
@@ -51,6 +51,10 @@ public class Cart {
 		return label;
 	}
 
+  public void setLabel(String label) {
+		this.label = label;
+	}
+
 	@Override
 	public boolean equals(final Object obj) {
 		if (obj instanceof Cart) {
@@ -66,10 +70,5 @@ public class Cart {
 		return Objects.hash(label, date);
 	}
 	
-	/*
-	@Override
-	public String toString() {
-		return "Cart{" + "Label = '" + label + "' Date = '" + date + "'}";
-	}*/
 }
 

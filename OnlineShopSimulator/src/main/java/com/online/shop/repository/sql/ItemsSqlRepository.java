@@ -151,4 +151,5 @@ public class ItemsSqlRepository implements ItemsRepository {
 	public JdbcTemplate getJdbcTemplate() {
 		return db;
 	}
+  
 }

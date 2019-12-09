@@ -16,7 +16,7 @@ public class ShopController {
 
 
 	public void allItems() {
-		itemsView.showItemsShop(itemsRepository.findAll());
+		itemsView.updateItemsShop(itemsRepository.findAll());
 	}
 
 	public void newItem(Item item) {
@@ -37,7 +37,7 @@ public class ShopController {
 	
 	public void removeItem(Item item) {
 		if (itemsRepository.findByProductCode(item.getProductCode()) == null) {
-			itemsView.errorLog("Item with product code " + item.getProductCode() + " does not exists", item);
+			//itemsView.errorLog("Item with product code " + item.getProductCode() + " does not exists", item);
 			return;
 		}
 		itemsRepository.remove(item.getProductCode());
@@ -64,10 +64,12 @@ public class ShopController {
 			return;
 		}
 		if (modifier + item.getQuantity() < 0) {
-			itemsView.errorLog("Item has quantity " + item.getQuantity() + ", can't remove more items", item);
+			//itemsView.errorLog("Item has quantity " + item.getQuantity() + ", can't remove more items", item);
 			return;
 		}
 		itemsRepository.modifyQuantity(item, modifier);
 	}
+	
+	
 
 }
