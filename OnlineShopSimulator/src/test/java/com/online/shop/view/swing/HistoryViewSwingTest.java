@@ -133,7 +133,6 @@ public class HistoryViewSwingTest extends AssertJSwingJUnitTestCase{
 		window.button(JButtonMatcher.withText("Remove")).click();
 		//verify
 		verify(cartController).removeCart(cart1);
-
 	}
 
 }

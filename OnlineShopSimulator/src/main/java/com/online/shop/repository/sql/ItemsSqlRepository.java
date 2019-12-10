@@ -18,7 +18,6 @@ public class ItemsSqlRepository implements ItemsRepository {
 	private JdbcTemplate db;
 
 	public ItemsSqlRepository(DataSource dataSource) {
-
 		db = new JdbcTemplate(dataSource);
 	}
 
@@ -43,6 +42,7 @@ public class ItemsSqlRepository implements ItemsRepository {
 		} 
 		
 		return result;
+
 	}
 
 	@Override
@@ -75,7 +75,6 @@ public class ItemsSqlRepository implements ItemsRepository {
 	public void storeCart(Cart cartToStore) {
 		String storeCart = "INSERT INTO carts (label, date) VALUES (?, ?)";
 		db.update(storeCart, cartToStore.getLabel(), cartToStore.getDate());
-
 		String selectCartId = "SELECT cart_id FROM carts WHERE label = '" + cartToStore.getLabel() + "' AND date = '"
 				+ cartToStore.getDate() + "'";
 
@@ -160,3 +159,4 @@ public class ItemsSqlRepository implements ItemsRepository {
 		return db;
 	}
 }
+

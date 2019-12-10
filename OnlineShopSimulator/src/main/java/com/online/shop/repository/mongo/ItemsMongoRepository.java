@@ -95,6 +95,7 @@ public class ItemsMongoRepository implements ItemsRepository {
 		}
 		collectionCarts.insertOne(new Document().append("label", cartToStore.getLabel())
 				.append("date", cartToStore.getDate()).append("items", list));
+
 	}
 
 	@Override

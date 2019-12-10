@@ -19,9 +19,9 @@ public interface ItemsRepository {
 	public void remove(String productCode);
 
 	public void modifyQuantity(Item itemToBeModified, int modifier);
-	
+
 	public void storeCart(Cart cartToStore);
-	
+
 	public void removeCart(String date, String label);
 	
 	public Cart findCart(String date, String label);

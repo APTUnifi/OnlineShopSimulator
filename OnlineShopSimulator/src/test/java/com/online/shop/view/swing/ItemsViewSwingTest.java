@@ -129,6 +129,7 @@ public class ItemsViewSwingTest extends AssertJSwingJUnitTestCase{
 		GuiActionRunner.execute(
 				()-> itemsViewSwing.getItemListCartModel().addElement(new Item("1","Iphone"))
 				);
+
 		window.textBox("cartNameText").enterText("Happy");
 		window.list("itemListCart").selectItem(0);
 		JButtonFixture buyButton = window.button(JButtonMatcher.withText("Remove"));	
@@ -190,6 +191,7 @@ public class ItemsViewSwingTest extends AssertJSwingJUnitTestCase{
 				);		
 		window.label("errorMessageLabel").requireText("error Message: " + item.getName() + " "+ item1.getName() + " ");
 		assertThat(JLabelMatcher.withText("errorMessageLabel").andShowing());
+
 
 	}
 	@Test
@@ -312,6 +314,7 @@ public class ItemsViewSwingTest extends AssertJSwingJUnitTestCase{
 					itemListCartModel.addElement(item1);
 					itemListCartModel.addElement(item2);
 				});
+
 		window.textBox("cartNameText").enterText("happy");
 		window.list("itemListCart").selectItem(0);
 		//exercise	

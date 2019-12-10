@@ -15,7 +15,6 @@ public class CartController {
 	private HistoryView historyView;
 	private Cart cart;
 
-
 	public CartController(ItemsView ShopView, ItemsRepository itemsRepository,HistoryView historyView) {
 		this.itemsView = ShopView;
 		this.itemsRepository = itemsRepository;
@@ -120,5 +119,4 @@ public class CartController {
 		itemsRepository.removeCart(cartToRemove.getDate(), cartToRemove.getLabel());
 		historyView.removeCart(cartToRemove);
 	}
-
 }

@@ -15,6 +15,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.testcontainers.containers.PostgreSQLContainer;
 
+import com.online.shop.model.Cart;
 import com.online.shop.model.Item;
 
 public class ItemsSqlRepositoryIT {
@@ -63,7 +64,9 @@ public class ItemsSqlRepositoryIT {
 		db.update("INSERT INTO carts (label, date) VALUES (?, ?)", cartToAdd.getLabel(), cartToAdd.getDate());
 
 		String selectCartId = "SELECT cart_id FROM carts WHERE label = '" + cartToAdd.getLabel() + "' AND date = '"
+
 				+ cartToAdd.getDate() + "'";
+
 
 		int cartID = (int) db.queryForObject(selectCartId, Integer.class);
 
@@ -71,6 +74,7 @@ public class ItemsSqlRepositoryIT {
 		for (Item item : cartToAdd.getItems()) {
 			db.update("INSERT INTO items_in_cart (cart_id, product_code, quantity_in_cart) VALUES (?, ?, ?)", cartID,
 					item.getProductCode(), item.getQuantity());
+
 		}
 	}
 
@@ -78,6 +82,7 @@ public class ItemsSqlRepositoryIT {
 		String sql = "SELECT * FROM items";
 		return db.query(sql,
 				(rs, rowNum) -> new Item(rs.getString("product_code"), rs.getString("name"), rs.getInt("quantity")));
+
 	}
 
 	private List<Cart> retrieveAllCarts() {
@@ -85,6 +90,7 @@ public class ItemsSqlRepositoryIT {
 		return db.query(selectAllCarts,
 				(rs, rowNum) -> new Cart(rs.getString("label"), rs.getString("date")));
 	}
+
 
 	private Item retrieveItem(String productCode) {
 		String sql = "SELECT * FROM items WHERE product_code = ?";
@@ -160,6 +166,11 @@ public class ItemsSqlRepositoryIT {
 		repository.modifyQuantity(itemToBeModified, QUANTITY_MODIFIER);
 		assertThat(retrieveItem("1").getQuantity()).isEqualTo(STARTER_QUANTITY + QUANTITY_MODIFIER);
 	}
+	
+	public void storeCart(Cart cart) {
+		// TODO Auto-generated method stub
+		 
+	}
 
 	@Test
 	public void testFindAllCarts() {
@@ -170,6 +181,7 @@ public class ItemsSqlRepositoryIT {
 
 		assertThat(repository.findAllCarts()).containsExactly(new Cart(Arrays.asList(new Item("1","test", 1)), "testCart"));
 	}
+
 
 	@Test
 	public void testRemoveCartFromTableCarts() {
@@ -183,6 +195,7 @@ public class ItemsSqlRepositoryIT {
 		assertThat(retrieveAllCarts()).isEmpty();
 	}
 
+
 	@Test
 	public void testRemoveCartIfAlsoAllItemsInItAreDropped() {
 		Item itemToAdd = new Item("1", "test", 1);
@@ -195,6 +208,7 @@ public class ItemsSqlRepositoryIT {
 		assertThat(retrieveAllItemsInCart("testCart", LocalDate.now().toString())).isEmpty();
 	}
 
+
 	@Test
 	public void testFindCart() {
 		Item itemToAdd = new Item("1", "test", 1);
@@ -202,13 +216,12 @@ public class ItemsSqlRepositoryIT {
 		Cart cartToFind = new Cart(Arrays.asList(itemToAdd), "testCart");
 		addTestCartToRepository(cartToFind);
 
+
 		assertThat(repository.findCart(cartToFind.getDate(),cartToFind.getLabel())).isEqualTo(new Cart(Arrays.asList(new Item("1", "test", 1)), "testCart"));
 	}
 
 	@Test
 	public void testStoreCartSavingNewCartInCartsTable() {
-
-
 		Cart cartToStore = new Cart();
 
 		repository.storeCart(cartToStore);
@@ -216,16 +229,19 @@ public class ItemsSqlRepositoryIT {
 		assertThat(retrieveAllCarts()).containsExactly(new Cart());
 	}
 
+
 	@Test
 	public void testStoreCartAlsoSavingItemsInItemsInCartTable() {
 		Item itemToAdd = new Item("1", "test", 1);
 		addTestItemToRepository(itemToAdd);
 		Cart cartToStore = new Cart(Arrays.asList(itemToAdd), "testCart");
 
+
 		repository.storeCart(cartToStore);
 
 		assertThat(retrieveAllItemsInCart(cartToStore.getLabel(), cartToStore.getDate())).containsExactly(new Item("1", "test", 1));
 	}
+
 
 	@Test
 	public void testStoreCartAlsoUpdateQuantityValueOfItemsLeftInShop() {
@@ -238,3 +254,4 @@ public class ItemsSqlRepositoryIT {
 		assertThat(retrieveItem("1").getQuantity()).isEqualTo(0);
 	}
 }
+
