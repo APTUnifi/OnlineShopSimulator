@@ -1,6 +1,5 @@
 package com.online.shop.controller;
 
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.ignoreStubs;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.spy;
@@ -18,14 +17,12 @@ import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-
 import com.online.shop.model.Cart;
 import com.online.shop.model.Item;
 import com.online.shop.repository.ItemsRepository;
 import com.online.shop.view.HistoryView;
-import com.online.shop.view.ItemsView;
+import com.online.shop.view.ShopView;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -37,7 +34,7 @@ public class CartControllerTest {
 	private static final String ITEM_PRODUCT_CODE = "1";
 
 	@Mock
-	ItemsView itemsView;
+	ShopView itemsView;
 
 	@Mock
 	HistoryView historyView;
@@ -64,9 +61,8 @@ public class CartControllerTest {
 	public void testAddItemToCartWhenItemIsNotPresent() {
 		Item itemToAdd = new Item(ITEM_PRODUCT_CODE, ITEM_NAME, 3);
 		cartController.setCart(new Cart());
-    
-		cartController.addToCart(itemToAdd);
 
+		cartController.addToCart(itemToAdd);
 		assertThat(cartController.cartSize()).isEqualTo(1);
 		assertThat(cartController.findItemQuantity(itemToAdd)).isEqualTo(1);
 		verify(itemsView).itemAddedToCart(itemToAdd);
@@ -265,10 +261,23 @@ public class CartControllerTest {
 		items.add(item);
 		Cart cartToRemove = new Cart(items, CART_LABEL);
 		when(itemsRepository.findCart(LocalDate.now().toString(), CART_LABEL)).thenReturn(null);
-		assertThatThrownBy(() -> cartController.removeCart(cartToRemove))
-				.isInstanceOf(IllegalArgumentException.class).hasMessage("Cart does not exists");
+		cartController.removeCart(cartToRemove);
+		verify(itemsView).errorLogCart("Cart not found" , cartToRemove);
+		verifyNoMoreInteractions(ignoreStubs(historyView));
+	}
+	
+	@Test
+	public void testCompletePurchaseShouldThrowErrorWhenNameCartAlreadyExists() {
+		List<Item> items = new ArrayList<>();
+		Cart cartToAdd = new Cart(CART_LABEL,LocalDate.now().toString(), items);
+		Cart cartExist = new Cart(CART_LABEL, LocalDate.now().toString(),items);
+		itemsRepository.storeCart(cartExist);
+		cartController.setCart(cartToAdd);
+		when(itemsRepository.findAllCarts()).thenReturn(Arrays.asList(cartExist));
+		cartController.completePurchase(CART_LABEL);
+		//verify(itemsRepository).storeCart(cartExist);
+		verify(itemsView).errorLogCart("Cart with this label already exists: ", cartExist);
 		verifyNoMoreInteractions(ignoreStubs(historyView));
 	}
 
 }
-

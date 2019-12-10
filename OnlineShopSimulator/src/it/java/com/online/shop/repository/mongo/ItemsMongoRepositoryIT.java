@@ -42,7 +42,6 @@ public class ItemsMongoRepositoryIT {
 	private ItemsMongoRepository itemsRepository;
 	private MongoCollection<Document> collectionItems;
 	private MongoCollection<Document> collectionCarts;
-	
 
 	@Before
 	public void setup() {
@@ -52,7 +51,6 @@ public class ItemsMongoRepositoryIT {
 		db.drop(); // clean db
 		collectionItems = db.getCollection(ITEMS_COLLECTION_NAME);
 		collectionCarts = db.getCollection(CARTS_COLLECTION_NAME);
-		
 	}
 
 	@After
@@ -70,9 +68,11 @@ public class ItemsMongoRepositoryIT {
 	private List<Item> retrieveAllItems() {
 		return StreamSupport.stream(collectionItems.find().spliterator(), false)
 				.map(d -> new Item("" + d.get("productCode"), "" + d.get("name"), (int) d.get("quantity")))
+
 				.collect(Collectors.toList());
 	}
 
+	@SuppressWarnings("unchecked")
 	private List<Cart> retrieveAllCarts() {
 
 		return StreamSupport.stream(collectionCarts.find().spliterator(), false)
@@ -147,21 +147,25 @@ public class ItemsMongoRepositoryIT {
 	public void testFindAllCarts() {
 		addTestCartToRepository("testCart", LocalDate.now().toString(), Arrays.asList(new Item("1", "test1")));
 		assertThat(itemsRepository.findAllCarts())
-				.containsExactly(new Cart(Arrays.asList(new Item("1", "test1")), "testCart"));
+		.containsExactly(new Cart(Arrays.asList(new Item("1", "test1")), "testCart"));
+
 	}
 
 	@Test
 	public void testFindCart() {
 		addTestCartToRepository("testCart1", LocalDate.now().toString(), Arrays.asList(new Item("1", "test1")));
 		addTestCartToRepository("testCart2", LocalDate.now().toString(), Arrays.asList(new Item("1", "test1")));
-		assertThat(itemsRepository.findCart(LocalDate.now().toString(), "testCart2"))
-				.isEqualTo(new Cart(Arrays.asList(new Item("1", "test1")), "testCart2"));
+		assertThat(itemsRepository.findCart( LocalDate.now().toString(),"testCart2"))
+		.isEqualTo(new Cart(Arrays.asList(new Item("1", "test1")), "testCart2"));
+
 	}
 
 	@Test
 	public void testRemoveCart() {
 		addTestCartToRepository("testCart", LocalDate.now().toString(), Arrays.asList(new Item("1", "test1")));
-		itemsRepository.removeCart(LocalDate.now().toString(), "testCart");
+
+		itemsRepository.removeCart(LocalDate.now().toString(),"testCart");
+
 		assertThat(retrieveAllCarts()).isEmpty();
 	}
 
@@ -173,15 +177,5 @@ public class ItemsMongoRepositoryIT {
 		Cart cartToStore = new Cart("testCart", LocalDate.now().toString(), Arrays.asList(itemToBeModified));
 		itemsRepository.storeCart(cartToStore);
 		assertThat(retrieveAllCarts()).containsExactly(new Cart("testCart", LocalDate.now().toString(), Arrays.asList(new Item("1", "test1"))));
-	}
-	
-	@Test
-	public void testStoreNewCartShouldUpdateItemShopQuantity() {
-		Item itemToBeModified = new Item("1", "test1", STARTER_QUANTITY);
-		addTestItemToRepository(itemToBeModified.getProductCode(), itemToBeModified.getName(),
-				itemToBeModified.getQuantity());
-		Cart cartToStore = new Cart("testCart", LocalDate.now().toString(), Arrays.asList(new Item("1", "test1", QUANTITY_MODIFIER)));
-		itemsRepository.storeCart(cartToStore);
-		assertThat(retrieveItem("1").getQuantity()).isEqualTo(STARTER_QUANTITY - QUANTITY_MODIFIER);
 	}
 }

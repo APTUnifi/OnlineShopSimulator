@@ -1,7 +1,6 @@
 package com.online.shop.repository;
 
 import java.util.List;
-
 import com.online.shop.model.Cart;
 import com.online.shop.model.Item;
 
@@ -19,13 +18,13 @@ public interface ItemsRepository {
 	public void remove(String productCode);
 
 	public void modifyQuantity(Item itemToBeModified, int modifier);
-	
-  public void storeCart(Cart cartToStore);
-	
+
+	public void storeCart(Cart cartToStore);
+
 	public void removeCart(String date, String label);
 	
 	public Cart findCart(String date, String label);
-	
+
 	public List<Cart> findAllCarts();
 	
 }

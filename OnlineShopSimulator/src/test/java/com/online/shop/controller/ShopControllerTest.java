@@ -11,23 +11,21 @@ import org.mockito.MockitoAnnotations;
 
 import com.online.shop.model.Item;
 import com.online.shop.repository.ItemsRepository;
-import com.online.shop.view.ItemsView;
+import com.online.shop.view.ShopView;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
- 
 
 public class ShopControllerTest {
 
 	private static final String PRODUCT_CODE = "1";
-
 	private static final String ITEM_NAME = "battery";
 
 	@Mock
 	ItemsRepository itemsRepository;
 
 	@Mock
-	ItemsView itemsView;
+	ShopView itemsView;
 
 	@InjectMocks
 	ShopController shopController;
@@ -36,7 +34,7 @@ public class ShopControllerTest {
 	public void setUp() throws Exception {
 		MockitoAnnotations.initMocks(this);
 	}
- 
+
 	@Test
 	public void testAllItems() {
 		// setup
@@ -48,6 +46,7 @@ public class ShopControllerTest {
 		verify(itemsView).updateItemsShop(items);
 	}
 
+	
 	@Test
 	public void testNewItemWhenQuantityIsNegative() {
 		// setup
@@ -55,7 +54,7 @@ public class ShopControllerTest {
 		when(itemsRepository.findByProductCode(PRODUCT_CODE)).thenReturn(null);
 		// exercise + verify
 		assertThatThrownBy(() -> shopController.newItem(item)).isInstanceOf(IllegalArgumentException.class)
-				.hasMessage("Negative amount: -1");
+		.hasMessage("Negative amount: -1");
 		verifyNoMoreInteractions(ignoreStubs(itemsRepository));
 	}
 
@@ -66,7 +65,7 @@ public class ShopControllerTest {
 		when(itemsRepository.findByProductCode(PRODUCT_CODE)).thenReturn(null);
 		// exercise + verify
 		assertThatThrownBy(() -> shopController.newItem(item)).isInstanceOf(IllegalArgumentException.class)
-				.hasMessage("Negative amount: 0");
+		.hasMessage("Negative amount: 0");
 		verifyNoMoreInteractions(ignoreStubs(itemsRepository));
 	}
 
@@ -116,7 +115,6 @@ public class ShopControllerTest {
 		// exercise
 		shopController.removeItem(itemToRemove);
 		// verify
-		//verify(itemsView).errorLog("Item with product code 1 does not exists", itemToRemove);
 		verifyNoMoreInteractions(ignoreStubs(itemsRepository));
 	}
 
@@ -162,7 +160,7 @@ public class ShopControllerTest {
 		verify(itemsRepository).remove(itemToModify.getProductCode());
 		verifyNoMoreInteractions(ignoreStubs(itemsRepository));
 	}
-	
+
 	@Test
 	public void testModifyQuantityWhenModifierIsZero() {
 		// Setup
@@ -180,7 +178,6 @@ public class ShopControllerTest {
 		// exercise
 		shopController.modifyItemQuantity(itemToModify, -3);
 		// verify
-		//verify(itemsView).errorLog("Item has quantity 2, can't remove more items", itemToModify);
 		verifyNoMoreInteractions(ignoreStubs(itemsRepository));
 	}
 }

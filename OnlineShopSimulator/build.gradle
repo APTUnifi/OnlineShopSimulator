@@ -34,12 +34,23 @@ sourceSets {
         }
         resources.srcDir file('src/it/resources')
     }
+    e2eTest {
+        java {
+            compileClasspath += main.output + test.output
+            runtimeClasspath += main.output + test.output
+            srcDir file('src/e2e/java')
+        }
+    }
 }
 
 configurations { 
     integrationTestCompile.extendsFrom testCompile
     integrationTestRuntime.extendsFrom testRuntime
     integrationTestImplementation.extendsFrom testImplementation
+    
+    e2eTestCompile.extendsFrom testCompile
+    e2eTestRuntime.extendsFrom testRuntime
+    e2eTestImplementation.extendsFrom testImplementation
 }
 
 dependencies {
@@ -75,6 +86,10 @@ dependencies {
     compile 'org.sqldroid:sqldroid:1.1.0-rc1'
     // https://mvnrepository.com/artifact/org.springframework/spring-jdbc
 	compile group: 'org.springframework', name: 'spring-jdbc', version: '5.2.1.RELEASE'
+	// picocli dependecies
+	compile 'info.picocli:picocli:4.1.2'
+
+	
 }
 
 // TASKS
@@ -82,6 +97,10 @@ dependencies {
 task integrationTest(type: Test) {
     testClassesDirs = sourceSets.integrationTest.output.classesDirs
     classpath = sourceSets.integrationTest.runtimeClasspath
+}
+task e2eTest(type: Test) {
+    testClassesDirs = sourceSets.e2eTest.output.classesDirs
+    classpath = sourceSets.e2eTest.runtimeClasspath
 }
 
 jacocoTestReport {	
@@ -107,6 +126,8 @@ sonarqube {
 
 check.dependsOn integrationTest
 integrationTest.mustRunAfter test
+check.dependsOn e2eTest
+e2eTest.mustRunAfter test
 project.tasks["sonarqube"].dependsOn "jacocoTestReport"
 
 //This task is essential for skipping the terms of service terminal procedure
