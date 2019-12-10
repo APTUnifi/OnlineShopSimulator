@@ -13,6 +13,7 @@ public class ShopController {
 		this.itemsView = itemsView;
 		this.itemsRepository = itemsRepository;
 	}
+	
 
 
 	public void allItems() {

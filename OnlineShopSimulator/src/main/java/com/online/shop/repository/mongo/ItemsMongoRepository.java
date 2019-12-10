@@ -90,7 +90,8 @@ public class ItemsMongoRepository implements ItemsRepository {
 		for (Item item : cartToStore.getItems()) {
 			list.add(new Document().append("productCode", item.getProductCode()).append("name", item.getName())
 					.append("quantity", item.getQuantity()));
-			modifyQuantity(findByProductCode(item.getProductCode()), -item.getQuantity());
+			//modifyQuantity(findByProductCode(item.getProductCode()), -item.getQuantity());
+			
 		}
 		collectionCarts.insertOne(new Document().append("label", cartToStore.getLabel())
 				.append("date", cartToStore.getDate()).append("items", list));

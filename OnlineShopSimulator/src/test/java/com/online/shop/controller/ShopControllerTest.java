@@ -20,7 +20,6 @@ import static org.mockito.Mockito.*;
 public class ShopControllerTest {
 
 	private static final String PRODUCT_CODE = "1";
-
 	private static final String ITEM_NAME = "battery";
 
 	@Mock

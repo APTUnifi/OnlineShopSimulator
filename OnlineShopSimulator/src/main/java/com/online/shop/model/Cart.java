@@ -3,7 +3,6 @@ package com.online.shop.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
 import java.time.LocalDate;
 
 public class Cart {
@@ -71,4 +70,3 @@ public class Cart {
 	}
 	
 }
-

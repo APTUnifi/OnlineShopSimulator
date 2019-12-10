@@ -1,3 +1,4 @@
+  
 package com.online.shop.view.swing;
 
 
@@ -225,7 +226,6 @@ public class ItemsViewSwing extends JFrame implements ItemsView {
 					cartController.completePurchase(cartNameText.getText());
 					
 		});
-
 	}
 
 	@Override
@@ -311,6 +311,7 @@ public class ItemsViewSwing extends JFrame implements ItemsView {
 		// TODO Auto-generated method stub
 		
 	}
+	
 	@Override
 	public void itemQuantityAdded(Item item) {
 		// TODO Auto-generated method stub
@@ -321,12 +322,5 @@ public class ItemsViewSwing extends JFrame implements ItemsView {
 		// TODO Auto-generated method stub
 		
 	}
-	@Override
-	public void showItemsCart(List<Item> items) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-
+	
 }

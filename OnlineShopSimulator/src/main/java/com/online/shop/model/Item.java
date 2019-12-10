@@ -10,7 +10,6 @@ public class Item {
 
 	// Used by Unit Testing
 	public Item() {
-
 	}
 
 	public Item(String productCode, String name) {
@@ -58,9 +57,18 @@ public class Item {
 		this.quantity = quantity;
 	}
 
-	@Override
-	public String toString() {
-		return "Item{" + "Name= ' " + name + " \'" +
-				",Quantity  = ' " + quantity + " '}";
+	public void setProductCode(String productCode) {
+		this.productCode = productCode;
 	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+//	@Override
+//	public String toString() {
+//		return "Item : " + name + ", ProductCode : " + productCode + ", Quantity : " + quantity;
+//	}
+	
+
 }
