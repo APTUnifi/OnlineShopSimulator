@@ -1,3 +1,4 @@
+  
 package com.online.shop.view.swing;
 
 
@@ -306,7 +307,20 @@ public class ItemsViewSwing extends JFrame implements ItemsView {
 		itemListShop.setModel(listShopUpdated);  
 
 	}
-
-
-
+	@Override
+	public void itemAdded(Item item) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void itemQuantityAdded(Item item) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void itemRemoved(Item item) {
+		// TODO Auto-generated method stub
+		
+	}
+	
 }

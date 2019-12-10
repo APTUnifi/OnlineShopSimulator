@@ -6,6 +6,13 @@ import java.util.List;
 import com.online.shop.model.Item;
 
 public interface ItemsView {
+	
+	 
+		void itemAdded(Item item);
+
+		void itemQuantityAdded(Item item);
+
+		void itemRemoved(Item item);
   
 	void showItemsShop(List<Item> items);
 	void errorLog(String error, List<Item> items);
