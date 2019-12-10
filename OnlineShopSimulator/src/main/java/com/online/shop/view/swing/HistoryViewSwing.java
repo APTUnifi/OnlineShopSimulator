@@ -94,8 +94,6 @@ public class HistoryViewSwing extends JFrame implements HistoryView {
 		gbcitemListCart.gridy = 2;
 		contentPanel.add(listItemsCart, gbcitemListCart);
 
-
-
 		btnRemove = new JButton("Remove");
 		btnRemove.setEnabled(false);
 		GridBagConstraints gbcbtnRemove = new GridBagConstraints();

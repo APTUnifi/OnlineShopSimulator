@@ -7,16 +7,16 @@ import com.online.shop.model.Cart;
 import com.online.shop.model.Item;
 import com.online.shop.repository.ItemsRepository;
 import com.online.shop.view.HistoryView;
-import com.online.shop.view.ShopView;
+import com.online.shop.view.ItemsView;
 
 public class CartController {
-	private ShopView itemsView;
+	private ItemsView itemsView;
 	private ItemsRepository itemsRepository;
 	private HistoryView historyView;
 	private Cart cart;
 
 
-	public CartController(ShopView ShopView, ItemsRepository itemsRepository,HistoryView historyView) {
+	public CartController(ItemsView ShopView, ItemsRepository itemsRepository,HistoryView historyView) {
 		this.itemsView = ShopView;
 		this.itemsRepository = itemsRepository;
 		this.historyView = historyView;

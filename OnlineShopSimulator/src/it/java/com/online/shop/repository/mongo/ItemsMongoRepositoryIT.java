@@ -161,7 +161,7 @@ public class ItemsMongoRepositoryIT {
 	@Test
 	public void testRemoveCart() {
 		addTestCartToRepository("testCart", LocalDate.now().toString(), Arrays.asList(new Item("1", "test1")));
-		itemsRepository.removeCart("testCart", LocalDate.now().toString());
+		itemsRepository.removeCart(LocalDate.now().toString(),"testCart");
 		assertThat(retrieveAllCarts()).isEmpty();
 	}
 

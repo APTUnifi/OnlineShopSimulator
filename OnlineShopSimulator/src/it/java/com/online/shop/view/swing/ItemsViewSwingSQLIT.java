@@ -22,7 +22,7 @@ import com.online.shop.controller.ShopController;
 import com.online.shop.model.Item;
 import com.online.shop.repository.sql.ItemsSqlRepository;
 
-public class ShopViewSwingSQLIT extends AssertJSwingJUnitTestCase {
+public class ItemsViewSwingSQLIT extends AssertJSwingJUnitTestCase {
 
 	@SuppressWarnings("rawtypes")
 	@ClassRule
@@ -32,7 +32,7 @@ public class ShopViewSwingSQLIT extends AssertJSwingJUnitTestCase {
 	
 	private ShopController shopController;
 	private CartController cartController;
-	private ShopViewSwing itemsViewSwing;
+	private ItemsViewSwing itemsViewSwing;
 	private HistoryViewSwing historyView;
 	
 	private FrameFixture window;
@@ -67,7 +67,7 @@ public class ShopViewSwingSQLIT extends AssertJSwingJUnitTestCase {
 
 		GuiActionRunner.execute(
 				()->{
-					itemsViewSwing = new ShopViewSwing();
+					itemsViewSwing = new ItemsViewSwing();
 					historyView = new HistoryViewSwing();
 					shopController = new ShopController(itemsViewSwing,repository);
 					cartController = new CartController(itemsViewSwing,repository,historyView);

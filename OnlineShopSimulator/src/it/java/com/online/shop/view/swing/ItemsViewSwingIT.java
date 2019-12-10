@@ -27,7 +27,7 @@ import com.online.shop.repository.mongo.ItemsMongoRepository;
 import de.bwaldvogel.mongo.MongoServer;
 import de.bwaldvogel.mongo.backend.memory.MemoryBackend;
 
-public class ShopViewSwingIT extends AssertJSwingJUnitTestCase {
+public class ItemsViewSwingIT extends AssertJSwingJUnitTestCase {
 	
 	@SuppressWarnings("rawtypes")
 	public static final GenericContainer mongo = new GenericContainer("mongo:4.0.5").withExposedPorts(27017);
@@ -41,7 +41,7 @@ public class ShopViewSwingIT extends AssertJSwingJUnitTestCase {
 	private ShopController shopController;
 	private CartController cartController;
 	private ItemsMongoRepository itemsRepository;
-	private ShopViewSwing shopViewSwing;
+	private ItemsViewSwing shopViewSwing;
 	private HistoryViewSwing historyView;
 	
 
@@ -65,7 +65,7 @@ public class ShopViewSwingIT extends AssertJSwingJUnitTestCase {
 		}
 		GuiActionRunner.execute(
 				()->{
-					shopViewSwing = new ShopViewSwing();
+					shopViewSwing = new ItemsViewSwing();
 					historyView = new HistoryViewSwing();
 					shopController = new ShopController(shopViewSwing,itemsRepository);
 					cartController = new CartController(shopViewSwing,itemsRepository,historyView);

@@ -10,7 +10,7 @@ import javax.swing.border.EmptyBorder;
 import com.online.shop.controller.CartController;
 import com.online.shop.controller.ShopController;
 import com.online.shop.model.Item;
-import com.online.shop.view.ShopView;
+import com.online.shop.view.ItemsView;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -26,7 +26,7 @@ import javax.swing.WindowConstants;
 
 
 @SuppressWarnings("serial")
-public class ShopViewSwing extends JFrame implements ShopView {	
+public class ItemsViewSwing extends JFrame implements ItemsView {	
 
 	private JPanel contentPane;
 	private JTextField itemName;
@@ -61,7 +61,7 @@ public class ShopViewSwing extends JFrame implements ShopView {
 		this.cartController = cartController;
 	}
 
-	public ShopViewSwing() {
+	public ItemsViewSwing() {
 
 
 

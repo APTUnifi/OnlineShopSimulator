@@ -44,7 +44,7 @@ public class HistoryViewSwingIT extends AssertJSwingJUnitTestCase {
 	
 	private CartController cartController;
 	private ItemsMongoRepository itemsRepository;
-	private ShopViewSwing shopViewSwing;
+	private ItemsViewSwing shopViewSwing;
 	private HistoryViewSwing historyViewSwing;
 	
 
@@ -64,12 +64,12 @@ public class HistoryViewSwingIT extends AssertJSwingJUnitTestCase {
 		mongoClient = new MongoClient(new ServerAddress(serverAddress));
 		itemsRepository = new ItemsMongoRepository(mongoClient);
 		for(Cart cart: itemsRepository.findAllCarts()) {
-			itemsRepository.removeCart(cart.getLabel(), cart.getDate());
+			itemsRepository.removeCart(cart.getDate(),cart.getLabel());
 	
 		}
 		GuiActionRunner.execute(
 				()->{
-					shopViewSwing = new ShopViewSwing();
+					shopViewSwing = new ItemsViewSwing();
 					historyViewSwing = new HistoryViewSwing();
 					cartController = new CartController(shopViewSwing,itemsRepository,historyViewSwing);
 					historyViewSwing.setCartController(cartController);

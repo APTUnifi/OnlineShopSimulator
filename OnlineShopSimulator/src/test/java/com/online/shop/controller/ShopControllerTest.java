@@ -11,7 +11,7 @@ import org.mockito.MockitoAnnotations;
 
 import com.online.shop.model.Item;
 import com.online.shop.repository.ItemsRepository;
-import com.online.shop.view.ShopView;
+import com.online.shop.view.ItemsView;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
@@ -27,7 +27,7 @@ public class ShopControllerTest {
 	ItemsRepository itemsRepository;
 
 	@Mock
-	ShopView itemsView;
+	ItemsView itemsView;
 
 	@InjectMocks
 	ShopController shopController;
@@ -45,7 +45,7 @@ public class ShopControllerTest {
 		// exercise
 		shopController.allItems();
 		// verify
-		verify(itemsView).showItemsShop(items);
+		verify(itemsView).updateItemsShop(items);
 	}
 
 	@Test
@@ -138,7 +138,7 @@ public class ShopControllerTest {
 		// exercise
 		shopController.searchItem(ITEM_NAME);
 		// verify
-		//verify(itemsView).errorLog("Item with name battery doest not exists", null);
+		verify(itemsView).errorLog("Item with name battery doest not exists", null);
 		verifyNoMoreInteractions(ignoreStubs(itemsRepository));
 	}
 
@@ -160,6 +160,16 @@ public class ShopControllerTest {
 		shopController.modifyItemQuantity(itemToModify, -2);
 		// verify
 		verify(itemsRepository).remove(itemToModify.getProductCode());
+		verifyNoMoreInteractions(ignoreStubs(itemsRepository));
+	}
+	
+	@Test
+	public void testModifyQuantityWhenModifierIsZero() {
+		// Setup
+		Item itemToModify = new Item(PRODUCT_CODE, ITEM_NAME, 2);
+		// exercise
+		shopController.modifyItemQuantity(itemToModify, 0);
+		// verify
 		verifyNoMoreInteractions(ignoreStubs(itemsRepository));
 	}
 

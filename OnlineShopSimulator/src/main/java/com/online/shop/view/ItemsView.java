@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.online.shop.model.Item;
 
-public interface ShopView {
+public interface ItemsView {
   
 	void showItemsShop(List<Item> items);
 	void errorLog(String error, List<Item> items);

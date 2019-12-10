@@ -2,21 +2,21 @@ package com.online.shop.controller;
 
 import com.online.shop.model.Item;
 import com.online.shop.repository.ItemsRepository;
-import com.online.shop.view.ShopView;
+import com.online.shop.view.ItemsView;
 
 public class ShopController {
 
-	private ShopView itemsView;
+	private ItemsView itemsView;
 	private ItemsRepository itemsRepository;
 
-	public ShopController(ShopView itemsView, ItemsRepository itemsRepository) {
+	public ShopController(ItemsView itemsView, ItemsRepository itemsRepository) {
 		this.itemsView = itemsView;
 		this.itemsRepository = itemsRepository;
 	}
 
 
 	public void allItems() {
-		itemsView.showItemsShop(itemsRepository.findAll());
+		itemsView.updateItemsShop(itemsRepository.findAll());
 	}
 
 	public void newItem(Item item) {
@@ -37,6 +37,7 @@ public class ShopController {
 	
 	public void removeItem(Item item) {
 		if (itemsRepository.findByProductCode(item.getProductCode()) == null) {
+			//itemsView.errorLog("Item with product code " + item.getProductCode() + " does not exists", item);
 			return;
 		}
 		itemsRepository.remove(item.getProductCode());
@@ -46,7 +47,7 @@ public class ShopController {
 		Item retrievedItem = itemsRepository.findByName(itemName);
 
 		if (retrievedItem == null) {
-//			itemsView.errorLog("Item with name " + itemName + " doest not exists", null);
+			itemsView.errorLog("Item with name " + itemName + " doest not exists", null);
 			return;
 		}
 
@@ -55,15 +56,20 @@ public class ShopController {
 
 
 	public void modifyItemQuantity(Item item, int modifier) {
+		if (modifier == 0) {
+			return;
+		}
 		if (modifier + item.getQuantity() == 0) {
 			itemsRepository.remove(item.getProductCode());
 			return;
 		}
 		if (modifier + item.getQuantity() < 0) {
-//			itemsView.errorLog("Item has quantity " + item.getQuantity() + ", can't remove more items", item);
+			//itemsView.errorLog("Item has quantity " + item.getQuantity() + ", can't remove more items", item);
 			return;
 		}
 		itemsRepository.modifyQuantity(item, modifier);
 	}
+	
+	
 
 }

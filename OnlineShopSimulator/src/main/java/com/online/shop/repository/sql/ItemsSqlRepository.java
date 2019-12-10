@@ -100,7 +100,6 @@ public class ItemsSqlRepository implements ItemsRepository {
 
 		String selectCartId = "SELECT cart_id FROM carts WHERE label = '" + label + "' AND date = '" + date +"'";
 		int cartId = (int) db.queryForObject(selectCartId, Integer.class);
-		System.out.println("fa????");
 
 		List<Item> items = new ArrayList<>();
 

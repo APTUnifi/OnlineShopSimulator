@@ -25,7 +25,7 @@ import com.online.shop.model.Cart;
 import com.online.shop.model.Item;
 import com.online.shop.repository.ItemsRepository;
 import com.online.shop.view.HistoryView;
-import com.online.shop.view.ShopView;
+import com.online.shop.view.ItemsView;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -37,7 +37,7 @@ public class CartControllerTest {
 	private static final String ITEM_PRODUCT_CODE = "1";
 
 	@Mock
-	ShopView itemsView;
+	ItemsView itemsView;
 
 	@Mock
 	HistoryView historyView;

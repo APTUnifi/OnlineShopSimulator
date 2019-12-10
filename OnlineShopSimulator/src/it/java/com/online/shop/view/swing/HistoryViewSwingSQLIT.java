@@ -36,7 +36,7 @@ public class HistoryViewSwingSQLIT extends AssertJSwingJUnitTestCase {
 	JdbcTemplate db;
 	
 	private CartController cartController;
-	private ShopViewSwing itemsViewSwing;
+	private ItemsViewSwing itemsViewSwing;
 	private HistoryViewSwing historyViewSwing;
 	
 	private FrameFixture window;
@@ -67,7 +67,7 @@ public class HistoryViewSwingSQLIT extends AssertJSwingJUnitTestCase {
 
 		GuiActionRunner.execute(
 				()->{
-					itemsViewSwing = new ShopViewSwing();
+					itemsViewSwing = new ItemsViewSwing();
 					historyViewSwing = new HistoryViewSwing();
 					cartController = new CartController(itemsViewSwing,repository,historyViewSwing);
 					historyViewSwing.setCartController(cartController);

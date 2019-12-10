@@ -28,11 +28,10 @@ import com.online.shop.view.HistoryView;
 import org.junit.Test;
 
 @RunWith(GUITestRunner.class)
-public class ShopViewSwingTest extends AssertJSwingJUnitTestCase{
+public class ItemsViewSwingTest extends AssertJSwingJUnitTestCase{
 
-	
 	private FrameFixture window;
-	private	ShopViewSwing itemsViewSwing;
+	private	ItemsViewSwing itemsViewSwing;
 	private HistoryViewSwing historyViewSwing;
 
 	@Mock
@@ -45,7 +44,7 @@ public class ShopViewSwingTest extends AssertJSwingJUnitTestCase{
 	protected void onSetUp() {
 		MockitoAnnotations.initMocks(this);
 		GuiActionRunner.execute(() -> {
-			itemsViewSwing = new ShopViewSwing();
+			itemsViewSwing = new ItemsViewSwing();
 			itemsViewSwing.setShopController(shopController);
 			itemsViewSwing.setCartController(cartController);
 			return itemsViewSwing;

@@ -90,6 +90,7 @@ public class ItemsMongoRepository implements ItemsRepository {
 		for (Item item : cartToStore.getItems()) {
 			list.add(new Document().append("productCode", item.getProductCode()).append("name", item.getName())
 					.append("quantity", item.getQuantity()));
+			modifyQuantity(findByProductCode(item.getProductCode()), -item.getQuantity());
 		}
 		collectionCarts.insertOne(new Document().append("label", cartToStore.getLabel())
 				.append("date", cartToStore.getDate()).append("items", list));
@@ -97,8 +98,8 @@ public class ItemsMongoRepository implements ItemsRepository {
 	}
 
 	@Override
-	public Cart findCart(String date,String label) {
-		Document d = collectionCarts.find(Filters.and(Filters.eq("label", label), Filters.eq("date", date))).first();
+	public Cart findCart(String date, String label) {
+		Document d = collectionCarts.find(Filters.and(Filters.eq("date", date), Filters.eq("label", label))).first();
 		if (d != null)
 			return fromDocumentToCart(d);
 		return null;
@@ -111,8 +112,7 @@ public class ItemsMongoRepository implements ItemsRepository {
 	}
 
 	@Override
-	public void removeCart(String label, String date) {
-		collectionCarts.deleteOne(Filters.and(Filters.eq("label", label), Filters.eq("date", date)));
+	public void removeCart(String date, String label) {
+		collectionCarts.deleteOne(Filters.and(Filters.eq("date", date), Filters.eq("label", label)));
 	}
-
 }
