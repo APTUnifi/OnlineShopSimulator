@@ -6,8 +6,8 @@ import com.online.shop.model.Cart;
 
 public interface HistoryView {
 
-	public void showHistory(List<Cart> carts);
-	public void showItemsCart(Cart cart);
-	public void removeCart(Cart cart);
-	
+	void showHistory(List<Cart> carts);
+	void showItemsCart(Cart cart);
+	void removeCart(Cart cartToRemove);
+  
 }

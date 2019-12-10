@@ -15,7 +15,6 @@ public class CartController {
 	private HistoryView historyView;
 	private Cart cart;
 
-
 	public CartController(ItemsView ShopView, ItemsRepository itemsRepository,HistoryView historyView) {
 		this.itemsView = ShopView;
 		this.itemsRepository = itemsRepository;
@@ -116,9 +115,8 @@ public class CartController {
 		if (itemsRepository.findCart(cartToRemove.getDate(), cartToRemove.getLabel()) == null) {
 			throw new IllegalArgumentException("Cart does not exists");
 		}
-
 		itemsRepository.removeCart(cartToRemove.getDate(), cartToRemove.getLabel());
 		historyView.removeCart(cartToRemove);
 	}
-  
 }
+

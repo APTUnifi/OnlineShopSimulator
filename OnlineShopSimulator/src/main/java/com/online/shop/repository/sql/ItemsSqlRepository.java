@@ -33,16 +33,13 @@ public class ItemsSqlRepository implements ItemsRepository {
 	@Override
 	public Item findByProductCode(String productCode) {
 		String sql = "SELECT * FROM items WHERE product_code = ?";
-		
-		Item result = null;
-		
+		Item result = null;	
 		try {
 			result = db.queryForObject(sql, new Object[] { productCode },
 					(rs, rowNum) -> new Item(rs.getString("product_code"), rs.getString("name"), rs.getInt("quantity")));
 		} catch (EmptyResultDataAccessException e) {
 			return null;
-		} 
-		
+		} 	
 		return result;
 	}
 
@@ -114,6 +111,7 @@ public class ItemsSqlRepository implements ItemsRepository {
 	}
 
 	@Override
+
 	public List<Cart> findAllCarts() {
 		List<Cart> allCarts = new ArrayList<>();
 
@@ -129,18 +127,20 @@ public class ItemsSqlRepository implements ItemsRepository {
 
 			items = db.query(selectItemsInCart, (rs, rowNum) -> new Item(rs.getString("product_code"),
 					rs.getString("name"), rs.getInt("quantity_in_cart")));
-
 			cart.setItems(items);
 		}
 		return allCarts;
 	}
 
 	@Override
+
 	public void removeCart( String date,String label) {
+
 		String selectCartId = "SELECT cart_id FROM carts WHERE label = '" + label + "' AND date = '"
 				+ date + "'";
 
 		int cartID = (int) db.queryForObject(selectCartId, Integer.class);
+
 
 		String deleteCartFromCarts = "DELETE FROM carts WHERE cart_id = ?";
 		db.update(deleteCartFromCarts, cartID);
@@ -161,3 +161,5 @@ public class ItemsSqlRepository implements ItemsRepository {
 		return db;
 	}
 }
+
+

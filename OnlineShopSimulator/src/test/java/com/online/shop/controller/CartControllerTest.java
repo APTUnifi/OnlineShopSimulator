@@ -160,6 +160,7 @@ public class CartControllerTest {
 
 		verify(itemsRepository).modifyQuantity(firstExistingItem, -1);
 		verify(itemsRepository).modifyQuantity(secondExistingItem, -2);
+
 	}
 
 	@Test
@@ -217,6 +218,60 @@ public class CartControllerTest {
 		cartController.completePurchase(CART_LABEL);
 		assertThat(cartController.cartItems()).isEmpty();
 	}
+
+	@Test
+	public void testPurchaseItemsShouldSaveCartDetails() {
+		List<Item> items = new ArrayList<>();
+		Cart cart = spy(new Cart());
+		Item firstExistingItem = new Item(ITEM_PRODUCT_CODE, ITEM_NAME, 2);
+		Item secondExistingItem = new Item("2", "test2", 3);
+		items.add(new Item(ITEM_PRODUCT_CODE, ITEM_NAME));
+		items.add(new Item("2", "test2", 2));
+		cart.setItems(items);
+		cartController.setCart(cart);
+		when(itemsRepository.findByProductCode(ITEM_PRODUCT_CODE)).thenReturn(firstExistingItem);
+		when(itemsRepository.findByProductCode("2")).thenReturn(secondExistingItem);
+		cartController.completePurchase(CART_LABEL);
+		InOrder inOrder = inOrder(itemsRepository, cart);
+		inOrder.verify(itemsRepository).storeCart(cart);
+		inOrder.verify(cart).setItems(new ArrayList<Item>());
+	}
+
+	@Test
+	public void testAllCarts() {
+		List<Cart> carts = Arrays.asList(new Cart());
+		when(itemsRepository.findAllCarts()).thenReturn(carts);
+		cartController.allCarts();
+		verify(historyView).showHistory(carts);
+	}
+
+	@Test
+	public void testRemoveCartWhenCartExists() {
+		List<Item> items = new ArrayList<>();
+		Item item = new Item(ITEM_PRODUCT_CODE, ITEM_NAME);
+		items.add(item);
+		Cart cartToRemove = new Cart(items, CART_LABEL);
+		cartController.setCart(cartToRemove);
+		when(itemsRepository.findCart(LocalDate.now().toString(), CART_LABEL)).thenReturn(cartToRemove);
+		cartController.removeCart(cartToRemove);
+		InOrder inOrder = inOrder(itemsRepository, historyView);
+		inOrder.verify(itemsRepository).removeCart(LocalDate.now().toString(), CART_LABEL);
+		inOrder.verify(historyView).removeCart(cartToRemove);
+	}
+
+	@Test
+	public void testRemoveCartWhenCartDoesNotExists() {
+		List<Item> items = new ArrayList<>();
+		Item item = new Item(ITEM_PRODUCT_CODE, ITEM_NAME);
+		items.add(item);
+		Cart cartToRemove = new Cart(items, CART_LABEL);
+		when(itemsRepository.findCart(LocalDate.now().toString(), CART_LABEL)).thenReturn(null);
+		assertThatThrownBy(() -> cartController.removeCart(cartToRemove))
+				.isInstanceOf(IllegalArgumentException.class).hasMessage("Cart does not exists");
+		verifyNoMoreInteractions(ignoreStubs(historyView));
+	}
+
+}
 
 	@Test
 	public void testPurchaseItemsShouldSaveCartDetails() {

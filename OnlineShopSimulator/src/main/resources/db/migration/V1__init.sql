@@ -18,3 +18,4 @@ CREATE TABLE items_in_cart(
    quantity_in_cart integer NOT NULL,
    CONSTRAINT PK_Item PRIMARY KEY (cart_id, product_code)
 );
+

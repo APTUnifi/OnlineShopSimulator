@@ -15,6 +15,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.testcontainers.containers.PostgreSQLContainer;
 
+import com.online.shop.model.Cart;
 import com.online.shop.model.Item;
 
 public class ItemsSqlRepositoryIT {
@@ -178,8 +179,8 @@ public class ItemsSqlRepositoryIT {
 		Cart cartToRemove = new Cart(Arrays.asList(itemToAdd), "testCart");
 		addTestCartToRepository(cartToRemove);
 		
+
 		repository.removeCart(LocalDate.now().toString(),"testCart");
-		
 		assertThat(retrieveAllCarts()).isEmpty();
 	}
 	
@@ -189,9 +190,7 @@ public class ItemsSqlRepositoryIT {
 		addTestItemToRepository(itemToAdd);
 		Cart cartToRemove = new Cart(Arrays.asList(itemToAdd), "testCart");
 		addTestCartToRepository(cartToRemove);
-		
-		repository.removeCart(cartToRemove.getDate(),cartToRemove.getLabel());
-		
+		repository.removeCart(cartToRemove.getDate(),cartToRemove.getLabel());	
 		assertThat(retrieveAllItemsInCart("testCart", LocalDate.now().toString())).isEmpty();
 	}
 	
@@ -201,18 +200,13 @@ public class ItemsSqlRepositoryIT {
 		addTestItemToRepository(itemToAdd);
 		Cart cartToFind = new Cart(Arrays.asList(itemToAdd), "testCart");
 		addTestCartToRepository(cartToFind);
-		
 		assertThat(repository.findCart(cartToFind.getDate(),cartToFind.getLabel())).isEqualTo(new Cart(Arrays.asList(new Item("1", "test", 1)), "testCart"));
 	}
 	
 	@Test
 	public void testStoreCartSavingNewCartInCartsTable() {
-		
-		
 		Cart cartToStore = new Cart();
-		
 		repository.storeCart(cartToStore);
-		
 		assertThat(retrieveAllCarts()).containsExactly(new Cart());
 	}
 	
@@ -220,10 +214,8 @@ public class ItemsSqlRepositoryIT {
 	public void testStoreCartAlsoSavingItemsInItemsInCartTable() {
 		Item itemToAdd = new Item("1", "test", 1);
 		addTestItemToRepository(itemToAdd);
-		Cart cartToStore = new Cart(Arrays.asList(itemToAdd), "testCart");
-		
-		repository.storeCart(cartToStore);
-		
+		Cart cartToStore = new Cart(Arrays.asList(itemToAdd), "testCart");		
+		repository.storeCart(cartToStore);		
 		assertThat(retrieveAllItemsInCart(cartToStore.getLabel(), cartToStore.getDate())).containsExactly(new Item("1", "test", 1));
 	}
 	
@@ -238,3 +230,4 @@ public class ItemsSqlRepositoryIT {
 		assertThat(retrieveItem("1").getQuantity()).isEqualTo(0);
 	}
 }
+

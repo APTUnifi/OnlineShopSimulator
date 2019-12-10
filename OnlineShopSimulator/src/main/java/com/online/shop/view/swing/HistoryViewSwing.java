@@ -128,6 +128,4 @@ public class HistoryViewSwing extends JFrame implements HistoryView {
 		}    
 		listItemsCart.setModel(listItems);  
 	}
-
-
 }
