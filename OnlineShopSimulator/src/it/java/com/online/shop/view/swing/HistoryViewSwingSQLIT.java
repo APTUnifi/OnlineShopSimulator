@@ -34,11 +34,11 @@ public class HistoryViewSwingSQLIT extends AssertJSwingJUnitTestCase {
 
 	ItemsSqlRepository repository;
 	JdbcTemplate db;
-	
+
 	private CartController cartController;
 	private ItemsViewSwing itemsViewSwing;
 	private HistoryViewSwing historyViewSwing;
-	
+
 	private FrameFixture window;
 
 
@@ -72,12 +72,12 @@ public class HistoryViewSwingSQLIT extends AssertJSwingJUnitTestCase {
 					cartController = new CartController(itemsViewSwing,repository,historyViewSwing);
 					historyViewSwing.setCartController(cartController);
 					return historyViewSwing;
-			});
+				});
 		window = new FrameFixture(robot(),historyViewSwing);
 		window.show();		
 	}
-	
-	
+
+
 	@Test @GUITest
 	public void testAllCarts() {
 		Item item1 = new Item("2","Iphone");
@@ -88,7 +88,7 @@ public class HistoryViewSwingSQLIT extends AssertJSwingJUnitTestCase {
 		repository.storeCart(cart);
 		GuiActionRunner.execute(
 				()-> cartController.allCarts()
-		);
+				);
 		assertThat(window.list("listCart").contents()).containsExactly(cart.toString());
 	}
 	@Test @GUITest
@@ -101,12 +101,12 @@ public class HistoryViewSwingSQLIT extends AssertJSwingJUnitTestCase {
 		repository.storeCart(cart);
 		GuiActionRunner.execute(
 				()-> cartController.allCarts()
-				
-		);
+
+				);
 		window.list("listCart").selectItem(0);
 		GuiActionRunner.execute(
 				()-> cartController.allItemsCart(cart)
-		);
+				);
 		assertThat(window.list("listItemsCart").contents()).containsExactly(cart.getItems().get(0).toString(),cart.getItems().get(1).toString());
 	}
 	@Test @GUITest
@@ -121,7 +121,7 @@ public class HistoryViewSwingSQLIT extends AssertJSwingJUnitTestCase {
 		repository.storeCart(cart1);
 		GuiActionRunner.execute(
 				()-> cartController.allCarts()		
-		);
+				);
 		window.list("listCart").selectItem(0);
 		window.button(JButtonMatcher.withText("Remove")).click();
 		assertThat(window.list("listCart").contents()).containsExactly(cart1.toString());
@@ -142,13 +142,13 @@ public class HistoryViewSwingSQLIT extends AssertJSwingJUnitTestCase {
 		window.button(JButtonMatcher.withText("Remove")).click();
 		assertThat(window.list("listCart").contents()).containsExactly(cart.toString());
 
-		
+
 	}	
 }
 
-	
-	
 
-	
+
+
+
 
 

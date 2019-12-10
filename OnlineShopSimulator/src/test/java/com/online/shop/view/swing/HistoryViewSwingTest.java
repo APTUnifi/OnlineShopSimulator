@@ -56,7 +56,7 @@ public class HistoryViewSwingTest extends AssertJSwingJUnitTestCase{
 					DefaultListModel<Cart> listCartModel = historyViewSwing.getListCartModel();
 					listCartModel.addElement(cart);
 				}
-		);
+				);
 		window.list("listCart").selectItem(0);
 		//verify
 		JButtonFixture deleteButton = window.button(JButtonMatcher.withText("Remove"));
@@ -75,7 +75,7 @@ public class HistoryViewSwingTest extends AssertJSwingJUnitTestCase{
 					DefaultListModel<Cart> listCartModel = historyViewSwing.getListCartModel();
 					listCartModel.addElement(cart);
 				}
-		);
+				);
 		window.list("listCart").selectItem(0);
 		String[] listContents = window.list("listItemsCart").contents();
 		assertThat(listContents).containsExactly(item1.toString(),item2.toString());
@@ -94,16 +94,16 @@ public class HistoryViewSwingTest extends AssertJSwingJUnitTestCase{
 					listCartModel.addElement(cart1);
 					listCartModel.addElement(cart2);
 				}
-		);
+				);
 		//execute
 		GuiActionRunner.execute(
 				()-> historyViewSwing.removeCart(cart1)
-		);
+				);
 		//verify
 		String[] listContents = window.list("listCart").contents();
 		assertThat(listContents).containsExactly(cart2.toString());
 	}
-	
+
 	@Test
 	public void testShowItemsShopShouldAddItemsToTheItemShopList() {
 		//setup
@@ -114,8 +114,8 @@ public class HistoryViewSwingTest extends AssertJSwingJUnitTestCase{
 
 		//execute
 		GuiActionRunner.execute(() ->
-			historyViewSwing.showHistory(Arrays.asList(cart1,cart2))
-		);
+		historyViewSwing.showHistory(Arrays.asList(cart1,cart2))
+				);
 		//verify
 		String[] listContents = window.list("listCart").contents();
 		assertThat(listContents).containsExactly(cart1.toString(),cart2.toString());
@@ -127,13 +127,13 @@ public class HistoryViewSwingTest extends AssertJSwingJUnitTestCase{
 		Cart cart1 = new Cart(Arrays.asList(item1),"test1");
 		GuiActionRunner.execute(
 				()-> historyViewSwing.getListCartModel().addElement(cart1)
-		);
+				);
 		//execute
 		window.list("listCart").selectItem(0);
 		window.button(JButtonMatcher.withText("Remove")).click();
 		//verify
 		verify(cartController).removeCart(cart1);
-	
+
 	}
-	
+
 }

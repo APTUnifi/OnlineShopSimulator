@@ -269,5 +269,4 @@ public class CartControllerTest {
 				.isInstanceOf(IllegalArgumentException.class).hasMessage("Cart does not exists");
 		verifyNoMoreInteractions(ignoreStubs(historyView));
 	}
-
 }

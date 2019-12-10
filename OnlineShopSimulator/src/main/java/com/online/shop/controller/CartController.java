@@ -25,7 +25,7 @@ public class CartController {
 
 	public void addToCart(Item item) {
 		List<Item> items = cart.getItems();
-		
+
 		if (!items.contains(item)) {
 			item.setQuantity(1);
 			itemsView.itemAddedToCart(item);
@@ -107,7 +107,7 @@ public class CartController {
 	public void allCarts() {
 		historyView.showHistory(itemsRepository.findAllCarts());
 	}
-	
+
 	public void allItemsCart(Cart cart) {
 		historyView.showItemsCart(cart);
 	}
@@ -120,5 +120,5 @@ public class CartController {
 		itemsRepository.removeCart(cartToRemove.getDate(), cartToRemove.getLabel());
 		historyView.removeCart(cartToRemove);
 	}
-  
+
 }

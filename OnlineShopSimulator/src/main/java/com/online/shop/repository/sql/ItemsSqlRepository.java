@@ -20,7 +20,6 @@ public class ItemsSqlRepository implements ItemsRepository {
 	public ItemsSqlRepository(DataSource dataSource) {
 
 		db = new JdbcTemplate(dataSource);
-
 	}
 
 	@Override

@@ -20,7 +20,7 @@ public interface ItemsRepository {
 
 	public void modifyQuantity(Item itemToBeModified, int modifier);
 	
-  public void storeCart(Cart cartToStore);
+	public void storeCart(Cart cartToStore);
 	
 	public void removeCart(String date, String label);
 	

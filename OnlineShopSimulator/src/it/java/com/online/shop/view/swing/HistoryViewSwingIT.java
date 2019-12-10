@@ -36,24 +36,24 @@ public class HistoryViewSwingIT extends AssertJSwingJUnitTestCase {
 	@SuppressWarnings("rawtypes")
 	public static final GenericContainer mongo = new GenericContainer("mongo:4.0.5").withExposedPorts(27017);
 
-	
+
 	private static MongoServer server;	
 	private MongoClient mongoClient;
 	private FrameFixture window;
 	private static InetSocketAddress serverAddress;
-	
+
 	private CartController cartController;
 	private ItemsMongoRepository itemsRepository;
 	private ItemsViewSwing shopViewSwing;
 	private HistoryViewSwing historyViewSwing;
-	
+
 
 	@BeforeClass
 	public static void setupServer() {
 		server = new MongoServer(new MemoryBackend());
 		serverAddress = server.bind();
 	}
-	
+
 	@AfterClass
 	public static void shutdownServer() {
 		server.shutdown();
@@ -65,7 +65,7 @@ public class HistoryViewSwingIT extends AssertJSwingJUnitTestCase {
 		itemsRepository = new ItemsMongoRepository(mongoClient);
 		for(Cart cart: itemsRepository.findAllCarts()) {
 			itemsRepository.removeCart(cart.getDate(),cart.getLabel());
-	
+
 		}
 		GuiActionRunner.execute(
 				()->{
@@ -74,11 +74,11 @@ public class HistoryViewSwingIT extends AssertJSwingJUnitTestCase {
 					cartController = new CartController(shopViewSwing,itemsRepository,historyViewSwing);
 					historyViewSwing.setCartController(cartController);
 					return historyViewSwing;
-			});
+				});
 		window = new FrameFixture(robot(),historyViewSwing);
 		window.show();
 	}		
-	
+
 	@Override
 	protected void onTearDown() {
 		mongoClient.close();
@@ -94,7 +94,7 @@ public class HistoryViewSwingIT extends AssertJSwingJUnitTestCase {
 		itemsRepository.storeCart(cart);
 		GuiActionRunner.execute(
 				()-> cartController.allCarts()
-		);
+				);
 		assertThat(window.list("listCart").contents()).containsExactly(cart.toString());
 	}
 	@Test @GUITest
@@ -107,12 +107,12 @@ public class HistoryViewSwingIT extends AssertJSwingJUnitTestCase {
 		itemsRepository.storeCart(cart);
 		GuiActionRunner.execute(
 				()-> cartController.allCarts()
-				
-		);
+
+				);
 		window.list("listCart").selectItem(0);
 		GuiActionRunner.execute(
 				()-> cartController.allItemsCart(cart)
-		);
+				);
 		assertThat(window.list("listItemsCart").contents()).containsExactly(cart.getItems().get(0).toString(),cart.getItems().get(1).toString());
 	}
 	@Test @GUITest
@@ -127,7 +127,7 @@ public class HistoryViewSwingIT extends AssertJSwingJUnitTestCase {
 		itemsRepository.storeCart(cart1);
 		GuiActionRunner.execute(
 				()-> cartController.allCarts()		
-		);
+				);
 		window.list("listCart").selectItem(1);
 		window.button(JButtonMatcher.withText("Remove")).click();
 		assertThat(window.list("listCart").contents()).containsExactly(cart.toString());
@@ -148,6 +148,6 @@ public class HistoryViewSwingIT extends AssertJSwingJUnitTestCase {
 		window.button(JButtonMatcher.withText("Remove")).click();
 		assertThat(window.list("listCart").contents()).containsExactly(cart.toString());
 
-		
+
 	}	
 }

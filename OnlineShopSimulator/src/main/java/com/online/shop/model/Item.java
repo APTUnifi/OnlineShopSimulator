@@ -10,7 +10,6 @@ public class Item {
 
 	// Used by Unit Testing
 	public Item() {
-
 	}
 
 	public Item(String productCode, String name) {

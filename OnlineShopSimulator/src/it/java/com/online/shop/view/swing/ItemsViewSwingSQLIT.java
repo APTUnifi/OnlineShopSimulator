@@ -29,12 +29,12 @@ public class ItemsViewSwingSQLIT extends AssertJSwingJUnitTestCase {
 	public static final PostgreSQLContainer sqlContainer = new PostgreSQLContainer();
 	private ItemsSqlRepository repository;
 	private JdbcTemplate db;
-	
+
 	private ShopController shopController;
 	private CartController cartController;
 	private ItemsViewSwing itemsViewSwing;
 	private HistoryViewSwing historyView;
-	
+
 	private FrameFixture window;
 
 
@@ -48,7 +48,7 @@ public class ItemsViewSwingSQLIT extends AssertJSwingJUnitTestCase {
 		return new ItemsSqlRepository(dataSource);
 
 	}
-	
+
 	private void addTestItemToRepository(Item itemToAdd) {
 		db.update("INSERT INTO items (product_code, name, quantity) VALUES (?, ?, ?)", itemToAdd.getProductCode(),
 				itemToAdd.getName(), itemToAdd.getQuantity());
@@ -61,7 +61,7 @@ public class ItemsViewSwingSQLIT extends AssertJSwingJUnitTestCase {
 
 		repository = buildRepository();
 		db = repository.getJdbcTemplate();
-		
+
 		flyway.clean();
 		flyway.migrate();
 
@@ -75,7 +75,7 @@ public class ItemsViewSwingSQLIT extends AssertJSwingJUnitTestCase {
 					itemsViewSwing.setShopController(shopController);
 					historyView.setCartController(cartController);
 					return itemsViewSwing;
-			});
+				});
 		window = new FrameFixture(robot(),itemsViewSwing);
 		window.show();		
 	}
@@ -85,10 +85,10 @@ public class ItemsViewSwingSQLIT extends AssertJSwingJUnitTestCase {
 		Item item2 = new Item("2","Samsung");
 		repository.store(item1);
 		repository.store(item2);
-		
+
 		GuiActionRunner.execute(
 				()-> shopController.allItems()
-		);
+				);
 		assertThat(window.list("itemListShop").contents()).containsExactly(item1.toString(),item2.toString());
 	}
 	@Test @GUITest
@@ -98,13 +98,13 @@ public class ItemsViewSwingSQLIT extends AssertJSwingJUnitTestCase {
 				()-> {
 					shopController.newItem(item1);
 				}
-		);
+				);
 		window.list("itemListShop").selectItem(0);
 		window.button(JButtonMatcher.withText("Add")).click();
 		//verify
 		assertThat(window.list("itemListCart").contents()).containsExactly(new Item("1","Iphone",1).toString());
 	}
-	
+
 	@Test @GUITest
 	public void testAddButtonSuccessModifyQuantity() {
 		Item item1 = new Item("1","Iphone",10);
@@ -113,16 +113,16 @@ public class ItemsViewSwingSQLIT extends AssertJSwingJUnitTestCase {
 		GuiActionRunner.execute(
 				()-> {
 					shopController.newItem(item1);
-					
+
 					cartController.addToCart(item1);
 				}
-		);
+				);
 		window.list("itemListShop").selectItem(0);
 		window.button(JButtonMatcher.withText("Add")).click();
 		//verify
 		assertThat(window.list("itemListCart").contents()).containsExactly(new Item("1","Iphone",2).toString());
 	}
-	
+
 	@Test @GUITest
 	public void testAddButtonError() {
 		Item item1 = new Item("1","Iphone",1);
@@ -133,7 +133,7 @@ public class ItemsViewSwingSQLIT extends AssertJSwingJUnitTestCase {
 					cartController.addToCart(item1);
 
 				}
-		);
+				);
 		window.list("itemListShop").selectItem(0);
 		window.button(JButtonMatcher.withText("Add")).click();
 		assertThat(window.list("itemListCart").contents()).containsExactly(new Item("1","Iphone",1).toString());
@@ -141,7 +141,7 @@ public class ItemsViewSwingSQLIT extends AssertJSwingJUnitTestCase {
 		window.list("itemListShop").clearSelection();
 		addButton.requireDisabled();
 	}
-	
+
 	@Test @GUITest
 	public void testRemoveButtonSuccess() {
 		Item item1 = new Item("1","Iphone",1);
@@ -149,11 +149,11 @@ public class ItemsViewSwingSQLIT extends AssertJSwingJUnitTestCase {
 				()-> {
 					cartController.addToCart(item1);
 				}
-		);
+				);
 		window.list("itemListCart").selectItem(0);
 		window.button(JButtonMatcher.withText("Remove")).click();
 		assertThat(window.list("itemListCart").contents()).isEmpty();
-	
+
 	}
 	@Test @GUITest
 	public void testRemoveButtonSuccessModifyQuantity() {
@@ -163,13 +163,13 @@ public class ItemsViewSwingSQLIT extends AssertJSwingJUnitTestCase {
 					shopController.newItem(item1);
 					cartController.addToCart(item1);
 				}
-		);
+				);
 		window.list("itemListShop").selectItem(0);
 		window.button(JButtonMatcher.withText("Add")).click();
 		window.list("itemListCart").selectItem(0);
 		window.button(JButtonMatcher.withText("Remove")).click();
 		assertThat(window.list("itemListCart").contents()).containsExactly(new Item("1","Iphone",1).toString());
-	
+
 	}
 	@Test @GUITest
 	public void testBuyButtonSuccess() {
@@ -180,15 +180,15 @@ public class ItemsViewSwingSQLIT extends AssertJSwingJUnitTestCase {
 				()-> {
 					shopController.newItem(item1);
 					cartController.addToCart(item2);
-		});
+				});
 		window.textBox("cartNameText").enterText("happy");
 		window.list("itemListCart").selectItem(0);
 		window.button(JButtonMatcher.withText("Buy")).click();
 		//verify
 		assertThat(window.list("itemListCart").contents()).isEmpty();
 		assertThat(window.list("itemListShop").contents()).containsExactly(new Item("1","Iphone",9).toString());
-		
-		
+
+
 	}
 	@Test @GUITest
 	public void testBuyButtonError() {

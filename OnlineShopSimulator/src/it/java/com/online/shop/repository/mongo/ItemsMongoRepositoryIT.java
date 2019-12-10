@@ -42,7 +42,7 @@ public class ItemsMongoRepositoryIT {
 	private ItemsMongoRepository itemsRepository;
 	private MongoCollection<Document> collectionItems;
 	private MongoCollection<Document> collectionCarts;
-	
+
 
 	@Before
 	public void setup() {
@@ -52,7 +52,7 @@ public class ItemsMongoRepositoryIT {
 		db.drop(); // clean db
 		collectionItems = db.getCollection(ITEMS_COLLECTION_NAME);
 		collectionCarts = db.getCollection(CARTS_COLLECTION_NAME);
-		
+
 	}
 
 	@After
@@ -147,7 +147,7 @@ public class ItemsMongoRepositoryIT {
 	public void testFindAllCarts() {
 		addTestCartToRepository("testCart", LocalDate.now().toString(), Arrays.asList(new Item("1", "test1")));
 		assertThat(itemsRepository.findAllCarts())
-				.containsExactly(new Cart(Arrays.asList(new Item("1", "test1")), "testCart"));
+		.containsExactly(new Cart(Arrays.asList(new Item("1", "test1")), "testCart"));
 	}
 
 	@Test
@@ -155,7 +155,7 @@ public class ItemsMongoRepositoryIT {
 		addTestCartToRepository("testCart1", LocalDate.now().toString(), Arrays.asList(new Item("1", "test1")));
 		addTestCartToRepository("testCart2", LocalDate.now().toString(), Arrays.asList(new Item("1", "test1")));
 		assertThat(itemsRepository.findCart( LocalDate.now().toString(),"testCart2"))
-				.isEqualTo(new Cart(Arrays.asList(new Item("1", "test1")), "testCart2"));
+		.isEqualTo(new Cart(Arrays.asList(new Item("1", "test1")), "testCart2"));
 	}
 
 	@Test
@@ -174,5 +174,5 @@ public class ItemsMongoRepositoryIT {
 		itemsRepository.storeCart(cartToStore);
 		assertThat(retrieveAllCarts()).containsExactly(new Cart("testCart", LocalDate.now().toString(), Arrays.asList(new Item("1", "test1"))));
 	}
-	
+
 }

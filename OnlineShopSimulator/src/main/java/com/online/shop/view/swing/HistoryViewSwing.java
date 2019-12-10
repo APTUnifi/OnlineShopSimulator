@@ -116,7 +116,7 @@ public class HistoryViewSwing extends JFrame implements HistoryView {
 	public void removeCart(Cart cart) {
 		SwingUtilities.invokeLater(
 				()-> listCartModel.removeElement(cart)			
-				);	
+		);	
 	}
 
 	@Override
