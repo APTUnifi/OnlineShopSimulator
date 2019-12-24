@@ -75,6 +75,11 @@ dependencies {
     compile 'org.sqldroid:sqldroid:1.1.0-rc1'
     // https://mvnrepository.com/artifact/org.springframework/spring-jdbc
 	compile group: 'org.springframework', name: 'spring-jdbc', version: '5.2.1.RELEASE'
+	// picocli dependecies
+	compile 'info.picocli:picocli:4.1.2'
+
+	
+	
 }
 
 // TASKS

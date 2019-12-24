@@ -28,6 +28,10 @@ public class ItemsMongoRepository implements ItemsRepository {
 		collectionCarts = client.getDatabase(SHOP_DB_NAME).getCollection(CARTS_COLLECTION_NAME);
 
 	}
+	public ItemsMongoRepository(MongoClient client, String databaseName, String itemsCollection, String cartsCollection) {
+		collectionItems = client.getDatabase(databaseName).getCollection(itemsCollection);
+		collectionCarts = client.getDatabase(databaseName).getCollection(cartsCollection);
+	}
 
 	private Item fromDocumentToItem(Document d) {
 		return new Item("" + d.get("productCode"), "" + d.get("name"), (int) d.get("quantity"));

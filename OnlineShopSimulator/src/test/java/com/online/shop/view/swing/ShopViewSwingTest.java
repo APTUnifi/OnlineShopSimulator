@@ -3,6 +3,7 @@ package com.online.shop.view.swing;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 
+import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -28,10 +29,20 @@ import com.online.shop.view.HistoryView;
 import org.junit.Test;
 
 @RunWith(GUITestRunner.class)
-public class ItemsViewSwingTest extends AssertJSwingJUnitTestCase{
+public class ShopViewSwingTest extends AssertJSwingJUnitTestCase{
 
+	private static final int ITEM_FIXTURE_QUANTITY_1 = 10;
+	private static final int ITEM_FIXTURE_QUANTITY_2 = 19;
+	private static final String ITEM_FIXTURE_NAME_2 = "test1";
+	private static final String ITEM_FIXTURE_PRODUCTCODE_2 = "2";
+	private static final String ITEM_FIXTURE_NAME_1 = "test";
+	private static final String ITEM_FIXTURE_PRODUCTCODE_1 = "1";
+	private static final int HEIGHT = 300;
+	private static final int WIDTH = 500;
+	private static final int FIRST_ITEM = 0;
+	
 	private FrameFixture window;
-	private	ItemsViewSwing itemsViewSwing;
+	private	ShopViewSwing itemsViewSwing;
 	private HistoryViewSwing historyViewSwing;
 
 	@Mock
@@ -44,13 +55,14 @@ public class ItemsViewSwingTest extends AssertJSwingJUnitTestCase{
 	protected void onSetUp() {
 		MockitoAnnotations.initMocks(this);
 		GuiActionRunner.execute(() -> {
-			itemsViewSwing = new ItemsViewSwing();
+			itemsViewSwing = new ShopViewSwing();
 			itemsViewSwing.setShopController(shopController);
 			itemsViewSwing.setCartController(cartController);
 			return itemsViewSwing;
 		});
 		window = new FrameFixture(robot(), itemsViewSwing);
-		window.show();
+		Dimension dimension = new Dimension(WIDTH, HEIGHT);
+		window.show(dimension);
 
 	}
 	@Test @GUITest
@@ -65,15 +77,15 @@ public class ItemsViewSwingTest extends AssertJSwingJUnitTestCase{
 		window.label("lblCartName").requireText("Cart Name : ");
 		window.button(JButtonMatcher.withText("Buy")).requireDisabled();
 		window.button(JButtonMatcher.withText("History")).requireEnabled();
-
 	}
 
 	@Test
 	public void testAddButtonShouldBeEnabledWhenAnItemIsSelectedInItemListShop() {
 		GuiActionRunner.execute(
-				()-> itemsViewSwing.getItemListShopModel().addElement(new Item("1","Iphone"))
+				()-> itemsViewSwing.getItemListShopModel().addElement(
+						new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1))
 				);
-		window.list("itemListShop").selectItem(0);
+		window.list("itemListShop").selectItem(FIRST_ITEM);
 		JButtonFixture addButton = window.button(JButtonMatcher.withText("Add"));
 		addButton.requireEnabled();
 		assertThat(addButton).matches(p -> p.isEnabled());
@@ -83,97 +95,85 @@ public class ItemsViewSwingTest extends AssertJSwingJUnitTestCase{
 
 	@Test
 	public void testSearchButtonShouldShowFilteredShopListIfThereIsTheSearchedItem() {
-		//setup
-		Item item1 = new Item("1","Iphone");
-		Item item2 = new Item("3","Samsung",1);
+		Item item1 = new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1);
+		Item item2 = new Item(ITEM_FIXTURE_PRODUCTCODE_2,ITEM_FIXTURE_NAME_2);
 		GuiActionRunner.execute(
 				()-> {
 					DefaultListModel<Item> itemListShopModel = itemsViewSwing.getItemListShopModel();
 					itemListShopModel.addElement(item1);
 					itemListShopModel.addElement(item2);
-				}
-				);
-		//exercise
-		window.textBox("itemName").setText("Iphone");
+				});
+		window.textBox("itemName").setText(ITEM_FIXTURE_NAME_1);
 		GuiActionRunner.execute(() ->
 		itemsViewSwing.showSearchResult(item1)
 				);
-		//verify
 		String[] listContents = window.list("itemListShop").contents();
 		assertThat(listContents).containsExactly(item1.toString());
 	}
 
 	@Test
 	public void testSearchButtonShouldShowShopListIfTheSearchBoxIsEmpty() {
-		//setup
-		Item item1 = new Item("1","Iphone");
-		Item item2 = new Item("3","Samsung",1);
+		Item item1 = new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1);
+		Item item2 = new Item(ITEM_FIXTURE_PRODUCTCODE_2,ITEM_FIXTURE_NAME_2);
 		GuiActionRunner.execute(
 				()-> {
 					DefaultListModel<Item> itemListShopModel = itemsViewSwing.getItemListShopModel();
 					itemListShopModel.addElement(item1);
 					itemListShopModel.addElement(item2);
-				}
-				);
-		//exercise
+				});
 		window.textBox("itemName").setText("");
-		GuiActionRunner.execute(() ->
-		itemsViewSwing.showSearchResult(item1)
+		GuiActionRunner.execute(
+				() -> itemsViewSwing.showSearchResult(item1)
 				);
-		//verify
 		String[] listContents = window.list("itemListShop").contents();
 		assertThat(listContents).containsExactly(item1.toString(),item2.toString());
 	}
+	
 	@Test
 	public void testBuyButtonShouldBeEnabledWhenThereIsOneOrMoreItemsInItemListCartAndNameInCartNameText() {
 		GuiActionRunner.execute(
-				()-> itemsViewSwing.getItemListCartModel().addElement(new Item("1","Iphone"))
+				()-> itemsViewSwing.getItemListCartModel().addElement(
+						new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1))
 				);
-
-		window.textBox("cartNameText").enterText("Happy");
+		window.textBox("cartNameText").enterText("testCart");
 		window.list("itemListCart").selectItem(0);
 		JButtonFixture buyButton = window.button(JButtonMatcher.withText("Remove"));	
 		buyButton.requireEnabled();
 		assertThat(buyButton).matches(p -> p.isEnabled());
 		window.list("itemListCart").clearSelection();
 		buyButton.requireDisabled();
-
 	}
+	
 	@Test
 	public void testHistoryButtonShouldShowHistoryFrameWhenClicked() {
 		window.button(JButtonMatcher.withText("History")).click();
-		assertThat(HistoryView.class.isInstance(historyViewSwing));		
-
+		assertThat(HistoryView.class.isInstance(historyViewSwing));	
 	}
 
 	@Test
 	public void testDeleteButtonShouldBeEnabledWhenAnItemIsSelectedInItemListCart() {
-		//setup
 		GuiActionRunner.execute(
 				()->{ 
-					itemsViewSwing.getItemListCartModel().addElement(new Item("1","Iphone",1));
-					itemsViewSwing.getItemListShopModel().addElement(new Item("1","Iphone", 19));
-				}
-				);
-		//exercise
-		window.list("itemListCart").selectItem(0);
-		//verify
+					itemsViewSwing.getItemListCartModel().addElement(
+							new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1));
+					itemsViewSwing.getItemListShopModel().addElement(
+							new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1, ITEM_FIXTURE_QUANTITY_2));
+				});
+		window.list("itemListCart").selectItem(FIRST_ITEM);
 		JButtonFixture deleteButton = window.button(JButtonMatcher.withText("Remove"));	
 		deleteButton.requireEnabled();
 		assertThat(deleteButton).matches(p -> p.isEnabled());
 		window.list("itemListCart").clearSelection();
 		deleteButton.requireDisabled();
 	}
+	
 	@Test
 	public void testShowItemsShopShouldAddItemsToTheItemShopList() {
-		//setup
-		Item item1 = new Item("1","Iphone");
-		Item item2 = new Item("3","Samsung");
-		//exercise
+		Item item1 = new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1);
+		Item item2 = new Item(ITEM_FIXTURE_PRODUCTCODE_2,ITEM_FIXTURE_NAME_2);
 		GuiActionRunner.execute(() ->
 		itemsViewSwing.showItemsShop(Arrays.asList(item1,item2))
 				);
-		//verify
 		String[] listContents = window.list("itemListShop").contents();
 		assertThat(listContents).containsExactly(item1.toString(),item2.toString());
 	}
@@ -181,9 +181,8 @@ public class ItemsViewSwingTest extends AssertJSwingJUnitTestCase{
 	@Test
 	public void testErrorLogShouldShowTheMessageInTheErrorMessageLabel() {
 		List<Item> items = new ArrayList<Item>();
-		Item item = new Item("1","Iphone");
-		Item item1 = new Item("2","Samsung");
-
+		Item item = new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1);
+		Item item1 = new Item(ITEM_FIXTURE_PRODUCTCODE_2,ITEM_FIXTURE_NAME_2);
 		items.add(item);
 		items.add(item1);
 		GuiActionRunner.execute(
@@ -191,40 +190,31 @@ public class ItemsViewSwingTest extends AssertJSwingJUnitTestCase{
 				);		
 		window.label("errorMessageLabel").requireText("error Message: " + item.getName() + " "+ item1.getName() + " ");
 		assertThat(JLabelMatcher.withText("errorMessageLabel").andShowing());
-
-
 	}
+	
 	@Test
 	public void testItemAddedToCartShouldAddTheItemToTheItemListCartAndResetTheErrorLabel() {
-		//setup
-		Item item = new Item("1","Iphone");
-		//exercise
+		Item item = new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1);
 		GuiActionRunner.execute(
 				()-> itemsViewSwing.itemAddedToCart(item)
 				);
-		//verify
 		String[] listContents = window.list("itemListCart").contents();
 		assertThat(listContents).containsExactly(item.toString());
-		//TODO : manage the errors
 		window.label("errorMessageLabel").requireText(" ");
 	}
 
 	@Test
 	public void testUpdateItemsCartShouldUpdateTheItemsCartList() {
-		//setup
-		Item item1 = new Item("1","Iphone",10);
-		Item item2 = new Item("1","Iphone",2);
+		Item item1 = new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1,ITEM_FIXTURE_QUANTITY_1);
+		Item item2 = new Item(ITEM_FIXTURE_PRODUCTCODE_2,ITEM_FIXTURE_NAME_2,ITEM_FIXTURE_QUANTITY_2);
 		GuiActionRunner.execute(
 				()-> {
 					itemsViewSwing.getItemListCartModel().addElement(item2);
 					itemsViewSwing.getItemListShopModel().addElement(item1);
-				}
-				);
-		//exercise
+				});
 		GuiActionRunner.execute(
 				()-> itemsViewSwing.updateItemsCart(Arrays.asList(item2))
 				);
-		//verify
 		String[] listContents = window.list("itemListCart").contents();
 		assertThat(listContents).containsExactly(item2.toString());
 
@@ -234,92 +224,72 @@ public class ItemsViewSwingTest extends AssertJSwingJUnitTestCase{
 	@Test
 	public void testItemRemovedToCartShouldRemoveTheItemFromTheItemListCartAndResetErrorLabel() {
 		//setup
-		Item item1 = new Item("1","Iphone",1);
-		Item item2 = new Item("3","Samsung",1);
-
+		Item item1 = new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1);
+		Item item2 = new Item(ITEM_FIXTURE_PRODUCTCODE_2,ITEM_FIXTURE_NAME_2);
 		GuiActionRunner.execute(
 				()-> {
 					DefaultListModel<Item> itemListCartModel = itemsViewSwing.getItemListCartModel();
 					itemListCartModel.addElement(item1);
 					itemListCartModel.addElement(item2);
-				}
-				);
-		//exercise
+				});
 		GuiActionRunner.execute(
 				()-> itemsViewSwing.itemRemovedFromCart(item1)
 				);
-		//verify
 		String[] listContents = window.list("itemListCart").contents();
 		assertThat(listContents).containsExactly(item2.toString());
 		window.label("errorMessageLabel").requireText(" ");
-
 	}
-
 
 	@Test
 	public void testAddButtonShouldDelegateToTheCartControllerAddElement() {
-		//setup
-		Item item = new Item("1","Iphone");
+		Item item = new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1);
 		GuiActionRunner.execute(
 				()-> itemsViewSwing.getItemListShopModel().addElement(item)
 				);
-		//exercise
-		window.list("itemListShop").selectItem(0);
+		window.list("itemListShop").selectItem(FIRST_ITEM);
 		window.button(JButtonMatcher.withText("Add")).click();
-		//verify
 		verify(cartController).addToCart(item);
-
 	}
 
 	@Test
 	public void testRemoveButtonShouldDelegateToTheCartControllerRemoveElement() {
-		//setup
-		Item item = new Item("1","Iphone");
+		Item item = new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1);
 		GuiActionRunner.execute(
 				()-> itemsViewSwing.getItemListCartModel().addElement(item)
 				);
-		//exercise
-		window.list("itemListCart").selectItem(0);
+		window.list("itemListCart").selectItem(FIRST_ITEM);
 		window.button(JButtonMatcher.withText("Remove")).click();
-		//verify
 		verify(cartController).removeFromCart(item);
 	}
 
 	@Test
 	public void testSearchButtonShouldDelegateToTheShopControllerShowSearchResults() {
-		//setup
-		Item item1 = new Item("1","Iphone");
-		Item item2 = new Item("2", "Nokia");
+		Item item1 = new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1);
+		Item item2 = new Item(ITEM_FIXTURE_PRODUCTCODE_2,ITEM_FIXTURE_NAME_2);
 		GuiActionRunner.execute(
 				()-> {
 					DefaultListModel<Item> itemListShopModel = itemsViewSwing.getItemListShopModel();
 					itemListShopModel.addElement(item1);
 					itemListShopModel.addElement(item2);
 				});
-		window.textBox("itemName").enterText("Nokia");
-		//exercise
+		window.textBox("itemName").enterText(ITEM_FIXTURE_NAME_2);
 		window.button(JButtonMatcher.withText("Search")).click();
-		//verify
 		verify(shopController).searchItem(window.textBox("itemName").text());	
-
 	}
+	
 	@Test
 	public void testBuyButtonShouldDelegateToTheCartControllerCompletePurchase() {
-		//setup
-		Item item1 = new Item("1","Iphone");
-		Item item2 = new Item("2", "Nokia");
+		Item item1 = new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1);
+		Item item2 = new Item(ITEM_FIXTURE_PRODUCTCODE_2,ITEM_FIXTURE_NAME_2);
 		GuiActionRunner.execute(
 				()-> {
 					DefaultListModel<Item> itemListCartModel = itemsViewSwing.getItemListCartModel();
 					itemListCartModel.addElement(item1);
 					itemListCartModel.addElement(item2);
 				});
-
-		window.textBox("cartNameText").enterText("happy");
-		window.list("itemListCart").selectItem(0);
-		//exercise	
+		window.textBox("cartNameText").enterText("testCart");
+		window.list("itemListCart").selectItem(FIRST_ITEM);
 		window.button(JButtonMatcher.withText("Buy")).click();
-		//verify
 		verify(cartController).completePurchase(window.textBox("cartNameText").text());
 	}
 

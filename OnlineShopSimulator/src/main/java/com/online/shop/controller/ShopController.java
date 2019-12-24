@@ -2,14 +2,14 @@ package com.online.shop.controller;
 
 import com.online.shop.model.Item;
 import com.online.shop.repository.ItemsRepository;
-import com.online.shop.view.ItemsView;
+import com.online.shop.view.ShopView;
 
 public class ShopController {
 
-	private ItemsView itemsView;
+	private ShopView itemsView;
 	private ItemsRepository itemsRepository;
 
-	public ShopController(ItemsView itemsView, ItemsRepository itemsRepository) {
+	public ShopController(ShopView itemsView, ItemsRepository itemsRepository) {
 		this.itemsView = itemsView;
 		this.itemsRepository = itemsRepository;
 	}

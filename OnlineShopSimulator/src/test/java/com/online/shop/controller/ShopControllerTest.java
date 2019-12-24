@@ -11,7 +11,7 @@ import org.mockito.MockitoAnnotations;
 
 import com.online.shop.model.Item;
 import com.online.shop.repository.ItemsRepository;
-import com.online.shop.view.ItemsView;
+import com.online.shop.view.ShopView;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
@@ -26,7 +26,7 @@ public class ShopControllerTest {
 	ItemsRepository itemsRepository;
 
 	@Mock
-	ItemsView itemsView;
+	ShopView itemsView;
 
 	@InjectMocks
 	ShopController shopController;

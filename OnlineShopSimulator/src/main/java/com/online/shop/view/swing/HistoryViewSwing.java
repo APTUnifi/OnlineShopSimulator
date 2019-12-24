@@ -1,38 +1,36 @@
 package com.online.shop.view.swing;
 
-import javax.swing.JFrame;
+import java.awt.BorderLayout;
+import java.awt.Window;
+import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-
 import com.online.shop.controller.CartController;
 import com.online.shop.model.Cart;
 import com.online.shop.model.Item;
 import com.online.shop.view.HistoryView;
 import javax.swing.JList;
-
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.util.List;
-
 import javax.swing.DefaultListModel;
-import javax.swing.JButton;
+import java.util.List;
+import javax.swing.JLabel;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
-import javax.swing.WindowConstants;
 
 @SuppressWarnings("serial")
-public class HistoryViewSwing extends JFrame implements HistoryView {
+public class HistoryViewSwing extends JPanel implements HistoryView{
 
-	private JPanel contentPanel;
-	private DefaultListModel<Cart> listCartModel;
+	private final DefaultListModel<Cart> listCartModel;
 	private DefaultListModel<Item> listItemsCartModel;
-	private JList<Cart> listCart;
-	private JList<Item> listItemsCart;
-
-	private transient CartController cartController;
-
+	public JList<Cart> listCart;
+	public JList<Item> listItemsCart;
 	private JButton btnRemove;
+	private JButton btnClose;
+	private JButton btnShowHistory;
+	private JLabel lblItemsCart;
+	private JLabel lblCarts;
+
+	private final JPanel contentPanel;
+	private transient CartController cartController;
 
 	DefaultListModel<Cart> getListCartModel(){
 		return listCartModel;
@@ -41,26 +39,54 @@ public class HistoryViewSwing extends JFrame implements HistoryView {
 	public void setCartController(CartController cartController) {
 		this.cartController = cartController;
 	}
+
+	public void setDefaultListModel(DefaultListModel<Cart> a) {
+		listCart.setModel(a);
+	}
+
 	public HistoryViewSwing() {
-
-		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		setTitle("History");
-		setBounds(100, 100, 450, 300);
 		contentPanel = new JPanel();
-		contentPanel.setName("history");
-		contentPanel.setBorder(new EmptyBorder(6, 6, 6, 6));
-		setContentPane(contentPanel);
-		GridBagLayout gblcontentPanel = new GridBagLayout();
-		gblcontentPanel.columnWidths = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 36, 0};
-		gblcontentPanel.rowHeights = new int[] {0, 30, 30, 30, 0, 0, 0, 0, 0, 30, 30, 0};
-		gblcontentPanel.columnWeights = new double[]{0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, Double.MIN_VALUE};
-		gblcontentPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		contentPanel.setLayout(gblcontentPanel);
 
-		listItemsCartModel = new DefaultListModel<>();
-		listCartModel = new DefaultListModel<>();
+		setBounds(100, 100, 450, 300);
+		setName("History");
+		setLayout(new BorderLayout());
+		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		add(contentPanel, BorderLayout.CENTER);
+		contentPanel.setLayout(null);
+		contentPanel.setName("HistoryPanel");
 
-		listCart = new JList<>();
+		btnRemove = new JButton("Remove");
+		btnRemove.setEnabled(false);
+		btnRemove.setName("Remove");
+
+		btnRemove.addActionListener(
+				e -> {
+					cartController.removeCart(listCart.getSelectedValue());
+					showItemsCart(null);
+					setDefaultListModel(updateListCarts());
+					showItemsCart(null);
+				});
+		btnRemove.setBounds(186, 254, 117, 29);
+		contentPanel.add(btnRemove);
+
+		btnClose = new JButton("Close");
+		btnClose.setName("Close");
+		btnClose.addActionListener(
+				e -> closeButtonAction()
+				);
+		btnClose.setBounds(315, 254, 117, 29);
+		contentPanel.add(btnClose);
+
+		listItemsCartModel =new DefaultListModel<>();		
+		listCartModel =  new DefaultListModel<>();
+		
+		listCart = new JList<>(listCartModel);
+		listCart.setModel(listCartModel);
+		listCart.setName("listCart");
+		listCart.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		listCart.setBounds(18, 50, 190, 186);
+		contentPanel.add(listCart);
+
 		listCart.addListSelectionListener(e -> {
 			btnRemove.setEnabled(listCart.getSelectedIndex() != -1)	;
 			if(listCart.getSelectedValue() != null) {
@@ -69,66 +95,83 @@ public class HistoryViewSwing extends JFrame implements HistoryView {
 		}
 				);
 
-		listCart.setModel(listCartModel);
-		listCart.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		listCart.setName("listCart");	
-		GridBagConstraints gbcitemListShop = new GridBagConstraints();
-		gbcitemListShop.gridwidth = 4;
-		gbcitemListShop.gridheight = 8;
-		gbcitemListShop.insets = new Insets(0, 0, 5, 5);
-		gbcitemListShop.fill = GridBagConstraints.BOTH;
-		gbcitemListShop.gridx = 0;
-		gbcitemListShop.gridy = 2;
-		contentPanel.add(listCart, gbcitemListShop);
-
-		listItemsCart = new JList<>(listItemsCartModel);
-		listItemsCart.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
+		listItemsCart = new JList<Item>(listItemsCartModel);
 		listItemsCart.setName("listItemsCart");
-		GridBagConstraints gbcitemListCart = new GridBagConstraints();
-		gbcitemListCart.insets = new Insets(0, 0, 5, 0);
-		gbcitemListCart.gridheight = 8;
-		gbcitemListCart.gridwidth = 5;
-		gbcitemListCart.fill = GridBagConstraints.BOTH;
-		gbcitemListCart.gridx = 5;
-		gbcitemListCart.gridy = 2;
-		contentPanel.add(listItemsCart, gbcitemListCart);
+		listItemsCart.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		listItemsCart.setBounds(242, 50, 190, 186);
+		contentPanel.add(listItemsCart);
 
-		btnRemove = new JButton("Remove");
-		btnRemove.setEnabled(false);
-		GridBagConstraints gbcbtnRemove = new GridBagConstraints();
-		gbcbtnRemove.insets = new Insets(0, 0, 5, 5);
-		gbcbtnRemove.gridx = 4;
-		gbcbtnRemove.gridy = 5;
-		contentPanel.add(btnRemove, gbcbtnRemove);
+		lblCarts = new JLabel("Carts");
+		lblCarts.setName("lblCarts");
+		lblCarts.setBounds(18, 22, 61, 16);
+		contentPanel.add(lblCarts);
 
-		btnRemove.addActionListener(
-				e -> cartController.removeCart(listCart.getSelectedValue())
+		lblItemsCart = new JLabel("Items Cart");
+		lblItemsCart.setName("lblItemsCart");
+		lblItemsCart.setBounds(242, 22, 108, 16);
+		contentPanel.add(lblItemsCart);
+
+		btnShowHistory = new JButton("ShowHistory");
+		btnShowHistory.setName("showHistory");
+		btnShowHistory.addActionListener(
+				e -> setDefaultListModel(updateListCarts())
 				);
+		
+		btnShowHistory.setBounds(57, 254, 117, 29);
+		contentPanel.add(btnShowHistory);
+	}
 
+	private void closeButtonAction() {
+		Window win = SwingUtilities.getWindowAncestor(this);
+		if (win != null) {
+			win.dispose();
+		}
 	}
 
 	@Override
 	public void showHistory(List<Cart> carts) {
-		carts.stream().forEach(listCartModel::addElement);
+		DefaultListModel<Cart> listCartUpdated = new DefaultListModel<>();
+		for(Cart cartHistory : carts){
+			listCartUpdated.addElement(cartHistory);	
+		}   
+		listCart.setModel(listCartUpdated); 
+		setDefaultListModel(listCartUpdated);
 	}
 
 	@Override
 	public void removeCart(Cart cart) {
-		SwingUtilities.invokeLater(
-				()-> listCartModel.removeElement(cart)			
-		);	
+		DefaultListModel<Cart> carts = (DefaultListModel<Cart>) listCart.getModel();
+		carts.removeElement(cart);
+		listCart.setModel(carts);
+		setDefaultListModel(carts);
 	}
 
 	@Override
 	public void showItemsCart(Cart cart) {
-
 		DefaultListModel<Item> listItems= new DefaultListModel<>();
+		if (cart == null) {
+			listItems.removeAllElements();
+			listItemsCart.setModel(listItems);
+			return;
+		}
 		for(Item itemsShop : cart.getItems()){
 			listItems.addElement(itemsShop);
 		}    
-		listItemsCart.setModel(listItems);  
+		listItemsCart.setModel(listItems);
 	}
 
-
+	@Override
+	public DefaultListModel<Cart> updateListCarts() {
+		DefaultListModel<Cart> listCartUpdated = new DefaultListModel<>();
+		List<Cart> carts = cartController.getListCart();
+		if (cartController.getListCart() == null) {
+			listCart.setModel(listCartUpdated);
+			return listCartUpdated;
+		}
+		for(Cart cartHistory : carts){
+			listCartUpdated.addElement(cartHistory);	
+		}   
+		listCart.setModel(listCartUpdated); 
+		return listCartUpdated;
+	}
 }
