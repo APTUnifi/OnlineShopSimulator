@@ -19,10 +19,10 @@ import javax.swing.SwingUtilities;
 @SuppressWarnings("serial")
 public class HistoryViewSwing extends JPanel implements HistoryView{
 
-	private final DefaultListModel<Cart> listCartModel;
+	private DefaultListModel<Cart> listCartModel;
 	private DefaultListModel<Item> listItemsCartModel;
-	public JList<Cart> listCart;
-	public JList<Item> listItemsCart;
+	private JList<Cart> listCart;
+	private JList<Item> listItemsCart;
 	private JButton btnRemove;
 	private JButton btnClose;
 	private JButton btnShowHistory;
@@ -62,9 +62,8 @@ public class HistoryViewSwing extends JPanel implements HistoryView{
 		btnRemove.addActionListener(
 				e -> {
 					cartController.removeCart(listCart.getSelectedValue());
-					showItemsCart(null);
 					setDefaultListModel(updateListCarts());
-					showItemsCart(null);
+					showItemsCart(new Cart());
 				});
 		btnRemove.setBounds(186, 254, 117, 29);
 		contentPanel.add(btnRemove);
