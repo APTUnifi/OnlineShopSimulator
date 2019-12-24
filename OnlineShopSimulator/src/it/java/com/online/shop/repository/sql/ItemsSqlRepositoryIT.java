@@ -14,12 +14,11 @@ import org.junit.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.testcontainers.containers.PostgreSQLContainer;
-
-import com.online.shop.model.Cart;
 import com.online.shop.model.Item;
 
 public class ItemsSqlRepositoryIT {
 
+	@SuppressWarnings("rawtypes")
 	@ClassRule
 	public static final PostgreSQLContainer sqlContainer = new PostgreSQLContainer();
 

@@ -13,8 +13,6 @@ public class ShopController {
 		this.itemsView = itemsView;
 		this.itemsRepository = itemsRepository;
 	}
-	
-
 
 	public void allItems() {
 		itemsView.updateItemsShop(itemsRepository.findAll());
@@ -35,7 +33,7 @@ public class ShopController {
 		itemsRepository.store(item);
 		allItems();
 	}
-	
+
 	public void removeItem(Item item) {
 		if (itemsRepository.findByProductCode(item.getProductCode()) == null) {
 			//itemsView.errorLog("Item with product code " + item.getProductCode() + " does not exists", item);
@@ -70,7 +68,7 @@ public class ShopController {
 		}
 		itemsRepository.modifyQuantity(item, modifier);
 	}
-	
-	
+
+
 
 }

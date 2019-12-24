@@ -63,7 +63,6 @@ public class CartControllerTest {
 		cartController.setCart(new Cart());
     
 		cartController.addToCart(itemToAdd);
-
 		assertThat(cartController.cartSize()).isEqualTo(1);
 		assertThat(cartController.findItemQuantity(itemToAdd)).isEqualTo(1);
 		verify(itemsView).itemAddedToCart(itemToAdd);

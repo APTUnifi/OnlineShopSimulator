@@ -2,14 +2,11 @@ package com.online.shop.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import com.online.shop.model.Cart;
 import com.online.shop.model.Item;
 import com.online.shop.repository.ItemsRepository;
 import com.online.shop.view.HistoryView;
 import com.online.shop.view.ShopView;
-import com.online.shop.view.swing.HistoryViewSwing;
-import com.online.shop.view.swing.HistoryViewSwing;
 
 public class CartController {
 	private ShopView itemsView;

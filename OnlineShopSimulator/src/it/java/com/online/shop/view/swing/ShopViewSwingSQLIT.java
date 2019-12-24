@@ -47,10 +47,9 @@ public class ShopViewSwingSQLIT extends AssertJSwingJUnitTestCase {
 	private ShopController shopController;
 	private CartController cartController;
 	private ShopViewSwing shopViewSwing;
-	private HistoryViewSwing historyView;
+	private HistoryDialogSwing historyDialogSwing;
 
 	private FrameFixture window;
-	
 	private ItemsSqlRepository buildRepository() {
 
 		DriverManagerDataSource dataSource = new DriverManagerDataSource();
@@ -80,12 +79,12 @@ public class ShopViewSwingSQLIT extends AssertJSwingJUnitTestCase {
 		GuiActionRunner.execute(
 				()->{
 					shopViewSwing = new ShopViewSwing();
-					historyView = new HistoryViewSwing();
+					historyDialogSwing = new HistoryDialogSwing();
 					shopController = new ShopController(shopViewSwing,itemsRepository);
-					cartController = new CartController(shopViewSwing,itemsRepository,historyView);
+					cartController = new CartController(shopViewSwing,itemsRepository,historyDialogSwing);
 					shopViewSwing.setCartController(cartController);
 					shopViewSwing.setShopController(shopController);
-					historyView.setCartController(cartController);
+					historyDialogSwing.setCartController(cartController);
 					return shopViewSwing;
 				});
 		window = new FrameFixture(robot(),shopViewSwing);

@@ -40,10 +40,9 @@ public class ShopViewSwingTest extends AssertJSwingJUnitTestCase{
 	private static final int HEIGHT = 300;
 	private static final int WIDTH = 500;
 	private static final int FIRST_ITEM = 0;
-	
 	private FrameFixture window;
-	private	ShopViewSwing itemsViewSwing;
-	private HistoryViewSwing historyViewSwing;
+	private	ShopViewSwing shopViewSwing;
+	private HistoryDialogSwing historyDialogSwing;
 
 	@Mock
 	private ShopController shopController;
@@ -55,12 +54,12 @@ public class ShopViewSwingTest extends AssertJSwingJUnitTestCase{
 	protected void onSetUp() {
 		MockitoAnnotations.initMocks(this);
 		GuiActionRunner.execute(() -> {
-			itemsViewSwing = new ShopViewSwing();
-			itemsViewSwing.setShopController(shopController);
-			itemsViewSwing.setCartController(cartController);
-			return itemsViewSwing;
+			shopViewSwing = new ShopViewSwing();
+			shopViewSwing.setShopController(shopController);
+			shopViewSwing.setCartController(cartController);
+			return shopViewSwing;
 		});
-		window = new FrameFixture(robot(), itemsViewSwing);
+		window = new FrameFixture(robot(), shopViewSwing);
 		Dimension dimension = new Dimension(WIDTH, HEIGHT);
 		window.show(dimension);
 
@@ -82,7 +81,7 @@ public class ShopViewSwingTest extends AssertJSwingJUnitTestCase{
 	@Test
 	public void testAddButtonShouldBeEnabledWhenAnItemIsSelectedInItemListShop() {
 		GuiActionRunner.execute(
-				()-> itemsViewSwing.getItemListShopModel().addElement(
+				()-> shopViewSwing.getItemListShopModel().addElement(
 						new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1))
 				);
 		window.list("itemListShop").selectItem(FIRST_ITEM);
@@ -99,13 +98,13 @@ public class ShopViewSwingTest extends AssertJSwingJUnitTestCase{
 		Item item2 = new Item(ITEM_FIXTURE_PRODUCTCODE_2,ITEM_FIXTURE_NAME_2);
 		GuiActionRunner.execute(
 				()-> {
-					DefaultListModel<Item> itemListShopModel = itemsViewSwing.getItemListShopModel();
+					DefaultListModel<Item> itemListShopModel = shopViewSwing.getItemListShopModel();
 					itemListShopModel.addElement(item1);
 					itemListShopModel.addElement(item2);
 				});
 		window.textBox("itemName").setText(ITEM_FIXTURE_NAME_1);
 		GuiActionRunner.execute(() ->
-		itemsViewSwing.showSearchResult(item1)
+		shopViewSwing.showSearchResult(item1)
 				);
 		String[] listContents = window.list("itemListShop").contents();
 		assertThat(listContents).containsExactly(item1.toString());
@@ -117,13 +116,13 @@ public class ShopViewSwingTest extends AssertJSwingJUnitTestCase{
 		Item item2 = new Item(ITEM_FIXTURE_PRODUCTCODE_2,ITEM_FIXTURE_NAME_2);
 		GuiActionRunner.execute(
 				()-> {
-					DefaultListModel<Item> itemListShopModel = itemsViewSwing.getItemListShopModel();
+					DefaultListModel<Item> itemListShopModel = shopViewSwing.getItemListShopModel();
 					itemListShopModel.addElement(item1);
 					itemListShopModel.addElement(item2);
 				});
 		window.textBox("itemName").setText("");
 		GuiActionRunner.execute(
-				() -> itemsViewSwing.showSearchResult(item1)
+				() -> shopViewSwing.showSearchResult(item1)
 				);
 		String[] listContents = window.list("itemListShop").contents();
 		assertThat(listContents).containsExactly(item1.toString(),item2.toString());
@@ -132,7 +131,7 @@ public class ShopViewSwingTest extends AssertJSwingJUnitTestCase{
 	@Test
 	public void testBuyButtonShouldBeEnabledWhenThereIsOneOrMoreItemsInItemListCartAndNameInCartNameText() {
 		GuiActionRunner.execute(
-				()-> itemsViewSwing.getItemListCartModel().addElement(
+				()-> shopViewSwing.getItemListCartModel().addElement(
 						new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1))
 				);
 		window.textBox("cartNameText").enterText("testCart");
@@ -147,16 +146,16 @@ public class ShopViewSwingTest extends AssertJSwingJUnitTestCase{
 	@Test
 	public void testHistoryButtonShouldShowHistoryFrameWhenClicked() {
 		window.button(JButtonMatcher.withText("History")).click();
-		assertThat(HistoryView.class.isInstance(historyViewSwing));	
+		assertThat(HistoryView.class.isInstance(historyDialogSwing));	
 	}
 
 	@Test
 	public void testDeleteButtonShouldBeEnabledWhenAnItemIsSelectedInItemListCart() {
 		GuiActionRunner.execute(
 				()->{ 
-					itemsViewSwing.getItemListCartModel().addElement(
+					shopViewSwing.getItemListCartModel().addElement(
 							new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1));
-					itemsViewSwing.getItemListShopModel().addElement(
+					shopViewSwing.getItemListShopModel().addElement(
 							new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1, ITEM_FIXTURE_QUANTITY_2));
 				});
 		window.list("itemListCart").selectItem(FIRST_ITEM);
@@ -172,7 +171,7 @@ public class ShopViewSwingTest extends AssertJSwingJUnitTestCase{
 		Item item1 = new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1);
 		Item item2 = new Item(ITEM_FIXTURE_PRODUCTCODE_2,ITEM_FIXTURE_NAME_2);
 		GuiActionRunner.execute(() ->
-		itemsViewSwing.showItemsShop(Arrays.asList(item1,item2))
+		shopViewSwing.showItemsShop(Arrays.asList(item1,item2))
 				);
 		String[] listContents = window.list("itemListShop").contents();
 		assertThat(listContents).containsExactly(item1.toString(),item2.toString());
@@ -186,7 +185,7 @@ public class ShopViewSwingTest extends AssertJSwingJUnitTestCase{
 		items.add(item);
 		items.add(item1);
 		GuiActionRunner.execute(
-				() -> itemsViewSwing.errorLog("error Message", items)
+				() -> shopViewSwing.errorLog("error Message", items)
 				);		
 		window.label("errorMessageLabel").requireText("error Message: " + item.getName() + " "+ item1.getName() + " ");
 		assertThat(JLabelMatcher.withText("errorMessageLabel").andShowing());
@@ -196,7 +195,7 @@ public class ShopViewSwingTest extends AssertJSwingJUnitTestCase{
 	public void testItemAddedToCartShouldAddTheItemToTheItemListCartAndResetTheErrorLabel() {
 		Item item = new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1);
 		GuiActionRunner.execute(
-				()-> itemsViewSwing.itemAddedToCart(item)
+				()-> shopViewSwing.itemAddedToCart(item)
 				);
 		String[] listContents = window.list("itemListCart").contents();
 		assertThat(listContents).containsExactly(item.toString());
@@ -209,11 +208,11 @@ public class ShopViewSwingTest extends AssertJSwingJUnitTestCase{
 		Item item2 = new Item(ITEM_FIXTURE_PRODUCTCODE_2,ITEM_FIXTURE_NAME_2,ITEM_FIXTURE_QUANTITY_2);
 		GuiActionRunner.execute(
 				()-> {
-					itemsViewSwing.getItemListCartModel().addElement(item2);
-					itemsViewSwing.getItemListShopModel().addElement(item1);
+					shopViewSwing.getItemListCartModel().addElement(item2);
+					shopViewSwing.getItemListShopModel().addElement(item1);
 				});
 		GuiActionRunner.execute(
-				()-> itemsViewSwing.updateItemsCart(Arrays.asList(item2))
+				()-> shopViewSwing.updateItemsCart(Arrays.asList(item2))
 				);
 		String[] listContents = window.list("itemListCart").contents();
 		assertThat(listContents).containsExactly(item2.toString());
@@ -228,12 +227,12 @@ public class ShopViewSwingTest extends AssertJSwingJUnitTestCase{
 		Item item2 = new Item(ITEM_FIXTURE_PRODUCTCODE_2,ITEM_FIXTURE_NAME_2);
 		GuiActionRunner.execute(
 				()-> {
-					DefaultListModel<Item> itemListCartModel = itemsViewSwing.getItemListCartModel();
+					DefaultListModel<Item> itemListCartModel = shopViewSwing.getItemListCartModel();
 					itemListCartModel.addElement(item1);
 					itemListCartModel.addElement(item2);
 				});
 		GuiActionRunner.execute(
-				()-> itemsViewSwing.itemRemovedFromCart(item1)
+				()-> shopViewSwing.itemRemovedFromCart(item1)
 				);
 		String[] listContents = window.list("itemListCart").contents();
 		assertThat(listContents).containsExactly(item2.toString());
@@ -244,7 +243,7 @@ public class ShopViewSwingTest extends AssertJSwingJUnitTestCase{
 	public void testAddButtonShouldDelegateToTheCartControllerAddElement() {
 		Item item = new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1);
 		GuiActionRunner.execute(
-				()-> itemsViewSwing.getItemListShopModel().addElement(item)
+				()-> shopViewSwing.getItemListShopModel().addElement(item)
 				);
 		window.list("itemListShop").selectItem(FIRST_ITEM);
 		window.button(JButtonMatcher.withText("Add")).click();
@@ -255,7 +254,7 @@ public class ShopViewSwingTest extends AssertJSwingJUnitTestCase{
 	public void testRemoveButtonShouldDelegateToTheCartControllerRemoveElement() {
 		Item item = new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1);
 		GuiActionRunner.execute(
-				()-> itemsViewSwing.getItemListCartModel().addElement(item)
+				()-> shopViewSwing.getItemListCartModel().addElement(item)
 				);
 		window.list("itemListCart").selectItem(FIRST_ITEM);
 		window.button(JButtonMatcher.withText("Remove")).click();
@@ -268,7 +267,7 @@ public class ShopViewSwingTest extends AssertJSwingJUnitTestCase{
 		Item item2 = new Item(ITEM_FIXTURE_PRODUCTCODE_2,ITEM_FIXTURE_NAME_2);
 		GuiActionRunner.execute(
 				()-> {
-					DefaultListModel<Item> itemListShopModel = itemsViewSwing.getItemListShopModel();
+					DefaultListModel<Item> itemListShopModel = shopViewSwing.getItemListShopModel();
 					itemListShopModel.addElement(item1);
 					itemListShopModel.addElement(item2);
 				});
@@ -283,7 +282,7 @@ public class ShopViewSwingTest extends AssertJSwingJUnitTestCase{
 		Item item2 = new Item(ITEM_FIXTURE_PRODUCTCODE_2,ITEM_FIXTURE_NAME_2);
 		GuiActionRunner.execute(
 				()-> {
-					DefaultListModel<Item> itemListCartModel = itemsViewSwing.getItemListCartModel();
+					DefaultListModel<Item> itemListCartModel = shopViewSwing.getItemListCartModel();
 					itemListCartModel.addElement(item1);
 					itemListCartModel.addElement(item2);
 				});

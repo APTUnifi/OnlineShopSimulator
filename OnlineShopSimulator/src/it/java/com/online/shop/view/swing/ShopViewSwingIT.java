@@ -56,8 +56,7 @@ public class ShopViewSwingIT extends AssertJSwingJUnitTestCase {
 	private CartController cartController;
 	private ItemsMongoRepository itemsRepository;
 	private ShopViewSwing shopViewSwing;
-	private HistoryViewSwing historyView;
-
+	private HistoryDialogSwing historyDialogSwing;
 
 	@BeforeClass
 	public static void setupServer() {
@@ -80,12 +79,12 @@ public class ShopViewSwingIT extends AssertJSwingJUnitTestCase {
 		GuiActionRunner.execute(
 				()->{
 					shopViewSwing = new ShopViewSwing();
-					historyView = new HistoryViewSwing();
+					historyDialogSwing = new HistoryDialogSwing();
 					shopController = new ShopController(shopViewSwing,itemsRepository);
-					cartController = new CartController(shopViewSwing,itemsRepository,historyView);
+					cartController = new CartController(shopViewSwing,itemsRepository,historyDialogSwing);
 					shopViewSwing.setCartController(cartController);
 					shopViewSwing.setShopController(shopController);
-					historyView.setCartController(cartController);
+					historyDialogSwing.setCartController(cartController);
 					return shopViewSwing;
 				});
 		window = new FrameFixture(robot(),shopViewSwing);

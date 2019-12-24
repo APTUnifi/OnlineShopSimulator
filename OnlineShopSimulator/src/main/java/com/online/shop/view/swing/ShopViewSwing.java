@@ -16,10 +16,8 @@ import com.online.shop.view.ShopView;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
-import javax.swing.JDialog;
 
 import java.awt.GridBagLayout;
-import java.awt.Dialog.ModalityType;
 import java.awt.GridBagConstraints;
 import javax.swing.JTextField;
 import java.awt.Insets;
@@ -37,7 +35,6 @@ public class ShopViewSwing extends JFrame implements ShopView {
 
 	private transient ShopController shopController;
 	private transient CartController cartController;
-
 	private JPanel contentPane;
 	private JTextField itemName;
 	private JButton btnRemove;
@@ -52,8 +49,7 @@ public class ShopViewSwing extends JFrame implements ShopView {
 	private JButton btnHistory;
 	private JLabel lblCartName;
 	private JTextField cartNameText;
-	private HistoryViewSwing historyDialogPanel;
-	private JDialog historydialog = new JDialog();
+	private HistoryDialogSwing historyDialog;
 
 	DefaultListModel<Item> getItemListShopModel(){
 		return itemListShopModel;
@@ -213,7 +209,6 @@ public class ShopViewSwing extends JFrame implements ShopView {
 		btnHistory.addActionListener(
 				e->
 				openHistoryDialog()
-
 				);
 
 		GridBagConstraints gbcbtnHistory = new GridBagConstraints();
@@ -237,21 +232,18 @@ public class ShopViewSwing extends JFrame implements ShopView {
 				});
 	}
 	private void openHistoryDialog() {
-		if (historydialog != null) {
+		if (historyDialog == null) {
 			Window window = SwingUtilities.getWindowAncestor(this);
 			if(window == null) {
-				historydialog = new JDialog(window,ModalityType.APPLICATION_MODAL);
-				historyDialogPanel = new HistoryViewSwing();
-				historydialog.setName("History");
-				historyDialogPanel.setCartController(cartController);
-				historyDialogPanel.setName("History");
-				historydialog.getContentPane().add(historyDialogPanel);
-				historydialog.pack();
-				historydialog.setLocationRelativeTo(null);
-				historydialog.setSize(500, 300);
+				historyDialog = new HistoryDialogSwing();
+				historyDialog.setName("History");
+				historyDialog.setCartController(cartController);
+				historyDialog.pack();
+				historyDialog.setLocationRelativeTo(null);
+				historyDialog.setSize(500, 300);
 			}
 		}
-		historydialog.setVisible(true); 
+		historyDialog.setVisible(true); 
 	}
 
 	@Override

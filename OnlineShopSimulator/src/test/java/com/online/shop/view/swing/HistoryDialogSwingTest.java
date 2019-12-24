@@ -7,7 +7,6 @@ import java.awt.Dimension;
 import java.util.Arrays;
 
 import javax.swing.DefaultListModel;
-import javax.swing.JDialog;
 
 import org.assertj.swing.annotation.GUITest;
 import org.assertj.swing.core.matcher.JButtonMatcher;
@@ -23,7 +22,7 @@ import com.online.shop.controller.CartController;
 import com.online.shop.model.Cart;
 import com.online.shop.model.Item;
 
-public class HistoryViewSwingTest extends AssertJSwingJUnitTestCase{
+public class HistoryDialogSwingTest extends AssertJSwingJUnitTestCase{
 
 	private static final String CART_FIXTURE_LABEL_2 = "test2";
 	private static final String ITEM_FIXTURE_NAME_2 = "test1";
@@ -36,8 +35,7 @@ public class HistoryViewSwingTest extends AssertJSwingJUnitTestCase{
 	private static final String CART_FIXTURE_LABEL_1 = "cartTest";
 
 	private DialogFixture window;
-	private	HistoryViewSwing historyViewSwing;
-	private JDialog historyDialog;
+	private	HistoryDialogSwing historyDialogSwing;
 
 	@Mock
 	private CartController cartController;
@@ -46,17 +44,14 @@ public class HistoryViewSwingTest extends AssertJSwingJUnitTestCase{
 	protected void onSetUp() {
 		MockitoAnnotations.initMocks(this);
 		GuiActionRunner.execute(() -> {
-			historyDialog = new JDialog();
-			historyViewSwing = new HistoryViewSwing();
-			historyViewSwing.setCartController(cartController);
-			historyViewSwing.setSize(WIDTH,HEIGHT);
-			historyDialog.getContentPane().add(historyViewSwing);
-			historyDialog.setSize(WIDTH, HEIGHT);
-			historyDialog.pack();
-			historyDialog.setLocationRelativeTo(null);
-			return historyDialog;
+			historyDialogSwing = new HistoryDialogSwing();
+			historyDialogSwing.setCartController(cartController);
+			historyDialogSwing.setSize(WIDTH,HEIGHT);
+			historyDialogSwing.pack();
+			historyDialogSwing.setLocationRelativeTo(null);
+			return historyDialogSwing;
 		});
-		window = new DialogFixture(robot(), historyDialog);
+		window = new DialogFixture(robot(), historyDialogSwing);
 		Dimension dimension = new Dimension(WIDTH, HEIGHT);
 		window.show(dimension);
 
@@ -76,7 +71,7 @@ public class HistoryViewSwingTest extends AssertJSwingJUnitTestCase{
 		Cart cart = new Cart();
 		GuiActionRunner.execute(
 				()-> {
-					DefaultListModel<Cart> listCartModel = historyViewSwing.getListCartModel();
+					DefaultListModel<Cart> listCartModel = historyDialogSwing.getListCartModel();
 					listCartModel.addElement(cart);
 				}
 				);
@@ -94,7 +89,7 @@ public class HistoryViewSwingTest extends AssertJSwingJUnitTestCase{
 		Cart cart = new Cart(Arrays.asList(item1,item2),CART_FIXTURE_LABEL_1);
 		GuiActionRunner.execute(
 				()-> {
-					DefaultListModel<Cart> listCartModel = historyViewSwing.getListCartModel();
+					DefaultListModel<Cart> listCartModel = historyDialogSwing.getListCartModel();
 					listCartModel.addElement(cart);
 				});
 		window.list("listCart").selectItem(FIRST_ITEM);
@@ -110,12 +105,12 @@ public class HistoryViewSwingTest extends AssertJSwingJUnitTestCase{
 		Cart cart2 = new Cart(Arrays.asList(item2),CART_FIXTURE_LABEL_2);
 		GuiActionRunner.execute(
 				()-> {
-					DefaultListModel<Cart> listCartModel = historyViewSwing.getListCartModel();
+					DefaultListModel<Cart> listCartModel = historyDialogSwing.getListCartModel();
 					listCartModel.addElement(cart1);
 					listCartModel.addElement(cart2);
 				});
 		GuiActionRunner.execute(
-				()-> historyViewSwing.removeCart(cart1)
+				()-> historyDialogSwing.removeCart(cart1)
 				);
 		String[] listContents = window.list("listCart").contents();
 		assertThat(listContents).containsExactly(cart2.toString());
@@ -128,7 +123,7 @@ public class HistoryViewSwingTest extends AssertJSwingJUnitTestCase{
 		Cart cart1 = new Cart(Arrays.asList(item1),CART_FIXTURE_LABEL_1);
 		Cart cart2 = new Cart(Arrays.asList(item2),CART_FIXTURE_LABEL_2);
 		GuiActionRunner.execute(
-				() -> historyViewSwing.showHistory(Arrays.asList(cart1,cart2))
+				() -> historyDialogSwing.showHistory(Arrays.asList(cart1,cart2))
 				);
 		String[] listContents = window.list("listCart").contents();
 		assertThat(listContents).containsExactly(cart1.toString(),cart2.toString());
@@ -139,9 +134,9 @@ public class HistoryViewSwingTest extends AssertJSwingJUnitTestCase{
 		Item item1 = new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1);
 		Cart cart1 = new Cart(Arrays.asList(item1),CART_FIXTURE_LABEL_1);
 		GuiActionRunner.execute(
-				()-> historyViewSwing.getListCartModel().addElement(cart1)
+				()-> historyDialogSwing.getListCartModel().addElement(cart1)
 				);
-		window.list("listCart").selectItem(0);
+		window.list("listCart").selectItem(FIRST_ITEM);
 		window.button(JButtonMatcher.withText("Remove")).click();
 		verify(cartController).removeCart(cart1);
 	}
@@ -149,7 +144,7 @@ public class HistoryViewSwingTest extends AssertJSwingJUnitTestCase{
 	@Test
 	public void testCloseButtonShouldCloseTheDialogWindow() {
 		window.button(JButtonMatcher.withName("Close")).click();
-		assertThat(historyDialog.isShowing()).isFalse();
+		assertThat(historyDialogSwing.isShowing()).isFalse();
 	}
 
 }

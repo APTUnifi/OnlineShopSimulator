@@ -1,106 +1,86 @@
 package com.online.shop.view.swing;
 
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.awt.Dimension;
-import java.net.InetSocketAddress;
+import java.util.Arrays;
 
+import javax.swing.DefaultListModel;
 
 import org.assertj.swing.annotation.GUITest;
 import org.assertj.swing.core.matcher.JButtonMatcher;
 import org.assertj.swing.edt.GuiActionRunner;
 import org.assertj.swing.fixture.DialogFixture;
-import org.assertj.swing.fixture.FrameFixture;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.flywaydb.core.Flyway;
+import org.junit.ClassRule;
 import org.junit.Test;
-import org.testcontainers.containers.GenericContainer;
-import java.util.Arrays;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.testcontainers.containers.PostgreSQLContainer;
 
-import javax.swing.DefaultListModel;
-import javax.swing.JDialog;
-
-import com.mongodb.MongoClient;
-import com.mongodb.ServerAddress;
 import com.online.shop.controller.CartController;
-import com.online.shop.controller.ShopController;
 import com.online.shop.model.Cart;
 import com.online.shop.model.Item;
-import com.online.shop.repository.mongo.ItemsMongoRepository;
+import com.online.shop.repository.sql.ItemsSqlRepository;
 
-import de.bwaldvogel.mongo.MongoServer;
-import de.bwaldvogel.mongo.backend.memory.MemoryBackend;
+public class HistoryDialogSwingSQLIT extends AssertJSwingJUnitTestCase {
 
-public class HistoryViewSwingIT extends AssertJSwingJUnitTestCase {
-
+	@SuppressWarnings("rawtypes")
+	@ClassRule
+	public static final PostgreSQLContainer sqlContainer = new PostgreSQLContainer();
 
 	private static final int HEIGHT = 300;
 	private static final int WIDTH = 500;
 	private static final int SECOND_ITEM = 1;
 	private static final int FIRST_ITEM = 0;
-	private static final String CART_FIXTURE_LABEL_1 = "test";
+	private static final String CART_FIXTURE_LABEL_1 = "cartTest";
 	private static final String ITEM_FIXTURE_NAME_2 = "test2";
 	private static final String ITEM_FIXTURE_PRODUCTCODE_2 = "2";
 	private static final String ITEM_FIXTURE_NAME_1 = "test1";
 	private static final String ITEM_FIXTURE_PRODUCTCODE_1 = "1";
 
-	@SuppressWarnings("rawtypes")
-	public static final GenericContainer mongo = new GenericContainer("mongo:4.0.5").withExposedPorts(27017);
-
-	private static MongoServer server;	
-	private MongoClient mongoClient;
-	private DialogFixture window;
-	private static InetSocketAddress serverAddress;
+	ItemsSqlRepository itemsRepository;
+	JdbcTemplate db;
 
 	private CartController cartController;
-	private ItemsMongoRepository itemsRepository;
-	private ShopViewSwing itemViewSwing;
-	private HistoryViewSwing historyViewSwing;
-	private JDialog historyDialog;
+	private ShopViewSwing shopViewSwing;
+	private HistoryDialogSwing historyDialogSwing;
+	private DialogFixture window;
+	private ItemsSqlRepository buildRepository() {
 
-	@BeforeClass
-	public static void setupServer() {
-		server = new MongoServer(new MemoryBackend());
-		serverAddress = server.bind();
-	}
+		DriverManagerDataSource dataSource = new DriverManagerDataSource();
+		dataSource.setUrl(sqlContainer.getJdbcUrl());
+		dataSource.setUsername(sqlContainer.getUsername());
+		dataSource.setPassword(sqlContainer.getPassword());
 
-	@AfterClass
-	public static void shutdownServer() {
-		server.shutdown();
+		return new ItemsSqlRepository(dataSource);
 	}
 
 	@Override
 	protected void onSetUp() {
-		mongoClient = new MongoClient(new ServerAddress(serverAddress));
-		itemsRepository = new ItemsMongoRepository(mongoClient);
-		for(Cart cart: itemsRepository.findAllCarts()) {
-			itemsRepository.removeCart(cart.getDate(),cart.getLabel());
-
-		}
+		Flyway flyway = Flyway.configure()
+				.dataSource(sqlContainer.getJdbcUrl(), sqlContainer.getUsername(), sqlContainer.getPassword()).load();
+		itemsRepository = buildRepository();
+		db = itemsRepository.getJdbcTemplate();
+		flyway.clean();
+		flyway.migrate();
+		
 		GuiActionRunner.execute(
 				()->{
-					historyDialog = new JDialog();
-					historyViewSwing = new HistoryViewSwing();
-					cartController = new CartController(itemViewSwing,itemsRepository,historyViewSwing);
-					historyDialog.getContentPane().add(historyViewSwing);
-					historyDialog.setName("History");
-					historyViewSwing.setCartController(cartController);
-					historyDialog.pack();
-					historyDialog.setLocationRelativeTo(null);
-					return historyDialog;
+					
+					historyDialogSwing = new HistoryDialogSwing();
+					cartController = new CartController(shopViewSwing,itemsRepository,historyDialogSwing);
+					historyDialogSwing.setCartController(cartController);
+					historyDialogSwing.pack();
+					historyDialogSwing.setLocationRelativeTo(null);
+					return historyDialogSwing;
 				});
-		window = new DialogFixture(robot(),historyDialog);
+		window = new DialogFixture(robot(),historyDialogSwing);
 		Dimension dimension = new Dimension(WIDTH, HEIGHT);
-		window.show(dimension);
-	}		
-
-	@Override
-	protected void onTearDown() {
-		mongoClient.close();
+		window.show(dimension);	
 	}
-
+	
 	@Test @GUITest
 	public void testAllCarts() {
 		Item item1 = new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1);
@@ -157,7 +137,7 @@ public class HistoryViewSwingIT extends AssertJSwingJUnitTestCase {
 		Cart cart = new Cart(Arrays.asList(item1,item2),CART_FIXTURE_LABEL_1);
 		GuiActionRunner.execute(
 				()->{ 
-					DefaultListModel<Cart> carts = historyViewSwing.getListCartModel();
+					DefaultListModel<Cart> carts = historyDialogSwing.getListCartModel();
 					carts.addElement(cart);
 				});
 		window.list("listCart").selectItem(FIRST_ITEM);

@@ -2,19 +2,16 @@ package com.online.shop.app.swing;
 
 import java.awt.EventQueue;
 import java.util.concurrent.Callable;
-
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
-
 import com.mongodb.MongoClient;
 import com.mongodb.ServerAddress;
 import com.online.shop.controller.CartController;
 import com.online.shop.controller.ShopController;
-import com.online.shop.model.Item;
 import com.online.shop.repository.mongo.ItemsMongoRepository;
-import com.online.shop.view.swing.HistoryViewSwing;
 import com.online.shop.view.swing.ShopViewSwing;
+import com.online.shop.view.swing.HistoryDialogSwing;
 
 @Command(mixinStandardHelpOptions = true)
 public class ShopSwingApp implements Callable<Void> {
@@ -34,6 +31,7 @@ public class ShopSwingApp implements Callable<Void> {
 	@Option(names = { "--db-collectionCarts" }, description = "Collection carts")
 	private String collectionCarts = "test-carts";
 
+	@SuppressWarnings("deprecation")
 	public static void main(String[] args) { 
 		CommandLine.call(new ShopSwingApp(), args);
 	}
@@ -46,7 +44,7 @@ public class ShopSwingApp implements Callable<Void> {
 						new MongoClient(new ServerAddress(mongoHost,mongoPort)),
 						databaseName, collectionItems, collectionCarts);
 				ShopViewSwing itemsView = new ShopViewSwing();
-				HistoryViewSwing historyView = new HistoryViewSwing();
+				HistoryDialogSwing historyView = new HistoryDialogSwing();
 				ShopController shopController = new ShopController(itemsView, itemsRepository);
 				CartController cartController = new CartController(itemsView, itemsRepository,historyView);
 				itemsView.setShopController(shopController);

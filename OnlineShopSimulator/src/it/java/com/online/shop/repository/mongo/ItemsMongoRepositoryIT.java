@@ -72,6 +72,7 @@ public class ItemsMongoRepositoryIT {
 				.collect(Collectors.toList());
 	}
 
+	@SuppressWarnings("unchecked")
 	private List<Cart> retrieveAllCarts() {
 
 		return StreamSupport.stream(collectionCarts.find().spliterator(), false)

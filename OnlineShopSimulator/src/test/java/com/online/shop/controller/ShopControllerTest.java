@@ -16,7 +16,6 @@ import com.online.shop.view.ShopView;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
  
-
 public class ShopControllerTest {
 
 	private static final String PRODUCT_CODE = "1";

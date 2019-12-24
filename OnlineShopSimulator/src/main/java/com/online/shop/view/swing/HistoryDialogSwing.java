@@ -1,34 +1,33 @@
 package com.online.shop.view.swing;
 
-import java.awt.BorderLayout;
+
 import java.awt.Window;
+import java.util.List;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
 import com.online.shop.controller.CartController;
 import com.online.shop.model.Cart;
 import com.online.shop.model.Item;
 import com.online.shop.view.HistoryView;
-import javax.swing.JList;
-import javax.swing.DefaultListModel;
-import java.util.List;
-import javax.swing.JLabel;
-import javax.swing.ListSelectionModel;
-import javax.swing.SwingUtilities;
 
 @SuppressWarnings("serial")
-public class HistoryViewSwing extends JPanel implements HistoryView{
+public class HistoryDialogSwing extends JDialog implements HistoryView {
 
-	private final DefaultListModel<Cart> listCartModel;
+	private DefaultListModel<Cart> listCartModel;
 	private DefaultListModel<Item> listItemsCartModel;
-	public JList<Cart> listCart;
-	public JList<Item> listItemsCart;
+	private JList<Cart> listCart;
+	private JList<Item> listItemsCart;
 	private JButton btnRemove;
 	private JButton btnClose;
 	private JButton btnShowHistory;
 	private JLabel lblItemsCart;
 	private JLabel lblCarts;
-
 	private final JPanel contentPanel;
 	private transient CartController cartController;
 
@@ -44,49 +43,25 @@ public class HistoryViewSwing extends JPanel implements HistoryView{
 		listCart.setModel(a);
 	}
 
-	public HistoryViewSwing() {
-		contentPanel = new JPanel();
-
-		setBounds(100, 100, 450, 300);
+	public HistoryDialogSwing() {
 		setName("History");
-		setLayout(new BorderLayout());
-		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
-		add(contentPanel, BorderLayout.CENTER);
+		setBounds(100, 100, 450, 300);
+		getContentPane().setLayout(null);
+		
+		contentPanel = new JPanel();
+		contentPanel.setBounds(0, 0, 450, 278);
+		contentPanel.setSize(500, 300);
+		getContentPane().add(contentPanel);
 		contentPanel.setLayout(null);
-		contentPanel.setName("HistoryPanel");
-
-		btnRemove = new JButton("Remove");
-		btnRemove.setEnabled(false);
-		btnRemove.setName("Remove");
-
-		btnRemove.addActionListener(
-				e -> {
-					cartController.removeCart(listCart.getSelectedValue());
-					showItemsCart(null);
-					setDefaultListModel(updateListCarts());
-					showItemsCart(null);
-				});
-		btnRemove.setBounds(186, 254, 117, 29);
-		contentPanel.add(btnRemove);
-
-		btnClose = new JButton("Close");
-		btnClose.setName("Close");
-		btnClose.addActionListener(
-				e -> closeButtonAction()
-				);
-		btnClose.setBounds(315, 254, 117, 29);
-		contentPanel.add(btnClose);
-
+		
 		listItemsCartModel =new DefaultListModel<>();		
 		listCartModel =  new DefaultListModel<>();
 		
 		listCart = new JList<>(listCartModel);
-		listCart.setModel(listCartModel);
-		listCart.setName("listCart");
 		listCart.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		listCart.setBounds(18, 50, 190, 186);
+		listCart.setName("listCart");
+		listCart.setBounds(16, 34, 190, 186);
 		contentPanel.add(listCart);
-
 		listCart.addListSelectionListener(e -> {
 			btnRemove.setEnabled(listCart.getSelectedIndex() != -1)	;
 			if(listCart.getSelectedValue() != null) {
@@ -94,31 +69,52 @@ public class HistoryViewSwing extends JPanel implements HistoryView{
 			}
 		}
 				);
-
-		listItemsCart = new JList<Item>(listItemsCartModel);
-		listItemsCart.setName("listItemsCart");
+		
+		listItemsCart = new JList<>(listItemsCartModel);
 		listItemsCart.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		listItemsCart.setBounds(242, 50, 190, 186);
+		listItemsCart.setName("listItemsCart");
+		listItemsCart.setBounds(242, 34, 190, 186);
 		contentPanel.add(listItemsCart);
-
+		
 		lblCarts = new JLabel("Carts");
 		lblCarts.setName("lblCarts");
-		lblCarts.setBounds(18, 22, 61, 16);
+		lblCarts.setBounds(16, 6, 61, 16);
 		contentPanel.add(lblCarts);
-
+		
 		lblItemsCart = new JLabel("Items Cart");
 		lblItemsCart.setName("lblItemsCart");
-		lblItemsCart.setBounds(242, 22, 108, 16);
+		lblItemsCart.setBounds(242, 6, 108, 16);
 		contentPanel.add(lblItemsCart);
-
+		
 		btnShowHistory = new JButton("ShowHistory");
 		btnShowHistory.setName("showHistory");
+		btnShowHistory.setBounds(57, 232, 117, 29);
+		contentPanel.add(btnShowHistory);
 		btnShowHistory.addActionListener(
 				e -> setDefaultListModel(updateListCarts())
 				);
 		
-		btnShowHistory.setBounds(57, 254, 117, 29);
-		contentPanel.add(btnShowHistory);
+		btnRemove = new JButton("Remove");
+		btnRemove.setName("Remove");
+		btnRemove.setEnabled(false);
+		btnRemove.setBounds(186, 232, 117, 29);
+		contentPanel.add(btnRemove);
+		btnRemove.addActionListener(
+				e -> {
+					cartController.removeCart(listCart.getSelectedValue());
+					setDefaultListModel(updateListCarts());
+					showItemsCart(new Cart());
+				});
+		
+		btnClose = new JButton("Close");
+		btnClose.setName("Close");
+		btnClose.setBounds(315, 232, 117, 29);
+		contentPanel.add(btnClose);
+		btnClose.addActionListener(
+				e -> closeButtonAction()
+				);
+
+
 	}
 
 	private void closeButtonAction() {

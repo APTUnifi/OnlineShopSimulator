@@ -1,6 +1,5 @@
 package com.online.shop.view.swing;
 
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;

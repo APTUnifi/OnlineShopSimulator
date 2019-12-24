@@ -37,6 +37,7 @@ public class ItemsMongoRepository implements ItemsRepository {
 		return new Item("" + d.get("productCode"), "" + d.get("name"), (int) d.get("quantity"));
 	}
 
+	@SuppressWarnings("unchecked")
 	private Cart fromDocumentToCart(Document d) {
 		List<Item> items = new ArrayList<>();
 		List<Document> documents = (List<Document>) (d.get("items"));
@@ -94,8 +95,6 @@ public class ItemsMongoRepository implements ItemsRepository {
 		for (Item item : cartToStore.getItems()) {
 			list.add(new Document().append("productCode", item.getProductCode()).append("name", item.getName())
 					.append("quantity", item.getQuantity()));
-			//modifyQuantity(findByProductCode(item.getProductCode()), -item.getQuantity());
-			
 		}
 		collectionCarts.insertOne(new Document().append("label", cartToStore.getLabel())
 				.append("date", cartToStore.getDate()).append("items", list));
