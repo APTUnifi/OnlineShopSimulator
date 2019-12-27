@@ -45,6 +45,7 @@ public class HistoryDialogSwing extends JDialog implements HistoryView {
 
 	public HistoryDialogSwing() {
 		setName("History");
+		setTitle("History");
 		setBounds(100, 100, 450, 300);
 		getContentPane().setLayout(null);
 		
