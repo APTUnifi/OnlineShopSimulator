@@ -63,6 +63,7 @@ public class HistoryDialogSwingSQLIT extends AssertJSwingJUnitTestCase {
 				.dataSource(sqlContainer.getJdbcUrl(), sqlContainer.getUsername(), sqlContainer.getPassword()).load();
 		itemsRepository = buildRepository();
 		db = itemsRepository.getJdbcTemplate();
+		
 		flyway.clean();
 		flyway.migrate();
 		

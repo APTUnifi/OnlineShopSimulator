@@ -145,11 +145,6 @@ public class HistoryDialogSwing extends JDialog implements HistoryView {
 	@Override
 	public void showItemsCart(Cart cart) {
 		DefaultListModel<Item> listItems= new DefaultListModel<>();
-		if (cart == null) {
-			listItems.removeAllElements();
-			listItemsCart.setModel(listItems);
-			return;
-		}
 		for(Item itemsShop : cart.getItems()){
 			listItems.addElement(itemsShop);
 		}    
