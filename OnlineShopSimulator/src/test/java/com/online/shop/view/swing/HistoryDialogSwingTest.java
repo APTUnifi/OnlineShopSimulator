@@ -82,6 +82,22 @@ public class HistoryDialogSwingTest extends AssertJSwingJUnitTestCase{
 		String[] listContents = window.list("listItemsCart").contents();
 		assertThat(listContents).containsExactly(item1.toString(),item2.toString());
 	}
+	@Test
+	public void testRemoveButtonShouldBeEnabledOnlyForTheFirstList() {
+		Cart cart = new Cart();
+		GuiActionRunner.execute(
+				()-> {
+					DefaultListModel<Cart> listCartModel = historyDialogSwing.getListCartModel();
+					listCartModel.addElement(cart);
+				}
+				);
+		window.list("listCart").selectItem(FIRST_ITEM);
+		JButtonFixture deleteButton = window.button(JButtonMatcher.withText("Remove"));
+		deleteButton.requireEnabled();
+		assertThat(deleteButton).matches(p -> p.isEnabled());
+		window.list("listCart").clearSelection();
+		deleteButton.requireDisabled();
+	}
 
 
 }
