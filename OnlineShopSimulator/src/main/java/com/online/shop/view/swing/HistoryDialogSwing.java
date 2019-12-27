@@ -1,4 +1,3 @@
-  
 package com.online.shop.view.swing;
 
 
@@ -58,9 +57,10 @@ public class HistoryDialogSwing extends JDialog implements HistoryView {
 		listItemsCartModel =new DefaultListModel<>();		
 		listCartModel =  new DefaultListModel<>();
 		
-		listCart = new JList<>(listCartModel);
+		listCart = new JList<Cart>(listCartModel);
 		listCart.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listCart.setName("listCart");
+		listCart.setEnabled(true);
 		listCart.setBounds(16, 34, 190, 186);
 		contentPanel.add(listCart);
 		listCart.addListSelectionListener(e -> {
