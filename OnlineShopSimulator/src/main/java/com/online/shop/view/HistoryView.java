@@ -11,6 +11,5 @@ public interface HistoryView {
 	void showHistory(List<Cart> carts);
 	void showItemsCart(Cart cart);
 	void removeCart(Cart cart);
-	DefaultListModel<Cart> updateListCarts();
 
 }

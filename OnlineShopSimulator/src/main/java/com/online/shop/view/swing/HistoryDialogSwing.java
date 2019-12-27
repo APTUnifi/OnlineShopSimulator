@@ -92,8 +92,8 @@ public class HistoryDialogSwing extends JDialog implements HistoryView {
 		contentPanel.add(btnShowHistory);
 		btnShowHistory.addActionListener(
 				e -> setDefaultListModel(updateListCarts())
-				);
-		
+				);		
+	
 		btnRemove = new JButton("Remove");
 		btnRemove.setName("Remove");
 		btnRemove.setEnabled(false);
@@ -151,7 +151,7 @@ public class HistoryDialogSwing extends JDialog implements HistoryView {
 		listItemsCart.setModel(listItems);
 	}
 
-	@Override
+	
 	public DefaultListModel<Cart> updateListCarts() {
 		DefaultListModel<Cart> listCartUpdated = new DefaultListModel<>();
 		List<Cart> carts = cartController.getListCart();
