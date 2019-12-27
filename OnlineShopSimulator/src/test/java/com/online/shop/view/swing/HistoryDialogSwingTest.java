@@ -68,41 +68,7 @@ public class HistoryDialogSwingTest extends AssertJSwingJUnitTestCase{
 
 	}
 	
-	@Test
-	public void testRemoveCartShouldRemoveTheCartFromTheListCartAndResetErrorLabel() {
-		Item item1 = new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1);
-		Item item2 = new Item(ITEM_FIXTURE_PRODUCTCODE_2,ITEM_FIXTURE_NAME_2);
-		Cart cart1 = new Cart(Arrays.asList(item1,item2),CART_FIXTURE_LABEL_1);
-		Cart cart2 = new Cart(Arrays.asList(item2),CART_FIXTURE_LABEL_2);
-		GuiActionRunner.execute(
-				()-> {
-					DefaultListModel<Cart> listCartModel = historyDialogSwing.getListCartModel();
-					listCartModel.addElement(cart1);
-					listCartModel.addElement(cart2);
-				});
-		GuiActionRunner.execute(
-				()-> historyDialogSwing.removeCart(cart1)
-				);
-		String[] listContents = window.list("listCart").contents();
-		assertThat(listContents).containsExactly(cart2.toString());
-	}
-
-	@Test
-	public void testRemoveButtonShouldBeEnabledOnlyForTheFirstList() {
-		Cart cart = new Cart();
-		GuiActionRunner.execute(
-				()-> {
-					DefaultListModel<Cart> listCartModel = historyDialogSwing.getListCartModel();
-					listCartModel.addElement(cart);
-				}
-				);
-		window.list("listCart").selectItem(FIRST_ITEM);
-		JButtonFixture deleteButton = window.button(JButtonMatcher.withText("Remove"));
-		deleteButton.requireEnabled();
-		assertThat(deleteButton).matches(p -> p.isEnabled());
-		window.list("listCart").clearSelection();
-		deleteButton.requireDisabled();
-	}
+	
 	@Test
 	public void testShowItemsCartShouldShowItemsWhenACartIsSelected() {
 		Item item1 = new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1);
@@ -133,18 +99,7 @@ public class HistoryDialogSwingTest extends AssertJSwingJUnitTestCase{
 	}
 
 	
-	@Test
-	public void testRemoveButtonShouldDelegateTheCartControllerRemoveCart() {
-		Item item1 = new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1);
-		Cart cart1 = new Cart(Arrays.asList(item1),CART_FIXTURE_LABEL_1);
-		GuiActionRunner.execute(
-				()-> historyDialogSwing.getListCartModel().addElement(cart1)
-				);
-		window.list("listCart").selectItem(FIRST_ITEM);
-		window.button(JButtonMatcher.withText("Remove")).click();
-		verify(cartController).removeCart(cart1);
-	}
-	
+
 	@Test
 	public void testShowHistoryButtonShouldShowHistoryCart() {
 		window.button(JButtonMatcher.withText("ShowHistory")).click();
