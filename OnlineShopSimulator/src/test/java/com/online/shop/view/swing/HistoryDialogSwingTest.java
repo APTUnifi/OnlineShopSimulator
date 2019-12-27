@@ -29,8 +29,8 @@ public class HistoryDialogSwingTest extends AssertJSwingJUnitTestCase{
 	private static final String ITEM_FIXTURE_PRODUCTCODE_2 = "2";
 	private static final String ITEM_FIXTURE_NAME_1 = "test";
 	private static final String ITEM_FIXTURE_PRODUCTCODE_1 = "1";
-	private static final int HEIGHT = 300;
-	private static final int WIDTH = 500;
+	private static final int HEIGHT = 800;
+	private static final int WIDTH = 800;
 	private static final int FIRST_ITEM = 0;
 	private static final String CART_FIXTURE_LABEL_1 = "cartTest";
 
@@ -58,59 +58,12 @@ public class HistoryDialogSwingTest extends AssertJSwingJUnitTestCase{
 	}
 	@Test @GUITest
 	public void testControlsInitialStates() {
-		
-		window.button(JButtonMatcher.withText("Remove")).requireDisabled();
-		window.button(JButtonMatcher.withText("Close")).requireEnabled();
-		window.button(JButtonMatcher.withText("ShowHistory")).requireEnabled();
-		window.label("lblItemsCart").requireText("Items Cart");
-		window.label("lblCarts").requireText("Carts");
 		window.list("listCart");
 		window.list("listItemsCart");
-
+		window.label("lblItemsCart").requireText("Items Cart");
+		window.label("lblCarts").requireText("Carts");
+		window.button(JButtonMatcher.withText("ShowHistory")).requireEnabled();
+		window.button(JButtonMatcher.withText("Remove")).requireDisabled();
+		window.button(JButtonMatcher.withText("Close")).requireEnabled();
 	}
-	
-	
-	@Test
-	public void testShowItemsCartShouldShowItemsWhenACartIsSelected() {
-		Item item1 = new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1);
-		Item item2 = new Item(ITEM_FIXTURE_PRODUCTCODE_2,ITEM_FIXTURE_NAME_2);
-		Cart cart = new Cart(Arrays.asList(item1,item2),CART_FIXTURE_LABEL_1);
-		GuiActionRunner.execute(
-				()-> {
-					DefaultListModel<Cart> listCartModel = historyDialogSwing.getListCartModel();
-					listCartModel.addElement(cart);
-				});
-		window.list("listCart").selectItem(FIRST_ITEM);
-		String[] listContents = window.list("listItemsCart").contents();
-		assertThat(listContents).containsExactly(item1.toString(),item2.toString());
-	}
-
-
-	@Test
-	public void testShowHistoryShouldShowCartToTheListCart() {
-		Item item1 = new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1);
-		Item item2 = new Item(ITEM_FIXTURE_PRODUCTCODE_2,ITEM_FIXTURE_NAME_2);
-		Cart cart1 = new Cart(Arrays.asList(item1),CART_FIXTURE_LABEL_1);
-		Cart cart2 = new Cart(Arrays.asList(item2),CART_FIXTURE_LABEL_2);
-		GuiActionRunner.execute(
-				() -> historyDialogSwing.showHistory(Arrays.asList(cart1,cart2))
-				);
-		String[] listContents = window.list("listCart").contents();
-		assertThat(listContents).containsExactly(cart1.toString(),cart2.toString());
-	}
-
-	
-	@Test
-	public void testShowHistoryButtonShouldShowHistoryCart() {
-		window.button(JButtonMatcher.withText("ShowHistory")).click();
-		String[] listContents = window.list("listCart").contents();
-		assertThat(listContents).isEmpty();
-	}
-
-	@Test
-	public void testCloseButtonShouldCloseTheDialogWindow() {
-		window.button(JButtonMatcher.withName("Close")).click();
-		assertThat(historyDialogSwing.isShowing()).isFalse();
-	}
-
 }
