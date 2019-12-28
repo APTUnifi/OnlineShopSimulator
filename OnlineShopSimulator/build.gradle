@@ -34,12 +34,23 @@ sourceSets {
         }
         resources.srcDir file('src/it/resources')
     }
+    e2eTest {
+        java {
+            compileClasspath += main.output + test.output
+            runtimeClasspath += main.output + test.output
+            srcDir file('src/e2e/java')
+        }
+    }
 }
 
 configurations { 
     integrationTestCompile.extendsFrom testCompile
     integrationTestRuntime.extendsFrom testRuntime
     integrationTestImplementation.extendsFrom testImplementation
+    
+    e2eTestCompile.extendsFrom testCompile
+    e2eTestRuntime.extendsFrom testRuntime
+    e2eTestImplementation.extendsFrom testImplementation
 }
 
 dependencies {
@@ -53,7 +64,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
 	
 	// https://mvnrepository.com/artifact/org.assertj/assertj-swing-junit
-	testCompile group: 'org.assertj', name: 'assertj-swing-junit', version: '3.5.0'
+	compile group: 'org.assertj', name: 'assertj-swing-junit', version: '3.9.2'
 	
 	// https://mvnrepository.com/artifact/org.mongodb/mongodb-driver
 	compile group: 'org.mongodb', name: 'mongodb-driver', version: '3.11.1'
@@ -88,6 +99,10 @@ task integrationTest(type: Test) {
     testClassesDirs = sourceSets.integrationTest.output.classesDirs
     classpath = sourceSets.integrationTest.runtimeClasspath
 }
+task e2eTest(type: Test) {
+    testClassesDirs = sourceSets.e2eTest.output.classesDirs
+    classpath = sourceSets.e2eTest.runtimeClasspath
+}
 
 jacocoTestReport {	
 	executionData(file("${buildDir}/jacoco/test.exec"), file("${buildDir}/jacoco/integrationTest.exec"))
@@ -112,6 +127,8 @@ sonarqube {
 
 check.dependsOn integrationTest
 integrationTest.mustRunAfter test
+check.dependsOn e2eTest
+e2eTest.mustRunAfter test
 project.tasks["sonarqube"].dependsOn "jacocoTestReport"
 
 //This task is essential for skipping the terms of service terminal procedure
