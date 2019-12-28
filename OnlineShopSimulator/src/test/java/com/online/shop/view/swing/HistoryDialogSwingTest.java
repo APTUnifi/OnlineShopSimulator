@@ -29,8 +29,8 @@ public class HistoryDialogSwingTest extends AssertJSwingJUnitTestCase{
 	private static final String ITEM_FIXTURE_PRODUCTCODE_2 = "2";
 	private static final String ITEM_FIXTURE_NAME_1 = "test";
 	private static final String ITEM_FIXTURE_PRODUCTCODE_1 = "1";
-	private static final int HEIGHT = 800;
-	private static final int WIDTH = 800;
+	private static final int HEIGHT = 300;
+	private static final int WIDTH = 500;
 	private static final int FIRST_ITEM = 0;
 	private static final String CART_FIXTURE_LABEL_1 = "cartTest";
 
@@ -47,8 +47,8 @@ public class HistoryDialogSwingTest extends AssertJSwingJUnitTestCase{
 			historyDialogSwing = new HistoryDialogSwing();
 			historyDialogSwing.setCartController(cartController);
 			historyDialogSwing.setSize(WIDTH,HEIGHT);
-			historyDialogSwing.pack();
-			historyDialogSwing.setLocationRelativeTo(null);
+			//historyDialogSwing.pack();
+			//historyDialogSwing.setLocationRelativeTo(null);
 			return historyDialogSwing;
 		});
 		window = new DialogFixture(robot(), historyDialogSwing);
