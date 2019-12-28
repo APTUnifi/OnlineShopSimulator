@@ -53,6 +53,7 @@ public class HistoryDialogSwing extends JDialog implements HistoryView {
 		contentPanel.setBounds(0, 0, 450, 278);
 		contentPanel.setSize(500, 300);
 		getContentPane().add(contentPanel);
+		setContentPane(contentPanel);
 		contentPanel.setLayout(null);
 		
 		listItemsCartModel =new DefaultListModel<>();		
