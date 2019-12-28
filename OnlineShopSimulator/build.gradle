@@ -53,7 +53,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
 	
 	// https://mvnrepository.com/artifact/org.assertj/assertj-swing-junit
-	compile group: 'org.assertj', name: 'assertj-swing-junit', version: '3.9.2'
+	testCompile group: 'org.assertj', name: 'assertj-swing-junit', version: '3.5.0'
 	
 	// https://mvnrepository.com/artifact/org.mongodb/mongodb-driver
 	compile group: 'org.mongodb', name: 'mongodb-driver', version: '3.11.1'
