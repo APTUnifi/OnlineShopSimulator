@@ -58,7 +58,7 @@ public class HistoryDialogSwing extends JDialog implements HistoryView {
 		listItemsCartModel =new DefaultListModel<>();		
 		listCartModel =  new DefaultListModel<>();
 		
-		listCart = new JList<Cart>(listCartModel);
+		listCart = new JList<>(listCartModel);
 		listCart.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listCart.setName("listCart");
 		listCart.setEnabled(true);
