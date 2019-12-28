@@ -68,7 +68,7 @@ public class HistoryDialogSwingTest extends AssertJSwingJUnitTestCase{
 		window.button(JButtonMatcher.withText("Close")).requireEnabled();
 	}
 	
-	@Test
+	@Test @GUITest
 	public void testShowItemsCartShouldShowItemsWhenACartIsSelected() {
 		Item item1 = new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1);
 		Item item2 = new Item(ITEM_FIXTURE_PRODUCTCODE_2,ITEM_FIXTURE_NAME_2);
@@ -83,7 +83,7 @@ public class HistoryDialogSwingTest extends AssertJSwingJUnitTestCase{
 		assertThat(listContents).containsExactly(item1.toString(),item2.toString());
 	}
 	
-	@Test
+	@Test @GUITest
 	public void testRemoveCartShouldRemoveTheCartFromTheListCartAndResetErrorLabel() {
 		Item item1 = new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1);
 		Item item2 = new Item(ITEM_FIXTURE_PRODUCTCODE_2,ITEM_FIXTURE_NAME_2);
