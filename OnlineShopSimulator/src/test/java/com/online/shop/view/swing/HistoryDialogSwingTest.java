@@ -59,12 +59,11 @@ public class HistoryDialogSwingTest extends AssertJSwingJUnitTestCase{
 	
 	@Test @GUITest
 	public void testControlsInitialStates() {
-		
+		window.list("listCart");
 		window.list("listItemsCart");
 		window.label("lblItemsCart").requireText("Items Cart");
 		window.label("lblCarts").requireText("Carts");
 		window.button(JButtonMatcher.withText("ShowHistory")).requireEnabled();
-		window.list("cartList");
 		window.button(JButtonMatcher.withText("Remove")).requireDisabled();
 		window.button(JButtonMatcher.withText("Close")).requireEnabled();
 	}
@@ -79,12 +78,12 @@ public class HistoryDialogSwingTest extends AssertJSwingJUnitTestCase{
 					DefaultListModel<Cart> listCartModel = historyDialogSwing.getListCartModel();
 					listCartModel.addElement(cart);
 				});
-		window.list("cartList").selectItem(0);
+		window.list("listCart").selectItem(0);
 		String[] listContents = window.list("listItemsCart").contents();
 		assertThat(listContents).containsExactly(item1.toString(),item2.toString());
 	}
 	
-	@Test
+	@Test 
 	public void testRemoveCartShouldRemoveTheCartFromTheListCartAndResetErrorLabel() {
 		Item item1 = new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1);
 		Item item2 = new Item(ITEM_FIXTURE_PRODUCTCODE_2,ITEM_FIXTURE_NAME_2);
@@ -99,7 +98,7 @@ public class HistoryDialogSwingTest extends AssertJSwingJUnitTestCase{
 		GuiActionRunner.execute(
 				()-> historyDialogSwing.removeCart(cart1)
 				);
-		String[] listContents = window.list("cartList").contents();
+		String[] listContents = window.list("listCart").contents();
 		assertThat(listContents).containsExactly(cart2.toString());
 	}
 
