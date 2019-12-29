@@ -59,7 +59,8 @@ public class HistoryDialogSwingTest extends AssertJSwingJUnitTestCase{
 	
 	@Test @GUITest
 	public void testControlsInitialStates() {
-		window.list("listCart");
+		window.panel().list("listCart");
+		//window.list("listCart");
 		window.list("listItemsCart");
 		window.label("lblItemsCart").requireText("Items Cart");
 		window.label("lblCarts").requireText("Carts");
@@ -78,7 +79,7 @@ public class HistoryDialogSwingTest extends AssertJSwingJUnitTestCase{
 					DefaultListModel<Cart> listCartModel = historyDialogSwing.getListCartModel();
 					listCartModel.addElement(cart);
 				});
-		window.list("listCart").selectItem(0);
+		window.panel().list("listCart").selectItem(0);
 		String[] listContents = window.list("listItemsCart").contents();
 		assertThat(listContents).containsExactly(item1.toString(),item2.toString());
 	}
@@ -98,7 +99,7 @@ public class HistoryDialogSwingTest extends AssertJSwingJUnitTestCase{
 		GuiActionRunner.execute(
 				()-> historyDialogSwing.removeCart(cart1)
 				);
-		String[] listContents = window.list("listCart").contents();
+		String[] listContents = window.panel().list("listCart").contents();
 		assertThat(listContents).containsExactly(cart2.toString());
 	}
 
