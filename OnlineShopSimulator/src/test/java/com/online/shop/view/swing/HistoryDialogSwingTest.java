@@ -86,24 +86,6 @@ public class HistoryDialogSwingTest extends AssertJSwingJUnitTestCase{
 		window.button(JButtonMatcher.withText("Remove")).requireDisabled();
 		window.button(JButtonMatcher.withText("Close")).requireEnabled();
 	}
-	
-	@Test
-	public void testShowItemsCartShouldShowItemsWhenACartIsSelected() {
-		Item item1 = new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1);
-		Item item2 = new Item(ITEM_FIXTURE_PRODUCTCODE_2,ITEM_FIXTURE_NAME_2);
-		Cart cart = new Cart(Arrays.asList(item1,item2),CART_FIXTURE_LABEL_1);
-		GuiActionRunner.execute(
-				()-> {
-					DefaultListModel<Cart> listCartModel = historyDialogSwing.getListCartModel();
-					listCartModel.addElement(cart);
-				});
-		window.list("listCart").selectItem(0);
-		String[] listContents = window.list("listItemsCart").contents();
-		assertThat(listContents).containsExactly(item1.toString(),item2.toString());
-	}
-	
-
-
 
 
 }
