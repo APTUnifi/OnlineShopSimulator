@@ -22,7 +22,7 @@ public class HistoryDialogSwing extends JDialog implements HistoryView {
 	private DefaultListModel<Cart> listCartModel;
 	private DefaultListModel<Item> listItemsCartModel;
 	private JList<Item> listItemsCart;
-	private JList<Cart> listCart;
+	private JList<Cart> cartList;
 	private JButton btnRemove;
 	private JButton btnClose;
 	private JButton btnShowHistory;
@@ -40,7 +40,7 @@ public class HistoryDialogSwing extends JDialog implements HistoryView {
 	}
 
 	public void setDefaultListModel(DefaultListModel<Cart> a) {
-		listCart.setModel(a);
+		cartList.setModel(a);
 	}
 
 	public HistoryDialogSwing() {
@@ -89,7 +89,7 @@ public class HistoryDialogSwing extends JDialog implements HistoryView {
 		contentPanel.add(btnRemove);
 		btnRemove.addActionListener(
 				e -> {
-					cartController.removeCart(listCart.getSelectedValue());
+					cartController.removeCart(cartList.getSelectedValue());
 					setDefaultListModel(updateListCarts());
 					showItemsCart(new Cart());
 				});
@@ -99,16 +99,16 @@ public class HistoryDialogSwing extends JDialog implements HistoryView {
 		btnClose.setBounds(315, 232, 117, 29);
 		contentPanel.add(btnClose);
 		
-		listCart = new JList<Cart>(listCartModel);
-		listCart.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		cartList = new JList<Cart>(listCartModel);
+		cartList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
-		listCart.setBounds(16, 34, 190, 186);
-		listCart.setName("listCart");
-		contentPanel.add(listCart);
-		listCart.addListSelectionListener(e -> {
-			btnRemove.setEnabled(listCart.getSelectedIndex() != -1)	;
-			if(listCart.getSelectedValue() != null) {
-				showItemsCart(listCart.getSelectedValue());
+		cartList.setBounds(16, 34, 190, 186);
+		cartList.setName("cartList");
+		contentPanel.add(cartList);
+		cartList.addListSelectionListener(e -> {
+			btnRemove.setEnabled(cartList.getSelectedIndex() != -1)	;
+			if(cartList.getSelectedValue() != null) {
+				showItemsCart(cartList.getSelectedValue());
 			}
 		}
 				);
@@ -132,15 +132,15 @@ public class HistoryDialogSwing extends JDialog implements HistoryView {
 		for(Cart cartHistory : carts){
 			listCartUpdated.addElement(cartHistory);	
 		}   
-		listCart.setModel(listCartUpdated); 
+		cartList.setModel(listCartUpdated); 
 		setDefaultListModel(listCartUpdated);
 	}
 
 	@Override
 	public void removeCart(Cart cart) {
-		DefaultListModel<Cart> carts = (DefaultListModel<Cart>) listCart.getModel();
+		DefaultListModel<Cart> carts = (DefaultListModel<Cart>) cartList.getModel();
 		carts.removeElement(cart);
-		listCart.setModel(carts);
+		cartList.setModel(carts);
 		setDefaultListModel(carts);
 	}
 
@@ -158,13 +158,13 @@ public class HistoryDialogSwing extends JDialog implements HistoryView {
 		DefaultListModel<Cart> listCartUpdated = new DefaultListModel<>();
 		List<Cart> carts = cartController.getListCart();
 		if (cartController.getListCart() == null) {
-			listCart.setModel(listCartUpdated);
+			cartList.setModel(listCartUpdated);
 			return listCartUpdated;
 		}
 		for(Cart cartHistory : carts){
 			listCartUpdated.addElement(cartHistory);	
 		}   
-		listCart.setModel(listCartUpdated); 
+		cartList.setModel(listCartUpdated); 
 		return listCartUpdated;
 	}
 }
