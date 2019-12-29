@@ -21,8 +21,8 @@ public class HistoryDialogSwing extends JDialog implements HistoryView {
 
 	private DefaultListModel<Cart> listCartModel;
 	private DefaultListModel<Item> listItemsCartModel;
-	private JList<Cart> listCart;
 	private JList<Item> listItemsCart;
+	private JList<Cart> listCart;
 	private JButton btnRemove;
 	private JButton btnClose;
 	private JButton btnShowHistory;
@@ -53,27 +53,12 @@ public class HistoryDialogSwing extends JDialog implements HistoryView {
 		contentPanel.setBounds(0, 0, 450, 278);
 		contentPanel.setSize(500, 300);
 		getContentPane().add(contentPanel);
-		setContentPane(contentPanel);
 		contentPanel.setLayout(null);
 		
 		listItemsCartModel =new DefaultListModel<>();		
 		listCartModel =  new DefaultListModel<>();
 		
-		listCart = new JList<>(listCartModel);
-		listCart.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		listCart.setName("listCart");
-		listCart.setEnabled(true);
-		listCart.setBounds(16, 34, 190, 186);
-		contentPanel.add(listCart);
-		listCart.addListSelectionListener(e -> {
-			btnRemove.setEnabled(listCart.getSelectedIndex() != -1)	;
-			if(listCart.getSelectedValue() != null) {
-				showItemsCart(listCart.getSelectedValue());
-			}
-		}
-				);
-		
-		listItemsCart = new JList<>(listItemsCartModel);
+		listItemsCart = new JList<Item>(listItemsCartModel);
 		listItemsCart.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listItemsCart.setName("listItemsCart");
 		listItemsCart.setBounds(242, 34, 190, 186);
@@ -113,6 +98,20 @@ public class HistoryDialogSwing extends JDialog implements HistoryView {
 		btnClose.setName("Close");
 		btnClose.setBounds(315, 232, 117, 29);
 		contentPanel.add(btnClose);
+		
+		listCart = new JList<Cart>(listCartModel);
+		listCart.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		
+		listCart.setBounds(16, 34, 190, 186);
+		listCart.setName("listCart");
+		contentPanel.add(listCart);
+		listCart.addListSelectionListener(e -> {
+			btnRemove.setEnabled(listCart.getSelectedIndex() != -1)	;
+			if(listCart.getSelectedValue() != null) {
+				showItemsCart(listCart.getSelectedValue());
+			}
+		}
+				);
 		btnClose.addActionListener(
 				e -> closeButtonAction()
 				);
