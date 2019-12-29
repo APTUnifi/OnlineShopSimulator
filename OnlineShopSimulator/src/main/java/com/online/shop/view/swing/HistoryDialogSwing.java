@@ -50,7 +50,9 @@ public class HistoryDialogSwing extends JDialog implements HistoryView {
 		setBounds(100, 100, 450, 300);
 		getContentPane().setLayout(null);
 		 
+
 		setModalityType(DEFAULT_MODALITY_TYPE);
+
 		contentPanel = new JDesktopPane();
 		contentPanel.setBounds(0, 0, 450, 278);
 		contentPanel.setSize(500, 300);
