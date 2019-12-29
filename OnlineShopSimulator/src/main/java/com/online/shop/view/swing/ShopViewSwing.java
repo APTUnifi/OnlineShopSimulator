@@ -16,6 +16,7 @@ import com.online.shop.view.ShopView;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JDesktopPane;
 
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
@@ -35,7 +36,7 @@ public class ShopViewSwing extends JFrame implements ShopView {
 
 	private transient ShopController shopController;
 	private transient CartController cartController;
-	private JPanel contentPane;
+	private JDesktopPane contentPane;
 	private JTextField itemName;
 	private JButton btnRemove;
 	private JButton btnAdd;
@@ -70,7 +71,7 @@ public class ShopViewSwing extends JFrame implements ShopView {
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setTitle("ShopOnlineTest");
 		setBounds(100, 100, 450, 300);
-		contentPane = new JPanel();
+		contentPane = new JDesktopPane();
 		contentPane.setName("MainPanel");
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -232,17 +233,13 @@ public class ShopViewSwing extends JFrame implements ShopView {
 				});
 	}
 	private void openHistoryDialog() {
-		if (historyDialog == null) {
-			Window window = SwingUtilities.getWindowAncestor(this);
-			if(window == null) {
-				historyDialog = new HistoryDialogSwing();
-				historyDialog.setName("History");
-				historyDialog.setCartController(cartController);
-				historyDialog.pack();
-				historyDialog.setLocationRelativeTo(null);
-				historyDialog.setSize(500, 300);
-			}
-		}
+		historyDialog = new HistoryDialogSwing();
+		historyDialog.setName("History");
+		historyDialog.setCartController(cartController);
+		historyDialog.pack();
+		historyDialog.setLocationRelativeTo(null);
+		historyDialog.setSize(500, 300);
+
 		historyDialog.setVisible(true); 
 	}
 
@@ -262,7 +259,7 @@ public class ShopViewSwing extends JFrame implements ShopView {
 				()->lblErrorMessageLabel.setText(error +": "+ name)
 				);
 	}
-	
+
 	@Override
 	public void errorLogCart(String error, Cart cart) {
 		SwingUtilities.invokeLater(
@@ -294,7 +291,7 @@ public class ShopViewSwing extends JFrame implements ShopView {
 					resetErrorLabel();
 				});
 	}
-	
+
 	@Override
 	public void itemRemovedFromCart(Item item) {
 		itemListCartModel.removeElement(item);
@@ -304,7 +301,7 @@ public class ShopViewSwing extends JFrame implements ShopView {
 	private void resetErrorLabel() {
 		lblErrorMessageLabel.setText(" ");
 	}
-	
+
 	@Override
 	public void updateItemsCart(List<Item> items) {
 		DefaultListModel<Item> listCartUpdated = new DefaultListModel<>();
@@ -316,7 +313,7 @@ public class ShopViewSwing extends JFrame implements ShopView {
 					itemListCart.setModel(listCartUpdated);  
 				});
 	}
-	
+
 	@Override
 	public void updateItemsShop(List<Item> items) {
 		DefaultListModel<Item> listShopUpdated = new DefaultListModel<>();
@@ -325,7 +322,7 @@ public class ShopViewSwing extends JFrame implements ShopView {
 		}    
 		itemListShop.setModel(listShopUpdated);  
 	}
-	
+
 	@Override
 	public void itemAdded(Item item) {
 		// TODO Auto-generated method stub
@@ -335,7 +332,7 @@ public class ShopViewSwing extends JFrame implements ShopView {
 	public void itemQuantityAdded(Item item) {
 		// TODO Auto-generated method stub
 	}
-	
+
 	@Override
 	public void itemRemoved(Item item) {
 		// TODO Auto-generated method stub
