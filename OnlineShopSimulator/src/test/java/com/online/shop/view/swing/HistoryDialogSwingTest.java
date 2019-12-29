@@ -59,11 +59,12 @@ public class HistoryDialogSwingTest extends AssertJSwingJUnitTestCase{
 	
 	@Test @GUITest
 	public void testControlsInitialStates() {
-		window.list("listCart");
+		
 		window.list("listItemsCart");
 		window.label("lblItemsCart").requireText("Items Cart");
 		window.label("lblCarts").requireText("Carts");
 		window.button(JButtonMatcher.withText("ShowHistory")).requireEnabled();
+		window.list("listCart");
 		window.button(JButtonMatcher.withText("Remove")).requireDisabled();
 		window.button(JButtonMatcher.withText("Close")).requireEnabled();
 	}
