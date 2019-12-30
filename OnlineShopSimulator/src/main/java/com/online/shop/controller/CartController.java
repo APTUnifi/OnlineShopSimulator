@@ -100,6 +100,7 @@ public class CartController {
 			itemsRepository.storeCart(cart);
 			cart.setItems(new ArrayList<Item>());
 			items = cart.getItems();
+			historyView.showHistory(itemsRepository.findAllCarts());
 			itemsView.updateItemsCart(items);
 			itemsView.updateItemsShop(itemsRepository.findAll());
 		} else {

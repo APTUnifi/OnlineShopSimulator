@@ -10,8 +10,7 @@ import com.mongodb.ServerAddress;
 import com.online.shop.controller.CartController;
 import com.online.shop.controller.ShopController;
 import com.online.shop.repository.mongo.ItemsMongoRepository;
-import com.online.shop.view.swing.ShopViewSwing;
-import com.online.shop.view.swing.HistoryDialogSwing;
+import com.online.shop.view.swing.ShopViewTotal;
 
 @Command(mixinStandardHelpOptions = true)
 public class ShopSwingApp implements Callable<Void> {
@@ -42,13 +41,12 @@ public class ShopSwingApp implements Callable<Void> {
 				ItemsMongoRepository itemsRepository = new ItemsMongoRepository(
 						new MongoClient(new ServerAddress(mongoHost,mongoPort)),
 						databaseName, collectionItems, collectionCarts);
-				ShopViewSwing itemsView = new ShopViewSwing();
-				HistoryDialogSwing historyView = new HistoryDialogSwing();
-				ShopController shopController = new ShopController(itemsView, itemsRepository);
-				CartController cartController = new CartController(itemsView, itemsRepository,historyView);
-				itemsView.setShopController(shopController);
-				itemsView.setCartController(cartController);
-				itemsView.setVisible(true);	
+				ShopViewTotal shopView = new ShopViewTotal();
+				ShopController shopController = new ShopController(shopView, itemsRepository);
+				CartController cartController = new CartController(shopView, itemsRepository,shopView);
+				shopView.setShopController(shopController);
+				shopView.setCartController(cartController);
+				shopView.setVisible(true);	
 				shopController.allItems();
 				cartController.allCarts();
 			}catch(Exception e ) {}

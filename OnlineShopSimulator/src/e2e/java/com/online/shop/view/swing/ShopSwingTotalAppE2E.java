@@ -1,9 +1,15 @@
 package com.online.shop.view.swing;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.swing.launcher.ApplicationLauncher.application;
+import static org.junit.Assert.*;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.swing.JFrame;
+
 import org.assertj.swing.annotation.GUITest;
 import org.assertj.swing.core.GenericTypeMatcher;
 import org.assertj.swing.core.matcher.JButtonMatcher;
@@ -11,18 +17,17 @@ import org.assertj.swing.finder.WindowFinder;
 import org.assertj.swing.fixture.FrameFixture;
 import org.assertj.swing.junit.runner.GUITestRunner;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
+import org.bson.Document;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.testcontainers.containers.GenericContainer;
+
 import com.mongodb.MongoClient;
 import com.online.shop.model.Item;
-import org.bson.Document;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.swing.launcher.ApplicationLauncher.*;
 
 @RunWith(GUITestRunner.class)
-public class ShopSwingAppE2E  extends AssertJSwingJUnitTestCase{
+public class ShopSwingTotalAppE2E  extends AssertJSwingJUnitTestCase{
 
 	private static final String CART_FIXTURE_DATE = LocalDate.now().toString();
 	private static final String CART_FIXTURE_LABEL = "cartTest";
@@ -69,7 +74,7 @@ public class ShopSwingAppE2E  extends AssertJSwingJUnitTestCase{
 		window = WindowFinder.findFrame(new GenericTypeMatcher<JFrame>(JFrame.class) {
 			@Override
 			protected boolean isMatching(JFrame frame) {
-				return "ShopOnlineTest".equals(frame.getTitle()) && frame.isShowing();
+				return "ShopOnline".equals(frame.getTitle()) && frame.isShowing();
 			}
 		}).using(robot());
 	}
@@ -152,25 +157,21 @@ public class ShopSwingAppE2E  extends AssertJSwingJUnitTestCase{
 	
 	@Test @GUITest
 	public void testRemoveCartSuccess() {
-		window.button(JButtonMatcher.withText("History")).click();
-		window.dialog("History").button(JButtonMatcher.withText("ShowHistory")).click();
-		window.dialog("History").list("listCart").selectItem(FIRST_ITEM);
-		window.dialog("History").button(JButtonMatcher.withText("Remove")).click();
-		assertThat(window.dialog("History").list("listCart").contents()).isEmpty();
-		assertThat(window.dialog("History").list("listItemsCart").contents()).isEmpty();
+		window.list("listCart").selectItem(FIRST_ITEM);
+		window.button(JButtonMatcher.withText("Delete")).click();
+		assertThat(window.list("listCart").contents()).isEmpty();
+		assertThat(window.list("listItemsCart").contents()).isEmpty();
 
 	}
 	
 	@Test @GUITest
 	public void testRemoveCartError() {
-		window.button(JButtonMatcher.withText("History")).click();
-		window.dialog("History").button(JButtonMatcher.withText("ShowHistory")).click();
-		window.dialog("History").list("listCart").selectItem(FIRST_ITEM);
+		window.list("listCart").selectItem(FIRST_ITEM);
 		removeTestCartFromDatabase(CART_FIXTURE_LABEL,CART_FIXTURE_DATE);
-		window.dialog("History").button(JButtonMatcher.withText("Remove")).click();
+		window.button(JButtonMatcher.withText("Delete")).click();
 		assertThat(window.label("errorMessageLabel").text())
      	.contains("Cart not found: " + CART_FIXTURE_LABEL );
-		assertThat(window.dialog("History").list("listItemsCart").contents()).isEmpty();
+		assertThat(window.list("listItemsCart").contents()).isEmpty();
 
 	}
 }

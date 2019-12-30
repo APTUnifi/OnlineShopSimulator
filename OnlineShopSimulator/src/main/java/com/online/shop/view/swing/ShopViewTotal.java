@@ -1,54 +1,69 @@
-
 package com.online.shop.view.swing;
 
-
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.util.List;
 
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 
 import com.online.shop.controller.CartController;
 import com.online.shop.controller.ShopController;
 import com.online.shop.model.Cart;
 import com.online.shop.model.Item;
+import com.online.shop.view.HistoryView;
 import com.online.shop.view.ShopView;
+import javax.swing.ListModel;
+import javax.swing.JSeparator;
 
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import javax.swing.JTextField;
-import java.awt.Insets;
-
-import javax.swing.JList;
-import javax.swing.JLabel;
-import javax.swing.ListSelectionModel;
-import javax.swing.SwingUtilities;
-import javax.swing.WindowConstants;
-
-
-@SuppressWarnings("serial")
-public class ShopViewSwing extends JFrame implements ShopView {	
+public class ShopViewTotal extends JFrame  implements ShopView, HistoryView{
 
 	private transient ShopController shopController;
 	private transient CartController cartController;
 	private JPanel contentPane;
+	
 	private JTextField itemName;
+	private JTextField cartNameText;
+
+	private DefaultListModel<Item> itemListShopModel;
+	private DefaultListModel<Item> itemListCartModel;
+	private DefaultListModel<Cart> listCartModel;
+	private DefaultListModel<Item> listItemsCartModel;
+	private JList<Item> itemListShop;
+	private JList<Item> itemListCart;
+	private JList<Item> listItemsCart;
+	private JList<Cart> listCart;
+
+	private JButton btnBuy;
+	private JButton btnDelete;
 	private JButton btnRemove;
 	private JButton btnAdd;
 	private JButton btnSearch;
-	private DefaultListModel<Item> itemListShopModel;
-	private DefaultListModel<Item> itemListCartModel;
-	private JList<Item> itemListShop;
-	private JList<Item> itemListCart;
-	private JLabel lblErrorMessageLabel;
-	private JButton btnBuy;
-	private JButton btnHistory;
+
+	private JSeparator separator; 
+
 	private JLabel lblCartName;
-	private JTextField cartNameText;
-	private HistoryDialogSwing historyDialog;
+	private JLabel lblYourCart;
+	private JLabel lblShop;
+	private JLabel lblCartsHistory;
+	private JLabel lblErrorMessageLabel;
+	private JLabel lblItemsCart;
+
+	DefaultListModel<Cart> getListCartModel(){
+		return listCartModel;
+	}
 
 	DefaultListModel<Item> getItemListShopModel(){
 		return itemListShopModel;
@@ -63,92 +78,70 @@ public class ShopViewSwing extends JFrame implements ShopView {
 	public void setCartController(CartController cartController) {
 		this.cartController = cartController;
 	}
+	
+	public void setDefaultListModel(DefaultListModel<Cart> a) {
+		listCart.setModel(a);
+	}
 
-	public ShopViewSwing() {
+	/**
+	 * Launch the application.
+	 */
+
+	public ShopViewTotal() {
 
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		setTitle("ShopOnlineTest");
-		setBounds(100, 100, 450, 300);
+		setTitle("ShopOnline");
+		setBounds(100, 100, 676, 594);
 		contentPane = new JPanel();
 		contentPane.setName("MainPanel");
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
-		GridBagLayout gblcontentPane = new GridBagLayout();
-		gblcontentPane.columnWidths = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 36, 0};
-		gblcontentPane.rowHeights = new int[] {0, 30, 30, 30, 0, 0, 0, 0, 0, 30, 30, 0};
-		gblcontentPane.columnWeights = new double[]{0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, Double.MIN_VALUE};
-		gblcontentPane.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		contentPane.setLayout(gblcontentPane);
+		contentPane.setLayout(null);
 
 		itemName = new JTextField();
+		itemName.setBounds(96, 6, 409, 26);
 		itemName.setName("itemName");
-		GridBagConstraints gbcitemName = new GridBagConstraints();
-		gbcitemName.gridwidth = 8;
-		gbcitemName.insets = new Insets(0, 0, 5, 5);
-		gbcitemName.fill = GridBagConstraints.HORIZONTAL;
-		gbcitemName.gridx = 1;
-		gbcitemName.gridy = 0;
-		contentPane.add(itemName, gbcitemName);
+		contentPane.add(itemName);
 		itemName.setColumns(10);
 
 		btnSearch = new JButton("Search");
+		btnSearch.setBounds(6, 5, 85, 29);
 		btnSearch.setEnabled(true);
-		GridBagConstraints gbcbtnSearch = new GridBagConstraints();
-		gbcbtnSearch.insets = new Insets(0, 0, 5, 5);
-		gbcbtnSearch.gridx = 0;
-		gbcbtnSearch.gridy = 0;
-		contentPane.add(btnSearch, gbcbtnSearch);
+		contentPane.add(btnSearch);
 
 		lblErrorMessageLabel = new JLabel(" ");
+		lblErrorMessageLabel.setBounds(306, 44, 32, 16);
 		lblErrorMessageLabel.setName("errorMessageLabel");
 		lblErrorMessageLabel.setOpaque(true);
-		GridBagConstraints gbclblErrorMessageLabel = new GridBagConstraints();
-		gbclblErrorMessageLabel.gridwidth = 8;
-		gbclblErrorMessageLabel.insets = new Insets(0, 0, 5, 5);
-		gbclblErrorMessageLabel.gridx = 1;
-		gbclblErrorMessageLabel.gridy = 1;
-		contentPane.add(lblErrorMessageLabel, gbclblErrorMessageLabel);
+		contentPane.add(lblErrorMessageLabel);
 
 		itemListShopModel = new DefaultListModel<>();
 		itemListCartModel = new DefaultListModel<>();
 
 		itemListShop = new JList<>();
+		itemListShop.setBounds(6, 91, 281, 169);
 		itemListShop.setModel(itemListShopModel);
 		itemListShop.addListSelectionListener(e -> 
 		btnAdd.setEnabled(itemListShop.getSelectedIndex() != -1)
 				);
 
 		lblCartName = new JLabel("Cart Name : ");
+		lblCartName.setBounds(316, 274, 78, 16);
 		lblCartName.setName("lblCartName");
-		GridBagConstraints gbc_lblCartName = new GridBagConstraints();
-		gbc_lblCartName.insets = new Insets(0, 0, 5, 5);
-		gbc_lblCartName.gridx = 4;
-		gbc_lblCartName.gridy = 2;
-		contentPane.add(lblCartName, gbc_lblCartName);
+		contentPane.add(lblCartName);
 
 		cartNameText = new JTextField("");
+		cartNameText.setBounds(399, 269, 260, 26);
 		cartNameText.setName("cartNameText");
-		GridBagConstraints gbc_cartNameText = new GridBagConstraints();
-		gbc_cartNameText.gridwidth = 5;
-		gbc_cartNameText.insets = new Insets(0, 0, 5, 5);
-		gbc_cartNameText.fill = GridBagConstraints.HORIZONTAL;
-		gbc_cartNameText.gridx = 5;
-		gbc_cartNameText.gridy = 2;
-		contentPane.add(cartNameText, gbc_cartNameText);
+		contentPane.add(cartNameText);
 		cartNameText.setColumns(10);
 
 		itemListShop.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		itemListShop.setName("itemListShop");
-		GridBagConstraints gbcitemListShop = new GridBagConstraints();
-		gbcitemListShop.gridwidth = 4;
-		gbcitemListShop.gridheight = 7;
-		gbcitemListShop.insets = new Insets(0, 0, 5, 5);
-		gbcitemListShop.fill = GridBagConstraints.BOTH;
-		gbcitemListShop.gridx = 0;
-		gbcitemListShop.gridy = 3;
-		contentPane.add(itemListShop, gbcitemListShop);
+		contentPane.add(itemListShop);
 
 		itemListCart = new JList<>(itemListCartModel);
+		itemListCart.setBounds(399, 91, 260, 169);
 		itemListCart.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		itemListCart.addListSelectionListener(e -> {
@@ -159,23 +152,13 @@ public class ShopViewSwing extends JFrame implements ShopView {
 		});	
 
 		itemListCart.setName("itemListCart");
-		GridBagConstraints gbcitemListCart = new GridBagConstraints();
-		gbcitemListCart.insets = new Insets(0, 0, 5, 0);
-		gbcitemListCart.gridheight = 7;
-		gbcitemListCart.gridwidth = 5;
-		gbcitemListCart.fill = GridBagConstraints.BOTH;
-		gbcitemListCart.gridx = 5;
-		gbcitemListCart.gridy = 3;
-		contentPane.add(itemListCart, gbcitemListCart);
+		contentPane.add(itemListCart);
 
 		btnAdd = new JButton("Add");
+		btnAdd.setBounds(299, 121, 75, 29);
 		btnAdd.setEnabled(false);
 		btnAdd.setName("Add");
-		GridBagConstraints gbcbtnAdd = new GridBagConstraints();
-		gbcbtnAdd.insets = new Insets(0, 0, 5, 5);
-		gbcbtnAdd.gridx = 4;
-		gbcbtnAdd.gridy = 4;
-		contentPane.add(btnAdd, gbcbtnAdd);
+		contentPane.add(btnAdd);
 
 		btnAdd.addActionListener(
 				e -> { 
@@ -184,13 +167,10 @@ public class ShopViewSwing extends JFrame implements ShopView {
 				});
 
 		btnRemove = new JButton("Remove");
+		btnRemove.setBounds(294, 162, 93, 29);
 		btnRemove.setName("Remove");
 		btnRemove.setEnabled(false);
-		GridBagConstraints gbcbtnRemove = new GridBagConstraints();
-		gbcbtnRemove.insets = new Insets(0, 0, 5, 5);
-		gbcbtnRemove.gridx = 4;
-		gbcbtnRemove.gridy = 5;
-		contentPane.add(btnRemove, gbcbtnRemove);
+		contentPane.add(btnRemove);
 
 		btnRemove.addActionListener(
 				e -> cartController.removeFromCart(itemListCart.getSelectedValue())
@@ -203,43 +183,77 @@ public class ShopViewSwing extends JFrame implements ShopView {
 						).start();
 				});
 
-		btnHistory = new JButton("History");
-		btnHistory.setName("History");
-		btnHistory.addActionListener(
-				e->
-				openHistoryDialog()
-				);
-
-		GridBagConstraints gbcbtnHistory = new GridBagConstraints();
-		gbcbtnHistory.insets = new Insets(0, 0, 5, 5);
-		gbcbtnHistory.gridx = 4;
-		gbcbtnHistory.gridy = 8;
-		contentPane.add(btnHistory, gbcbtnHistory);
-
 		btnBuy = new JButton("Buy");
+		btnBuy.setBounds(299, 203, 75, 29);
 		btnBuy.setName("Buy");
 		btnBuy.setEnabled(false);
-		GridBagConstraints gbcbtnBuy = new GridBagConstraints();
-		gbcbtnBuy.insets = new Insets(0, 0, 0, 5);
-		gbcbtnBuy.gridx = 4;
-		gbcbtnBuy.gridy = 10;
-		contentPane.add(btnBuy, gbcbtnBuy);
+		contentPane.add(btnBuy);
+
+		
+		listItemsCartModel =new DefaultListModel<>();		
+		listCartModel =  new DefaultListModel<>();
+		
+		listCart = new JList<Cart>(listCartModel);
+		listCart.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		listCart.setBounds(4, 359, 283, 186);
+		listCart.setName("listCart");
+		contentPane.add(listCart);
+		listCart.addListSelectionListener(e -> {
+			btnDelete.setEnabled(listCart.getSelectedIndex() != -1)	;
+			if(listCart.getSelectedValue() != null) {
+				showItemsCart(listCart.getSelectedValue());
+			}
+		}
+				);
+		
+		listItemsCart = new JList<Item>(listItemsCartModel);
+		listItemsCart.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		listItemsCart.setName("listItemsCart");
+		listItemsCart.setBounds(406, 359, 253, 186);
+		contentPane.add(listItemsCart);
+		
+		btnDelete = new JButton("Delete");
+		btnDelete.setName("Delete");
+		btnDelete.setEnabled(false);
+		btnDelete.setBounds(296, 449, 98, 29);
+		contentPane.add(btnDelete);
+		btnDelete.addActionListener(
+				e -> {
+					cartController.removeCart(listCart.getSelectedValue());
+					//setDefaultListModel(updateListCarts());
+					showItemsCart(new Cart());
+				});
+		
+		lblCartsHistory = new JLabel("Carts");
+		lblCartsHistory.setName("lblCartsHistory");
+		lblCartsHistory.setBounds(4, 334, 61, 16);
+		contentPane.add(lblCartsHistory);
+		
+		lblItemsCart = new JLabel("Items Cart");
+		lblItemsCart.setName("lblItemsCart");
+		lblItemsCart.setBounds(403, 334, 108, 16);
+		contentPane.add(lblItemsCart);
+		
+		lblShop = new JLabel("Items Shop");
+		lblShop.setName("lblShop");
+		lblShop.setBounds(6, 73, 85, 16);
+		contentPane.add(lblShop);
+		
+		lblYourCart = new JLabel("Your Cart");
+		lblYourCart.setName("lblYourCart");
+		lblYourCart.setBounds(399, 73, 61, 16);
+		contentPane.add(lblYourCart);
+		
+		separator = new JSeparator();
+		separator.setBounds(6, 307, 668, 12);
+		contentPane.add(separator);
 
 		btnBuy.addActionListener(
 				e ->{
 					cartController.completePurchase(cartNameText.getText());
 				});
 	}
-	private void openHistoryDialog() {
-		historyDialog = new HistoryDialogSwing();
-		historyDialog.setName("History");
-		historyDialog.setCartController(cartController);
-		historyDialog.pack();
-		historyDialog.setLocationRelativeTo(null);
-		historyDialog.setSize(500, 300);
 
-		historyDialog.setVisible(true); 
-	}
 
 	@Override
 	public void showItemsShop(List<Item> items) {
@@ -334,5 +348,31 @@ public class ShopViewSwing extends JFrame implements ShopView {
 	@Override
 	public void itemRemoved(Item item) {
 		// TODO Auto-generated method stub
+	}
+	@Override
+	public void showHistory(List<Cart> carts) {
+		DefaultListModel<Cart> listCartUpdated = new DefaultListModel<>();
+		for(Cart cartHistory : carts){
+			listCartUpdated.addElement(cartHistory);	
+		}   
+		listCart.setModel(listCartUpdated); 
+		setDefaultListModel(listCartUpdated);
+	}
+
+	@Override
+	public void removeCart(Cart cart) {
+		DefaultListModel<Cart> carts = (DefaultListModel<Cart>) listCart.getModel();
+		carts.removeElement(cart);
+		listCart.setModel(carts);
+		setDefaultListModel(carts);
+	}
+
+	@Override
+	public void showItemsCart(Cart cart) {
+		DefaultListModel<Item> listItems= new DefaultListModel<>();
+		for(Item itemsShop : cart.getItems()){
+			listItems.addElement(itemsShop);
+		}    
+		listItemsCart.setModel(listItems);
 	}
 }
