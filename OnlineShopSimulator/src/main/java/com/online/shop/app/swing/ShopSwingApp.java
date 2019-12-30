@@ -31,7 +31,6 @@ public class ShopSwingApp implements Callable<Void> {
 	@Option(names = { "--db-collectionCarts" }, description = "Collection carts")
 	private String collectionCarts = "test-carts";
 
-	@SuppressWarnings("deprecation")
 	public static void main(String[] args) { 
 		CommandLine.call(new ShopSwingApp(), args);
 	}
