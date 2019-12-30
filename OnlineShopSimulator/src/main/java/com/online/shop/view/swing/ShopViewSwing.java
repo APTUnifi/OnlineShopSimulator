@@ -16,13 +16,11 @@ import com.online.shop.view.ShopView;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
-import javax.swing.JDesktopPane;
 
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import javax.swing.JTextField;
 import java.awt.Insets;
-import java.awt.Window;
 
 import javax.swing.JList;
 import javax.swing.JLabel;
@@ -36,7 +34,7 @@ public class ShopViewSwing extends JFrame implements ShopView {
 
 	private transient ShopController shopController;
 	private transient CartController cartController;
-	private JDesktopPane contentPane;
+	private JPanel contentPane;
 	private JTextField itemName;
 	private JButton btnRemove;
 	private JButton btnAdd;
@@ -71,7 +69,7 @@ public class ShopViewSwing extends JFrame implements ShopView {
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setTitle("ShopOnlineTest");
 		setBounds(100, 100, 450, 300);
-		contentPane = new JDesktopPane();
+		contentPane = new JPanel();
 		contentPane.setName("MainPanel");
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);

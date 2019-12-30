@@ -5,7 +5,6 @@ import java.awt.Window;
 import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
-import javax.swing.JDesktopPane;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -29,7 +28,7 @@ public class HistoryDialogSwing extends JDialog implements HistoryView {
 	private JButton btnShowHistory;
 	private JLabel lblItemsCart;
 	private JLabel lblCarts;
-	private final JDesktopPane contentPanel;
+	private final JPanel contentPanel;
 	private transient CartController cartController;
 
 	DefaultListModel<Cart> getListCartModel(){
@@ -53,7 +52,7 @@ public class HistoryDialogSwing extends JDialog implements HistoryView {
 
 		setModalityType(DEFAULT_MODALITY_TYPE);
 
-		contentPanel = new JDesktopPane();
+		contentPanel = new JPanel();
 		contentPanel.setBounds(0, 0, 450, 278);
 		contentPanel.setSize(500, 300);
 		getContentPane().add(contentPanel);
@@ -96,7 +95,9 @@ public class HistoryDialogSwing extends JDialog implements HistoryView {
 		btnShowHistory.setBounds(57, 232, 117, 29);
 		contentPanel.add(btnShowHistory);
 		btnShowHistory.addActionListener(
-				e -> setDefaultListModel(updateListCarts())
+				e ->{ setDefaultListModel(updateListCarts());
+				cartController.allCarts();
+				}
 				);		
 	
 		btnRemove = new JButton("Remove");
