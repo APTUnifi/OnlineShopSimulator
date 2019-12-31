@@ -2,20 +2,20 @@ package com.online.shop.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import com.online.shop.model.Cart;
 import com.online.shop.model.Item;
 import com.online.shop.repository.ItemsRepository;
 import com.online.shop.view.HistoryView;
-import com.online.shop.view.ItemsView;
+import com.online.shop.view.ShopView;
 
 public class CartController {
-	private ItemsView itemsView;
+	
+	private ShopView itemsView;
 	private ItemsRepository itemsRepository;
 	private HistoryView historyView;
 	private Cart cart;
 
-	public CartController(ItemsView ShopView, ItemsRepository itemsRepository,HistoryView historyView) {
+	public CartController(ShopView ShopView, ItemsRepository itemsRepository,HistoryView historyView) {
 		this.itemsView = ShopView;
 		this.itemsRepository = itemsRepository;
 		this.historyView = historyView;
@@ -24,7 +24,6 @@ public class CartController {
 
 	public void addToCart(Item item) {
 		List<Item> items = cart.getItems();
-
 		if (!items.contains(item)) {
 			item.setQuantity(1);
 			itemsView.itemAddedToCart(item);
@@ -56,7 +55,6 @@ public class CartController {
 		if (items.contains(item)) {
 			return items.get(items.indexOf(item)).getQuantity();
 		}
-
 		return 0;
 	}
 
@@ -74,6 +72,12 @@ public class CartController {
 
 	public void completePurchase(String label) {
 		cart.setLabel(label);
+		for(Cart carts : itemsRepository.findAllCarts()) {
+			if(cart.getLabel().equals(carts.getLabel())) {
+				itemsView.errorLogCart("Cart with this label already exists: " , cart);
+				return;
+			}
+		}
 		List<Item> items = cart.getItems();
 		List<Item> itemsNotStored = new ArrayList<Item>();
 		Item retrievedItem;
@@ -96,6 +100,7 @@ public class CartController {
 			itemsRepository.storeCart(cart);
 			cart.setItems(new ArrayList<Item>());
 			items = cart.getItems();
+			historyView.showHistory(itemsRepository.findAllCarts());
 			itemsView.updateItemsCart(items);
 			itemsView.updateItemsShop(itemsRepository.findAll());
 		} else {
@@ -113,9 +118,9 @@ public class CartController {
 
 	public void removeCart(Cart cartToRemove) {
 		if (itemsRepository.findCart(cartToRemove.getDate(), cartToRemove.getLabel()) == null) {
-			throw new IllegalArgumentException("Cart does not exists");
+			itemsView.errorLogCart("Cart not found", cartToRemove );
+			return;
 		}
-
 		itemsRepository.removeCart(cartToRemove.getDate(), cartToRemove.getLabel());
 		historyView.removeCart(cartToRemove);
 	}

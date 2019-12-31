@@ -105,9 +105,7 @@ public class ItemsSqlRepository implements ItemsRepository {
 
 		items = db.query(selectItemsInCart, (rs, rowNum) -> new Item(rs.getString("product_code"),
 				rs.getString("name"), rs.getInt("quantity_in_cart")));
-
 		requestedCart.setItems(items);
-
 		return requestedCart;
 	}
 
@@ -159,4 +157,3 @@ public class ItemsSqlRepository implements ItemsRepository {
 		return db;
 	}
 }
-

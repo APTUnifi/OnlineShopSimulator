@@ -72,6 +72,7 @@ public class ItemsMongoRepositoryIT {
 				.collect(Collectors.toList());
 	}
 
+	@SuppressWarnings("unchecked")
 	private List<Cart> retrieveAllCarts() {
 
 		return StreamSupport.stream(collectionCarts.find().spliterator(), false)
@@ -178,4 +179,3 @@ public class ItemsMongoRepositoryIT {
 		assertThat(retrieveAllCarts()).containsExactly(new Cart("testCart", LocalDate.now().toString(), Arrays.asList(new Item("1", "test1"))));
 	}
 }
-

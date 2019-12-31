@@ -1,7 +1,6 @@
 package com.online.shop.repository;
 
 import java.util.List;
-
 import com.online.shop.model.Cart;
 import com.online.shop.model.Item;
 
@@ -25,7 +24,7 @@ public interface ItemsRepository {
 	public void removeCart(String date, String label);
 	
 	public Cart findCart(String date, String label);
-	
+
 	public List<Cart> findAllCarts();
 	
 }

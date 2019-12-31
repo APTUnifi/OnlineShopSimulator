@@ -23,17 +23,17 @@ public class Item {
 		this.name = name;
 		this.quantity = quantity;
 	}
-	
+
 	//TODO update with the other methods
 	@Override
 	public boolean equals(final Object obj){
-	    if(obj instanceof Item){
-	        final Item other = (Item) obj;
-	        return Objects.equals(productCode, other.productCode)
-	            && Objects.equals(name, other.name);
-	    } else{
-	        return false;
-	    }
+		if(obj instanceof Item){
+			final Item other = (Item) obj;
+			return Objects.equals(productCode, other.productCode)
+					&& Objects.equals(name, other.name);
+		} else{
+			return false;
+		}
 	}
 
 	@Override
@@ -56,19 +56,4 @@ public class Item {
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
-
-	public void setProductCode(String productCode) {
-		this.productCode = productCode;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-	
-//	@Override
-//	public String toString() {
-//		return "Item : " + name + ", ProductCode : " + productCode + ", Quantity : " + quantity;
-//	}
-	
-
 }

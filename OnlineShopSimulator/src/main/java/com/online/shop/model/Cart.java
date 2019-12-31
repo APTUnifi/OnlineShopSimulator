@@ -6,10 +6,11 @@ import java.util.Objects;
 import java.time.LocalDate;
 
 public class Cart {
+	
 	private List<Item> items;
 	private String label;
-  private String date;
-  
+	private String date;
+
 	public Cart() {
 		items = new ArrayList<>();
 		label = "";
@@ -50,7 +51,7 @@ public class Cart {
 		return label;
 	}
 
-  public void setLabel(String label) {
+	public void setLabel(String label) {
 		this.label = label;
 	}
 
@@ -68,5 +69,4 @@ public class Cart {
 	public int hashCode() {
 		return Objects.hash(label, date);
 	}
-	
 }
