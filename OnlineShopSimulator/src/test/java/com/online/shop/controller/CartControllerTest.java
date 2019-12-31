@@ -265,4 +265,18 @@ public class CartControllerTest {
 		verify(itemsView).errorLogCart("Cart not found" , cartToRemove);
 		verifyNoMoreInteractions(ignoreStubs(historyView));
 	}
+	@Test
+	public void testCompletePurchaseShouldThrowErrorWhenNameCartAlreadyExists() {
+		List<Item> items = new ArrayList<>();
+		Cart cartToAdd = new Cart(CART_LABEL,LocalDate.now().toString(), items);
+		Cart cartExist = new Cart(CART_LABEL, LocalDate.now().toString(),items);
+		itemsRepository.storeCart(cartExist);
+		cartController.setCart(cartToAdd);
+		when(itemsRepository.findAllCarts()).thenReturn(Arrays.asList(cartExist));
+		cartController.completePurchase(CART_LABEL);
+		//verify(itemsRepository).storeCart(cartExist);
+		verify(itemsView).errorLogCart("Cart with this label already exists: ", cartExist);
+		verifyNoMoreInteractions(ignoreStubs(historyView));
+	}
+
 }

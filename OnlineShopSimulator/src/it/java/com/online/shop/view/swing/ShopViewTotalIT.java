@@ -1,7 +1,6 @@
 package com.online.shop.view.swing;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.*;
 
 import java.awt.Dimension;
 import java.net.InetSocketAddress;
@@ -107,29 +106,28 @@ public class ShopViewTotalIT extends AssertJSwingJUnitTestCase {
 
 	@Test @GUITest
 	public void testAllItems() {
-		Item item1 = new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1);
-		Item item2 = new Item(ITEM_FIXTURE_PRODUCTCODE_2,ITEM_FIXTURE_NAME_2);
-		Cart cart = new Cart(Arrays.asList(item1,item2),CART_FIXTURE_LABEL_1);
-		itemsRepository.store(item1);
-		itemsRepository.store(item2);
+		Item itemExist1 = new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1);
+		Item itemExist2 = new Item(ITEM_FIXTURE_PRODUCTCODE_2,ITEM_FIXTURE_NAME_2);
+		itemsRepository.store(itemExist1);
+		itemsRepository.store(itemExist2);
 		GuiActionRunner.execute(
 				()->{
 					shopController.allItems();
 				});
-		assertThat(window.list("itemListShop").contents()).containsExactly(item1.toString(),item2.toString());
+		assertThat(window.list("itemListShop").contents()).containsExactly(itemExist1.toString(),itemExist2.toString());
 	}
 	@Test @GUITest
 	public void testAllCarts() {
-		Item item1 = new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1);
-		Item item2 = new Item(ITEM_FIXTURE_PRODUCTCODE_2,ITEM_FIXTURE_NAME_2);
-		Cart cart = new Cart(Arrays.asList(item1,item2),CART_FIXTURE_LABEL_1);
-		itemsRepository.store(item1);
-		itemsRepository.store(item2);
-		itemsRepository.storeCart(cart);
+		Item itemExist1 = new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1);
+		Item itemExist2 = new Item(ITEM_FIXTURE_PRODUCTCODE_2,ITEM_FIXTURE_NAME_2);
+		Cart cartExist = new Cart(Arrays.asList(itemExist1,itemExist2),CART_FIXTURE_LABEL_1);
+		itemsRepository.store(itemExist1);
+		itemsRepository.store(itemExist2);
+		itemsRepository.storeCart(cartExist);
 		GuiActionRunner.execute(
 				()-> cartController.allCarts()
 				);
-		assertThat(window.list("listCart").contents()).containsExactly(cart.toString());
+		assertThat(window.list("listCart").contents()).containsExactly(cartExist.toString());
 	}
 	@Test @GUITest
 	public void testAddButtonSuccess() {

@@ -1,10 +1,5 @@
 package com.online.shop.view.swing;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
@@ -25,9 +20,9 @@ import com.online.shop.model.Cart;
 import com.online.shop.model.Item;
 import com.online.shop.view.HistoryView;
 import com.online.shop.view.ShopView;
-import javax.swing.ListModel;
 import javax.swing.JSeparator;
 
+@SuppressWarnings("serial")
 public class ShopViewTotal extends JFrame  implements ShopView, HistoryView{
 
 	private transient ShopController shopController;
@@ -110,7 +105,7 @@ public class ShopViewTotal extends JFrame  implements ShopView, HistoryView{
 		contentPane.add(btnSearch);
 
 		lblErrorMessageLabel = new JLabel(" ");
-		lblErrorMessageLabel.setBounds(306, 44, 32, 16);
+		lblErrorMessageLabel.setBounds(106, 44, 441, 16);
 		lblErrorMessageLabel.setName("errorMessageLabel");
 		lblErrorMessageLabel.setOpaque(true);
 		contentPane.add(lblErrorMessageLabel);

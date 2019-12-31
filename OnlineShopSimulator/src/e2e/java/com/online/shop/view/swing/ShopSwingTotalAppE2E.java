@@ -2,7 +2,6 @@ package com.online.shop.view.swing;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.swing.launcher.ApplicationLauncher.application;
-import static org.junit.Assert.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

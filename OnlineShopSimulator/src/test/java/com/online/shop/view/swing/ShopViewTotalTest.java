@@ -25,7 +25,6 @@ import com.online.shop.controller.CartController;
 import com.online.shop.controller.ShopController;
 import com.online.shop.model.Cart;
 import com.online.shop.model.Item;
-import com.online.shop.view.HistoryView;
 
 import org.junit.Test;
 

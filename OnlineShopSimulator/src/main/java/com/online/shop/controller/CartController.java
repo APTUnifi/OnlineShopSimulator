@@ -74,7 +74,7 @@ public class CartController {
 		//TODO : check it!
 		for(Cart carts : itemsRepository.findAllCarts()) {
 			if(cart.getLabel() == carts.getLabel() ) {
-				itemsView.errorLog("Label already exist. Change it" + label, null);
+				itemsView.errorLogCart("Cart with this label already exists: " , cart);
 				return;
 			}
 		}
@@ -110,14 +110,6 @@ public class CartController {
 
 	public void allCarts() {
 		historyView.showHistory(itemsRepository.findAllCarts());
-	}
-
-	public List<Cart> getListCart() {
-		List<Cart>  carts = itemsRepository.findAllCarts();
-		if(carts.isEmpty()) {
-			return null;
-		}
-		return carts;
 	}
 
 	public void allItemsCart(Cart cart) {
