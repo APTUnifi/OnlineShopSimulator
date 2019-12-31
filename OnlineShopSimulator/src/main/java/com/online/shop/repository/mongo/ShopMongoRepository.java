@@ -13,9 +13,9 @@ import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
 import com.online.shop.model.Cart;
 import com.online.shop.model.Item;
-import com.online.shop.repository.ItemsRepository;
+import com.online.shop.repository.ShopRepository;
 
-public class ItemsMongoRepository implements ItemsRepository {
+public class ShopMongoRepository implements ShopRepository {
 
 	private static final String SHOP_DB_NAME = "shop";
 	private static final String ITEMS_COLLECTION_NAME = "items";
@@ -23,12 +23,14 @@ public class ItemsMongoRepository implements ItemsRepository {
 	private MongoCollection<Document> collectionItems;
 	private MongoCollection<Document> collectionCarts;
 
-	public ItemsMongoRepository(MongoClient client) {
+	public ShopMongoRepository(MongoClient client) {
 		collectionItems = client.getDatabase(SHOP_DB_NAME).getCollection(ITEMS_COLLECTION_NAME);
 		collectionCarts = client.getDatabase(SHOP_DB_NAME).getCollection(CARTS_COLLECTION_NAME);
 
 	}
-	public ItemsMongoRepository(MongoClient client, String databaseName, String itemsCollection, String cartsCollection) {
+
+	public ShopMongoRepository(MongoClient client, String databaseName, String itemsCollection,
+			String cartsCollection) {
 		collectionItems = client.getDatabase(databaseName).getCollection(itemsCollection);
 		collectionCarts = client.getDatabase(databaseName).getCollection(cartsCollection);
 	}
@@ -50,13 +52,13 @@ public class ItemsMongoRepository implements ItemsRepository {
 	}
 
 	@Override
-	public List<Item> findAll() {
+	public List<Item> findAllItems() {
 		return StreamSupport.stream(collectionItems.find().spliterator(), false).map(this::fromDocumentToItem)
 				.collect(Collectors.toList());
 	}
 
 	@Override
-	public Item findByProductCode(String productCode) {
+	public Item findItemByProductCode(String productCode) {
 		Document d = collectionItems.find(Filters.eq("productCode", productCode)).first();
 		if (d != null)
 			return fromDocumentToItem(d);
@@ -64,7 +66,7 @@ public class ItemsMongoRepository implements ItemsRepository {
 	}
 
 	@Override
-	public Item findByName(String name) {
+	public Item findItemByName(String name) {
 		Document d = collectionItems.find(Filters.eq("name", name)).first();
 		if (d != null)
 			return fromDocumentToItem(d);
@@ -72,18 +74,18 @@ public class ItemsMongoRepository implements ItemsRepository {
 	}
 
 	@Override
-	public void store(Item itemToAdd) {
+	public void storeItem(Item itemToAdd) {
 		collectionItems.insertOne(new Document().append("productCode", itemToAdd.getProductCode())
 				.append("name", itemToAdd.getName()).append("quantity", itemToAdd.getQuantity()));
 	}
 
 	@Override
-	public void remove(String productCode) {
+	public void removeItem(String productCode) {
 		collectionItems.deleteOne(Filters.eq("productCode", productCode));
 	}
 
 	@Override
-	public void modifyQuantity(Item itemToBeModified, int modifier) {
+	public void modifyItemQuantity(Item itemToBeModified, int modifier) {
 		int newQuantity = itemToBeModified.getQuantity() + modifier;
 		collectionItems.updateOne(Filters.eq("productCode", itemToBeModified.getProductCode()),
 				Updates.set("quantity", newQuantity));

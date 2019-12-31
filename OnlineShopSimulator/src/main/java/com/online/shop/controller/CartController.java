@@ -4,18 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 import com.online.shop.model.Cart;
 import com.online.shop.model.Item;
-import com.online.shop.repository.ItemsRepository;
+import com.online.shop.repository.ShopRepository;
 import com.online.shop.view.HistoryView;
 import com.online.shop.view.ShopView;
 
 public class CartController {
 	
 	private ShopView itemsView;
-	private ItemsRepository itemsRepository;
+	private ShopRepository itemsRepository;
 	private HistoryView historyView;
 	private Cart cart;
 
-	public CartController(ShopView ShopView, ItemsRepository itemsRepository,HistoryView historyView) {
+	public CartController(ShopView ShopView, ShopRepository itemsRepository,HistoryView historyView) {
 		this.itemsView = ShopView;
 		this.itemsRepository = itemsRepository;
 		this.historyView = historyView;
@@ -84,15 +84,15 @@ public class CartController {
 		boolean isStored = true;
 
 		for (Item item : items) {
-			retrievedItem = itemsRepository.findByProductCode(item.getProductCode());
+			retrievedItem = itemsRepository.findItemByProductCode(item.getProductCode());
 			if (retrievedItem == null) {
 				isStored = false;
 				itemsNotStored.add(item);
 			} else {
 				if (retrievedItem.getQuantity() == item.getQuantity()) {
-					itemsRepository.remove(item.getProductCode());
+					itemsRepository.removeItem(item.getProductCode());
 				} else {
-					itemsRepository.modifyQuantity(retrievedItem, -item.getQuantity());
+					itemsRepository.modifyItemQuantity(retrievedItem, -item.getQuantity());
 				}
 			}
 		}
@@ -102,7 +102,7 @@ public class CartController {
 			items = cart.getItems();
 			historyView.showHistory(itemsRepository.findAllCarts());
 			itemsView.updateItemsCart(items);
-			itemsView.updateItemsShop(itemsRepository.findAll());
+			itemsView.updateItemsShop(itemsRepository.findAllItems());
 		} else {
 			itemsView.errorLog("Item/s not found", itemsNotStored);
 		}

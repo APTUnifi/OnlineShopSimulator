@@ -27,7 +27,7 @@ import com.online.shop.controller.CartController;
 import com.online.shop.controller.ShopController;
 import com.online.shop.model.Cart;
 import com.online.shop.model.Item;
-import com.online.shop.repository.mongo.ItemsMongoRepository;
+import com.online.shop.repository.mongo.ShopMongoRepository;
 
 import de.bwaldvogel.mongo.MongoServer;
 import de.bwaldvogel.mongo.backend.memory.MemoryBackend;
@@ -60,7 +60,7 @@ public class ShopOnlineViewIT extends AssertJSwingJUnitTestCase {
 
 	private ShopController shopController;
 	private CartController cartController;
-	private ItemsMongoRepository itemsRepository;
+	private ShopMongoRepository itemsRepository;
 	private ShopOnlineView shopOnlineView;
 
 	@BeforeClass
@@ -77,9 +77,9 @@ public class ShopOnlineViewIT extends AssertJSwingJUnitTestCase {
 	@Override
 	protected void onSetUp() {
 		mongoClient = new MongoClient(new ServerAddress(serverAddress));
-		itemsRepository = new ItemsMongoRepository(mongoClient);
-		for(Item item : itemsRepository.findAll()) {
-			itemsRepository.remove(item.getProductCode());
+		itemsRepository = new ShopMongoRepository(mongoClient);
+		for(Item item : itemsRepository.findAllItems()) {
+			itemsRepository.removeItem(item.getProductCode());
 		}
 		for(Cart cart: itemsRepository.findAllCarts()) {
 			itemsRepository.removeCart(cart.getDate(),cart.getLabel());
@@ -108,8 +108,8 @@ public class ShopOnlineViewIT extends AssertJSwingJUnitTestCase {
 	public void testAllItems() {
 		Item itemExist1 = new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1);
 		Item itemExist2 = new Item(ITEM_FIXTURE_PRODUCTCODE_2,ITEM_FIXTURE_NAME_2);
-		itemsRepository.store(itemExist1);
-		itemsRepository.store(itemExist2);
+		itemsRepository.storeItem(itemExist1);
+		itemsRepository.storeItem(itemExist2);
 		GuiActionRunner.execute(
 				()->{
 					shopController.allItems();
@@ -121,8 +121,8 @@ public class ShopOnlineViewIT extends AssertJSwingJUnitTestCase {
 		Item itemExist1 = new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1);
 		Item itemExist2 = new Item(ITEM_FIXTURE_PRODUCTCODE_2,ITEM_FIXTURE_NAME_2);
 		Cart cartExist = new Cart(Arrays.asList(itemExist1,itemExist2),CART_FIXTURE_LABEL_1);
-		itemsRepository.store(itemExist1);
-		itemsRepository.store(itemExist2);
+		itemsRepository.storeItem(itemExist1);
+		itemsRepository.storeItem(itemExist2);
 		itemsRepository.storeCart(cartExist);
 		GuiActionRunner.execute(
 				()-> cartController.allCarts()
@@ -159,7 +159,7 @@ public class ShopOnlineViewIT extends AssertJSwingJUnitTestCase {
 	@Test @GUITest
 	public void testAddButtonError() {
 		Item item1 = new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1,ITEM_FIXTURE_QUANTITY_1);
-		itemsRepository.store(item1);
+		itemsRepository.storeItem(item1);
 		GuiActionRunner.execute(
 				()-> {
 					shopController.allItems();
@@ -242,8 +242,8 @@ public class ShopOnlineViewIT extends AssertJSwingJUnitTestCase {
 		Item item1 = new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1);
 		Item item2 = new Item(ITEM_FIXTURE_PRODUCTCODE_2,ITEM_FIXTURE_NAME_2);
 		Cart cart = new Cart(Arrays.asList(item1,item2),CART_FIXTURE_LABEL_1);
-		itemsRepository.store(item1);
-		itemsRepository.store(item2);
+		itemsRepository.storeItem(item1);
+		itemsRepository.storeItem(item2);
 		itemsRepository.storeCart(cart);
 		GuiActionRunner.execute(
 				()-> cartController.allCarts()
@@ -261,8 +261,8 @@ public class ShopOnlineViewIT extends AssertJSwingJUnitTestCase {
 		Item item1 = new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1);
 		Item item2 = new Item(ITEM_FIXTURE_PRODUCTCODE_2,ITEM_FIXTURE_NAME_2);
 		Cart cart = new Cart(Arrays.asList(item1,item2),CART_FIXTURE_LABEL_1);
-		itemsRepository.store(item1);
-		itemsRepository.store(item2);
+		itemsRepository.storeItem(item1);
+		itemsRepository.storeItem(item2);
 		itemsRepository.storeCart(cart);
 		GuiActionRunner.execute(
 				()-> cartController.allCarts()		

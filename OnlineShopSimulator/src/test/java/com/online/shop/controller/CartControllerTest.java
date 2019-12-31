@@ -20,7 +20,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import com.online.shop.model.Cart;
 import com.online.shop.model.Item;
-import com.online.shop.repository.ItemsRepository;
+import com.online.shop.repository.ShopRepository;
 import com.online.shop.view.HistoryView;
 import com.online.shop.view.ShopView;
 
@@ -40,7 +40,7 @@ public class CartControllerTest {
 	HistoryView historyView;
 
 	@Mock
-	ItemsRepository itemsRepository;
+	ShopRepository itemsRepository;
 
 	@InjectMocks
 	CartController cartController;
@@ -134,11 +134,11 @@ public class CartControllerTest {
 		items.add(new Item(ITEM_PRODUCT_CODE, ITEM_NAME));
 		items.add(new Item("2", "test2", 2));
 		cartController.setCart(new Cart(items, CART_LABEL));
-		when(itemsRepository.findByProductCode(ITEM_PRODUCT_CODE)).thenReturn(firstExistingItem);
-		when(itemsRepository.findByProductCode("2")).thenReturn(secondExistingItem);
+		when(itemsRepository.findItemByProductCode(ITEM_PRODUCT_CODE)).thenReturn(firstExistingItem);
+		when(itemsRepository.findItemByProductCode("2")).thenReturn(secondExistingItem);
 		cartController.completePurchase(CART_LABEL);
-		verify(itemsRepository).remove(ITEM_PRODUCT_CODE);
-		verify(itemsRepository).remove("2");
+		verify(itemsRepository).removeItem(ITEM_PRODUCT_CODE);
+		verify(itemsRepository).removeItem("2");
 	}
 
 	@Test
@@ -149,13 +149,13 @@ public class CartControllerTest {
 		items.add(new Item(ITEM_PRODUCT_CODE, ITEM_NAME, 1));
 		items.add(new Item("2", "test2", 2));
 		cartController.setCart(new Cart(items, CART_LABEL));
-		when(itemsRepository.findByProductCode(ITEM_PRODUCT_CODE)).thenReturn(firstExistingItem);
-		when(itemsRepository.findByProductCode("2")).thenReturn(secondExistingItem);
+		when(itemsRepository.findItemByProductCode(ITEM_PRODUCT_CODE)).thenReturn(firstExistingItem);
+		when(itemsRepository.findItemByProductCode("2")).thenReturn(secondExistingItem);
 
 		cartController.completePurchase(CART_LABEL);
 
-		verify(itemsRepository).modifyQuantity(firstExistingItem, -1);
-		verify(itemsRepository).modifyQuantity(secondExistingItem, -2);
+		verify(itemsRepository).modifyItemQuantity(firstExistingItem, -1);
+		verify(itemsRepository).modifyItemQuantity(secondExistingItem, -2);
 	}
 
 	@Test
@@ -166,8 +166,8 @@ public class CartControllerTest {
 		items.add(new Item(ITEM_PRODUCT_CODE, ITEM_NAME, 1));
 		items.add(notExistingItem);
 		cartController.setCart(new Cart(items, CART_LABEL));
-		when(itemsRepository.findByProductCode(ITEM_PRODUCT_CODE)).thenReturn(firstExistingItem);
-		when(itemsRepository.findByProductCode("2")).thenReturn(null);
+		when(itemsRepository.findItemByProductCode(ITEM_PRODUCT_CODE)).thenReturn(firstExistingItem);
+		when(itemsRepository.findItemByProductCode("2")).thenReturn(null);
 		cartController.completePurchase(CART_LABEL);
 		verify(itemsView).errorLog("Item/s not found", Arrays.asList(notExistingItem));
 	}
@@ -180,10 +180,10 @@ public class CartControllerTest {
 		items.add(new Item(ITEM_PRODUCT_CODE, ITEM_NAME));
 		items.add(new Item("2", "test2", 2));
 		cartController.setCart(new Cart(items, CART_LABEL));
-		when(itemsRepository.findByProductCode(ITEM_PRODUCT_CODE)).thenReturn(firstExistingItem);
-		when(itemsRepository.findByProductCode("2")).thenReturn(secondExistingItem);
+		when(itemsRepository.findItemByProductCode(ITEM_PRODUCT_CODE)).thenReturn(firstExistingItem);
+		when(itemsRepository.findItemByProductCode("2")).thenReturn(secondExistingItem);
 		cartController.completePurchase(CART_LABEL);
-		verify(itemsView).updateItemsShop(itemsRepository.findAll());
+		verify(itemsView).updateItemsShop(itemsRepository.findAllItems());
 	}
 
 	@Test
@@ -194,10 +194,10 @@ public class CartControllerTest {
 		items.add(new Item(ITEM_PRODUCT_CODE, ITEM_NAME));
 		items.add(new Item("2", "test2", 2));
 		cartController.setCart(new Cart(items, CART_LABEL));
-		when(itemsRepository.findByProductCode(ITEM_PRODUCT_CODE)).thenReturn(firstExistingItem);
-		when(itemsRepository.findByProductCode("2")).thenReturn(secondExistingItem);
+		when(itemsRepository.findItemByProductCode(ITEM_PRODUCT_CODE)).thenReturn(firstExistingItem);
+		when(itemsRepository.findItemByProductCode("2")).thenReturn(secondExistingItem);
 		cartController.completePurchase(CART_LABEL);
-		verify(itemsView).updateItemsCart(itemsRepository.findAll());
+		verify(itemsView).updateItemsCart(itemsRepository.findAllItems());
 	}
 
 	@Test
@@ -208,8 +208,8 @@ public class CartControllerTest {
 		items.add(new Item(ITEM_PRODUCT_CODE, ITEM_NAME));
 		items.add(new Item("2", "test2", 2));
 		cartController.setCart(new Cart(items, CART_LABEL));
-		when(itemsRepository.findByProductCode(ITEM_PRODUCT_CODE)).thenReturn(firstExistingItem);
-		when(itemsRepository.findByProductCode("2")).thenReturn(secondExistingItem);
+		when(itemsRepository.findItemByProductCode(ITEM_PRODUCT_CODE)).thenReturn(firstExistingItem);
+		when(itemsRepository.findItemByProductCode("2")).thenReturn(secondExistingItem);
 		cartController.completePurchase(CART_LABEL);
 		assertThat(cartController.cartItems()).isEmpty();
 	}
@@ -224,8 +224,8 @@ public class CartControllerTest {
 		items.add(new Item("2", "test2", 2));
 		cart.setItems(items);
 		cartController.setCart(cart);
-		when(itemsRepository.findByProductCode(ITEM_PRODUCT_CODE)).thenReturn(firstExistingItem);
-		when(itemsRepository.findByProductCode("2")).thenReturn(secondExistingItem);
+		when(itemsRepository.findItemByProductCode(ITEM_PRODUCT_CODE)).thenReturn(firstExistingItem);
+		when(itemsRepository.findItemByProductCode("2")).thenReturn(secondExistingItem);
 		cartController.completePurchase(CART_LABEL);
 		InOrder inOrder = inOrder(itemsRepository, cart);
 		inOrder.verify(itemsRepository).storeCart(cart);
