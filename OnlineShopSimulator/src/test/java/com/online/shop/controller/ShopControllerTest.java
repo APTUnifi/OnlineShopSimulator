@@ -10,7 +10,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import com.online.shop.model.Item;
-import com.online.shop.repository.ItemsRepository;
+import com.online.shop.repository.ShopRepository;
 import com.online.shop.view.ShopView;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -22,7 +22,7 @@ public class ShopControllerTest {
 	private static final String ITEM_NAME = "battery";
 
 	@Mock
-	ItemsRepository itemsRepository;
+	ShopRepository itemsRepository;
 
 	@Mock
 	ShopView itemsView;
@@ -39,7 +39,7 @@ public class ShopControllerTest {
 	public void testAllItems() {
 		// setup
 		List<Item> items = Arrays.asList(new Item());
-		when(itemsRepository.findAll()).thenReturn(items);
+		when(itemsRepository.findAllItems()).thenReturn(items);
 		// exercise
 		shopController.allItems();
 		// verify
@@ -51,7 +51,7 @@ public class ShopControllerTest {
 	public void testNewItemWhenQuantityIsNegative() {
 		// setup
 		Item item = new Item(PRODUCT_CODE, ITEM_NAME, -1);
-		when(itemsRepository.findByProductCode(PRODUCT_CODE)).thenReturn(null);
+		when(itemsRepository.findItemByProductCode(PRODUCT_CODE)).thenReturn(null);
 		// exercise + verify
 		assertThatThrownBy(() -> shopController.newItem(item)).isInstanceOf(IllegalArgumentException.class)
 		.hasMessage("Negative amount: -1");
@@ -62,7 +62,7 @@ public class ShopControllerTest {
 	public void testNewItemWhenQuantityIsZero() {
 		// setup
 		Item item = new Item(PRODUCT_CODE, ITEM_NAME, 0);
-		when(itemsRepository.findByProductCode(PRODUCT_CODE)).thenReturn(null);
+		when(itemsRepository.findItemByProductCode(PRODUCT_CODE)).thenReturn(null);
 		// exercise + verify
 		assertThatThrownBy(() -> shopController.newItem(item)).isInstanceOf(IllegalArgumentException.class)
 		.hasMessage("Negative amount: 0");
@@ -73,12 +73,12 @@ public class ShopControllerTest {
 	public void testNewItemWhenItemDoesNotAlreadyExists() {
 		// setup
 		Item item = new Item(PRODUCT_CODE, ITEM_NAME);
-		when(itemsRepository.findByProductCode(PRODUCT_CODE)).thenReturn(null);
+		when(itemsRepository.findItemByProductCode(PRODUCT_CODE)).thenReturn(null);
 		// exercise
 		shopController.newItem(item);
 		// verify
 		InOrder inOrder = inOrder(itemsRepository, itemsView);
-		inOrder.verify(itemsRepository).store(item);
+		inOrder.verify(itemsRepository).storeItem(item);
 	}
 
 	@Test
@@ -86,24 +86,24 @@ public class ShopControllerTest {
 		// setup
 		Item itemToAdd = new Item(PRODUCT_CODE, ITEM_NAME, 1);
 		Item existingItem = new Item(PRODUCT_CODE, ITEM_NAME, 2);
-		when(itemsRepository.findByProductCode(PRODUCT_CODE)).thenReturn(existingItem);
+		when(itemsRepository.findItemByProductCode(PRODUCT_CODE)).thenReturn(existingItem);
 		// exercise
 		shopController.newItem(itemToAdd);
 		// verify
 		InOrder inOrder = inOrder(itemsRepository, itemsView);
-		inOrder.verify(itemsRepository).modifyQuantity(existingItem, 1);
+		inOrder.verify(itemsRepository).modifyItemQuantity(existingItem, 1);
 	}
 
 	@Test
 	public void testRemoveItemWhenItemAlreadyExists() {
 		// setup
 		Item itemToRemove = new Item(PRODUCT_CODE, ITEM_NAME);
-		when(itemsRepository.findByProductCode(PRODUCT_CODE)).thenReturn(itemToRemove);
+		when(itemsRepository.findItemByProductCode(PRODUCT_CODE)).thenReturn(itemToRemove);
 		// exercise
 		shopController.removeItem(itemToRemove);
 		// verify
 		InOrder inOrder = inOrder(itemsRepository, itemsView);
-		inOrder.verify(itemsRepository).remove(PRODUCT_CODE);
+		inOrder.verify(itemsRepository).removeItem(PRODUCT_CODE);
 
 	}
 
@@ -111,7 +111,7 @@ public class ShopControllerTest {
 	public void testRemoveItemWhenItemDoesNotAlreadyExists() {
 		// setup
 		Item itemToRemove = new Item(PRODUCT_CODE, ITEM_NAME);
-		when(itemsRepository.findByProductCode(PRODUCT_CODE)).thenReturn(null);
+		when(itemsRepository.findItemByProductCode(PRODUCT_CODE)).thenReturn(null);
 		// exercise
 		shopController.removeItem(itemToRemove);
 		// verify
@@ -122,7 +122,7 @@ public class ShopControllerTest {
 	public void testSearchItemWhenItemAlreadyExists() {
 		// setup
 		Item itemToSearch = new Item("1", ITEM_NAME);
-		when(itemsRepository.findByName(ITEM_NAME)).thenReturn(itemToSearch);
+		when(itemsRepository.findItemByName(ITEM_NAME)).thenReturn(itemToSearch);
 		// exercise
 		shopController.searchItem(itemToSearch.getName());
 		// verify
@@ -132,7 +132,7 @@ public class ShopControllerTest {
 	@Test
 	public void testSearchItemWhenItemDoestNotExists() {
 		// setup
-		when(itemsRepository.findByName(ITEM_NAME)).thenReturn(null);
+		when(itemsRepository.findItemByName(ITEM_NAME)).thenReturn(null);
 		// exercise
 		shopController.searchItem(ITEM_NAME);
 		// verify
@@ -147,7 +147,7 @@ public class ShopControllerTest {
 		// exercise
 		shopController.modifyItemQuantity(itemToModify, -1);
 		// verify
-		verify(itemsRepository).modifyQuantity(itemToModify, -1);
+		verify(itemsRepository).modifyItemQuantity(itemToModify, -1);
 	}
 
 	@Test
@@ -157,7 +157,7 @@ public class ShopControllerTest {
 		// exercise
 		shopController.modifyItemQuantity(itemToModify, -2);
 		// verify
-		verify(itemsRepository).remove(itemToModify.getProductCode());
+		verify(itemsRepository).removeItem(itemToModify.getProductCode());
 		verifyNoMoreInteractions(ignoreStubs(itemsRepository));
 	}
 

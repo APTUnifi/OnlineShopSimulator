@@ -23,9 +23,9 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import com.online.shop.model.Cart;
 import com.online.shop.model.Item;
-import com.online.shop.repository.mongo.ItemsMongoRepository;
+import com.online.shop.repository.mongo.ShopMongoRepository;
 
-public class ItemsMongoRepositoryIT {
+public class ShopMongoRepositoryIT {
 
 	@SuppressWarnings("rawtypes")
 	@ClassRule
@@ -35,18 +35,24 @@ public class ItemsMongoRepositoryIT {
 	private static final String ITEMS_COLLECTION_NAME = "items";
 	private static final String CARTS_COLLECTION_NAME = "carts";
 
+	private static final String ITEM_NAME_1 = "test1";
+	private static final String PRODUCT_CODE_1 = "1";
+	private static final String ITEM_NAME_2 = "test2";
+	private static final String PRODUCT_CODE_2 = "2";
 	private static final int STARTER_QUANTITY = 2;
 	private static final int QUANTITY_MODIFIER = 1;
+	private static final String CART_NAME_2 = "testCart2";
+	private static final String CART_NAME_1 = "testCart1";
 
 	private MongoClient client;
-	private ItemsMongoRepository itemsRepository;
+	private ShopMongoRepository itemsRepository;
 	private MongoCollection<Document> collectionItems;
 	private MongoCollection<Document> collectionCarts;
 
 	@Before
 	public void setup() {
 		client = new MongoClient(new ServerAddress(mongo.getContainerIpAddress(), mongo.getMappedPort(27017)));
-		itemsRepository = new ItemsMongoRepository(client);
+		itemsRepository = new ShopMongoRepository(client);
 		MongoDatabase db = client.getDatabase(SHOP_DB_NAME);
 		db.drop(); // clean db
 		collectionItems = db.getCollection(ITEMS_COLLECTION_NAME);
@@ -68,7 +74,6 @@ public class ItemsMongoRepositoryIT {
 	private List<Item> retrieveAllItems() {
 		return StreamSupport.stream(collectionItems.find().spliterator(), false)
 				.map(d -> new Item("" + d.get("productCode"), "" + d.get("name"), (int) d.get("quantity")))
-
 				.collect(Collectors.toList());
 	}
 
@@ -101,81 +106,88 @@ public class ItemsMongoRepositoryIT {
 
 	@Test
 	public void testFindAll() {
-		addTestItemToRepository("1", "test1");
-		addTestItemToRepository("2", "test2");
-		assertThat(itemsRepository.findAll()).containsExactly(new Item("1", "test1"), new Item("2", "test2"));
+		addTestItemToRepository(PRODUCT_CODE_1, ITEM_NAME_1);
+		addTestItemToRepository(PRODUCT_CODE_2, ITEM_NAME_2);
+		assertThat(itemsRepository.findAllItems()).containsExactly(new Item(PRODUCT_CODE_1, ITEM_NAME_1),
+				new Item(PRODUCT_CODE_2, ITEM_NAME_2));
 	}
 
 	@Test
 	public void testFindByProductCode() {
-		addTestItemToRepository("1", "test1");
-		addTestItemToRepository("2", "test2");
-		assertThat(itemsRepository.findByProductCode("1")).isEqualTo(new Item("1", "test1"));
+		addTestItemToRepository(PRODUCT_CODE_1, ITEM_NAME_1);
+		addTestItemToRepository(PRODUCT_CODE_2, ITEM_NAME_2);
+		assertThat(itemsRepository.findItemByProductCode(PRODUCT_CODE_1))
+				.isEqualTo(new Item(PRODUCT_CODE_1, ITEM_NAME_1));
 	}
 
 	@Test
 	public void testFindByName() {
-		addTestItemToRepository("1", "test1");
-		addTestItemToRepository("2", "test2");
-		assertThat(itemsRepository.findByName("test2")).isEqualTo(new Item("2", "test2"));
+		addTestItemToRepository(PRODUCT_CODE_1, ITEM_NAME_1);
+		addTestItemToRepository(PRODUCT_CODE_2, ITEM_NAME_2);
+		assertThat(itemsRepository.findItemByName(ITEM_NAME_2)).isEqualTo(new Item(PRODUCT_CODE_2, ITEM_NAME_2));
 	}
 
 	@Test
 	public void testStore() {
-		Item itemToAdd = new Item("1", "test1");
-		itemsRepository.store(itemToAdd);
+		Item itemToAdd = new Item(PRODUCT_CODE_1, ITEM_NAME_1);
+		itemsRepository.storeItem(itemToAdd);
 		assertThat(retrieveAllItems()).containsExactly(itemToAdd);
 	}
 
 	@Test
 	public void testRemove() {
-		addTestItemToRepository("1", "test1");
-		itemsRepository.remove("1");
+		addTestItemToRepository(PRODUCT_CODE_1, ITEM_NAME_1);
+		itemsRepository.removeItem(PRODUCT_CODE_1);
 		assertThat(retrieveAllItems()).isEmpty();
 	}
 
 	@Test
 	public void testModifyQuantityWhenModifierIsPositive() {
-		Item itemToBeModified = new Item("1", "test1", STARTER_QUANTITY);
+		Item itemToBeModified = new Item(PRODUCT_CODE_1, ITEM_NAME_1, STARTER_QUANTITY);
 		addTestItemToRepository(itemToBeModified.getProductCode(), itemToBeModified.getName(),
 				itemToBeModified.getQuantity());
-		itemsRepository.modifyQuantity(itemToBeModified, QUANTITY_MODIFIER);
-		assertThat(retrieveItem("1").getQuantity()).isEqualTo(STARTER_QUANTITY + QUANTITY_MODIFIER);
+		itemsRepository.modifyItemQuantity(itemToBeModified, QUANTITY_MODIFIER);
+		assertThat(retrieveItem(PRODUCT_CODE_1).getQuantity()).isEqualTo(STARTER_QUANTITY + QUANTITY_MODIFIER);
 	}
 
 	@Test
 	public void testFindAllCarts() {
-		addTestCartToRepository("testCart", LocalDate.now().toString(), Arrays.asList(new Item("1", "test1")));
+		addTestCartToRepository(CART_NAME_1, LocalDate.now().toString(),
+				Arrays.asList(new Item(PRODUCT_CODE_1, ITEM_NAME_1)));
 		assertThat(itemsRepository.findAllCarts())
-		.containsExactly(new Cart(Arrays.asList(new Item("1", "test1")), "testCart"));
+				.containsExactly(new Cart(Arrays.asList(new Item(PRODUCT_CODE_1, ITEM_NAME_1)), CART_NAME_1));
 
 	}
 
 	@Test
 	public void testFindCart() {
-		addTestCartToRepository("testCart1", LocalDate.now().toString(), Arrays.asList(new Item("1", "test1")));
-		addTestCartToRepository("testCart2", LocalDate.now().toString(), Arrays.asList(new Item("1", "test1")));
-		assertThat(itemsRepository.findCart( LocalDate.now().toString(),"testCart2"))
-		.isEqualTo(new Cart(Arrays.asList(new Item("1", "test1")), "testCart2"));
+		addTestCartToRepository(CART_NAME_1, LocalDate.now().toString(),
+				Arrays.asList(new Item(PRODUCT_CODE_1, ITEM_NAME_1)));
+		addTestCartToRepository(CART_NAME_2, LocalDate.now().toString(),
+				Arrays.asList(new Item(PRODUCT_CODE_1, ITEM_NAME_1)));
+		assertThat(itemsRepository.findCart(LocalDate.now().toString(), CART_NAME_2))
+				.isEqualTo(new Cart(Arrays.asList(new Item(PRODUCT_CODE_1, ITEM_NAME_1)), CART_NAME_2));
 
 	}
 
 	@Test
 	public void testRemoveCart() {
-		addTestCartToRepository("testCart", LocalDate.now().toString(), Arrays.asList(new Item("1", "test1")));
+		addTestCartToRepository(CART_NAME_1, LocalDate.now().toString(),
+				Arrays.asList(new Item(PRODUCT_CODE_1, ITEM_NAME_1)));
 
-		itemsRepository.removeCart(LocalDate.now().toString(),"testCart");
+		itemsRepository.removeCart(LocalDate.now().toString(), CART_NAME_1);
 
 		assertThat(retrieveAllCarts()).isEmpty();
 	}
 
 	@Test
 	public void testStoreNewCartShouldAddCartToRepository() {
-		Item itemToBeModified = new Item("1", "test1", STARTER_QUANTITY);
+		Item itemToBeModified = new Item(PRODUCT_CODE_1, ITEM_NAME_1, STARTER_QUANTITY);
 		addTestItemToRepository(itemToBeModified.getProductCode(), itemToBeModified.getName(),
 				itemToBeModified.getQuantity());
-		Cart cartToStore = new Cart("testCart", LocalDate.now().toString(), Arrays.asList(itemToBeModified));
+		Cart cartToStore = new Cart(CART_NAME_1, LocalDate.now().toString(), Arrays.asList(itemToBeModified));
 		itemsRepository.storeCart(cartToStore);
-		assertThat(retrieveAllCarts()).containsExactly(new Cart("testCart", LocalDate.now().toString(), Arrays.asList(new Item("1", "test1"))));
+		assertThat(retrieveAllCarts()).containsExactly(new Cart(CART_NAME_1, LocalDate.now().toString(),
+				Arrays.asList(new Item(PRODUCT_CODE_1, ITEM_NAME_1))));
 	}
 }

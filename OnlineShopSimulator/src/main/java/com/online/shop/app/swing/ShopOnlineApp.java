@@ -10,7 +10,7 @@ import com.mongodb.ServerAddress;
 
 import com.online.shop.controller.CartController;
 import com.online.shop.controller.ShopController;
-import com.online.shop.repository.mongo.ItemsMongoRepository;
+import com.online.shop.repository.mongo.ShopMongoRepository;
 import com.online.shop.view.swing.ShopOnlineView;
 
 @Command(mixinStandardHelpOptions = true)
@@ -31,6 +31,7 @@ public class ShopOnlineApp implements Callable<Void> {
 	@Option(names = { "--db-collectionCarts" }, description = "Collection carts")
 	private String collectionCarts = "test-carts";
 
+	@SuppressWarnings("deprecation")
 	public static void main(String[] args) { 
 		CommandLine.call(new ShopOnlineApp(), args);
 	}
@@ -39,7 +40,7 @@ public class ShopOnlineApp implements Callable<Void> {
 	public Void call() throws Exception {
 		EventQueue.invokeLater(()->{
 			try {
-				ItemsMongoRepository itemsRepository = new ItemsMongoRepository(
+				ShopMongoRepository itemsRepository = new ShopMongoRepository(
 						new MongoClient(new ServerAddress(mongoHost,mongoPort)),
 						databaseName, collectionItems, collectionCarts);
 				ShopOnlineView shopView = new ShopOnlineView();
