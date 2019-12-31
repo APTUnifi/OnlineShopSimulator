@@ -28,7 +28,7 @@ public class ShopViewTotal extends JFrame  implements ShopView, HistoryView{
 	private transient ShopController shopController;
 	private transient CartController cartController;
 	private JPanel contentPane;
-	
+
 	private JTextField itemName;
 	private JTextField cartNameText;
 
@@ -73,14 +73,10 @@ public class ShopViewTotal extends JFrame  implements ShopView, HistoryView{
 	public void setCartController(CartController cartController) {
 		this.cartController = cartController;
 	}
-	
+
 	public void setDefaultListModel(DefaultListModel<Cart> a) {
 		listCart.setModel(a);
 	}
-
-	/**
-	 * Launch the application.
-	 */
 
 	public ShopViewTotal() {
 
@@ -184,10 +180,10 @@ public class ShopViewTotal extends JFrame  implements ShopView, HistoryView{
 		btnBuy.setEnabled(false);
 		contentPane.add(btnBuy);
 
-		
+
 		listItemsCartModel =new DefaultListModel<>();		
 		listCartModel =  new DefaultListModel<>();
-		
+
 		listCart = new JList<Cart>(listCartModel);
 		listCart.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listCart.setBounds(4, 359, 283, 186);
@@ -200,13 +196,13 @@ public class ShopViewTotal extends JFrame  implements ShopView, HistoryView{
 			}
 		}
 				);
-		
+
 		listItemsCart = new JList<Item>(listItemsCartModel);
 		listItemsCart.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listItemsCart.setName("listItemsCart");
 		listItemsCart.setBounds(406, 359, 253, 186);
 		contentPane.add(listItemsCart);
-		
+
 		btnDelete = new JButton("Delete");
 		btnDelete.setName("Delete");
 		btnDelete.setEnabled(false);
@@ -218,27 +214,27 @@ public class ShopViewTotal extends JFrame  implements ShopView, HistoryView{
 					//setDefaultListModel(updateListCarts());
 					showItemsCart(new Cart());
 				});
-		
+
 		lblCartsHistory = new JLabel("Carts");
 		lblCartsHistory.setName("lblCartsHistory");
 		lblCartsHistory.setBounds(4, 334, 61, 16);
 		contentPane.add(lblCartsHistory);
-		
+
 		lblItemsCart = new JLabel("Items Cart");
 		lblItemsCart.setName("lblItemsCart");
 		lblItemsCart.setBounds(403, 334, 108, 16);
 		contentPane.add(lblItemsCart);
-		
+
 		lblShop = new JLabel("Items Shop");
 		lblShop.setName("lblShop");
 		lblShop.setBounds(6, 73, 85, 16);
 		contentPane.add(lblShop);
-		
+
 		lblYourCart = new JLabel("Your Cart");
 		lblYourCart.setName("lblYourCart");
 		lblYourCart.setBounds(399, 73, 61, 16);
 		contentPane.add(lblYourCart);
-		
+
 		separator = new JSeparator();
 		separator.setBounds(6, 307, 668, 12);
 		contentPane.add(separator);

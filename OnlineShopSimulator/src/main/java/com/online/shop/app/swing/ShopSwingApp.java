@@ -7,6 +7,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import com.mongodb.MongoClient;
 import com.mongodb.ServerAddress;
+
 import com.online.shop.controller.CartController;
 import com.online.shop.controller.ShopController;
 import com.online.shop.repository.mongo.ItemsMongoRepository;
@@ -50,7 +51,7 @@ public class ShopSwingApp implements Callable<Void> {
 				shopController.allItems();
 				cartController.allCarts();
 			}catch(Exception e ) {}
-		}
+		}	
 				);
 		return null;
 	}

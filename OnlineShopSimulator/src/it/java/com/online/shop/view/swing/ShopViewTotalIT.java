@@ -48,7 +48,7 @@ public class ShopViewTotalIT extends AssertJSwingJUnitTestCase {
 	private static final int WIDTH = 676;
 	private static final int FIRST_ITEM = 0;
 	private static final int SECOND_ITEM = 1;
-	
+
 	@SuppressWarnings("rawtypes")
 	@ClassRule
 	public static final GenericContainer mongo = new GenericContainer("mongo:4.0.5").withExposedPorts(27017);
@@ -185,7 +185,7 @@ public class ShopViewTotalIT extends AssertJSwingJUnitTestCase {
 		window.button(JButtonMatcher.withText("Remove")).click();
 		assertThat(window.list("itemListCart").contents()).isEmpty();
 	}
-	
+
 	@Test @GUITest
 	public void testRemoveButtonSuccessModifyQuantity() {
 		Item item1 = new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1,ITEM_FIXTURE_NEW_QUANTITY+MODIFIER);
@@ -200,7 +200,6 @@ public class ShopViewTotalIT extends AssertJSwingJUnitTestCase {
 		window.button(JButtonMatcher.withText("Remove")).click();
 		assertThat(window.list("itemListCart").contents()).containsExactly(
 				new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1,ITEM_FIXTURE_NEW_QUANTITY).toString());
-
 	}
 
 	@Test @GUITest
@@ -222,8 +221,8 @@ public class ShopViewTotalIT extends AssertJSwingJUnitTestCase {
 		window.list("listCart").selectItem(0);
 		assertThat(window.list("listItemsCart").contents()).containsExactly(
 				new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1,ITEM_FIXTURE_NEW_QUANTITY).toString());
-
 	}
+	
 	@Test @GUITest
 	public void testBuyButtonError() {
 		Item item1 = new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1,ITEM_FIXTURE_QUANTITY_1);
@@ -237,6 +236,7 @@ public class ShopViewTotalIT extends AssertJSwingJUnitTestCase {
 		window.button(JButtonMatcher.withText("Buy")).click();
 		assertThat(window.list("itemListCart").contents()).containsExactly(item1.toString());
 	}
+	
 	@Test @GUITest
 	public void testAllCartItems() {
 		Item item1 = new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1);
@@ -255,7 +255,7 @@ public class ShopViewTotalIT extends AssertJSwingJUnitTestCase {
 		assertThat(window.list("listItemsCart").contents()).containsExactly(cart.getItems().get(FIRST_ITEM).toString(),
 				cart.getItems().get(SECOND_ITEM).toString());
 	}
-	
+
 	@Test @GUITest
 	public void testDeleteButtonSuccess() {
 		Item item1 = new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1);
@@ -271,7 +271,7 @@ public class ShopViewTotalIT extends AssertJSwingJUnitTestCase {
 		window.button(JButtonMatcher.withText("Delete")).click();
 		assertThat(window.list("listCart").contents()).isEmpty();
 	}
-	
+
 	@Test @GUITest
 	public void testRemoveButtonError() {
 		Item item1 = new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1);

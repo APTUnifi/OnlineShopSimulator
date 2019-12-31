@@ -9,6 +9,7 @@ import com.online.shop.view.HistoryView;
 import com.online.shop.view.ShopView;
 
 public class CartController {
+	
 	private ShopView itemsView;
 	private ItemsRepository itemsRepository;
 	private HistoryView historyView;
@@ -71,7 +72,6 @@ public class CartController {
 
 	public void completePurchase(String label) {
 		cart.setLabel(label);
-		//TODO : check it!
 		for(Cart carts : itemsRepository.findAllCarts()) {
 			if(cart.getLabel() == carts.getLabel() ) {
 				itemsView.errorLogCart("Cart with this label already exists: " , cart);

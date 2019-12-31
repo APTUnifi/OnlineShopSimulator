@@ -61,7 +61,7 @@ public class CartControllerTest {
 	public void testAddItemToCartWhenItemIsNotPresent() {
 		Item itemToAdd = new Item(ITEM_PRODUCT_CODE, ITEM_NAME, 3);
 		cartController.setCart(new Cart());
-    
+
 		cartController.addToCart(itemToAdd);
 		assertThat(cartController.cartSize()).isEqualTo(1);
 		assertThat(cartController.findItemQuantity(itemToAdd)).isEqualTo(1);
@@ -265,6 +265,7 @@ public class CartControllerTest {
 		verify(itemsView).errorLogCart("Cart not found" , cartToRemove);
 		verifyNoMoreInteractions(ignoreStubs(historyView));
 	}
+	
 	@Test
 	public void testCompletePurchaseShouldThrowErrorWhenNameCartAlreadyExists() {
 		List<Item> items = new ArrayList<>();

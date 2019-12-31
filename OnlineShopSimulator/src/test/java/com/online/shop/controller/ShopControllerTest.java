@@ -15,7 +15,7 @@ import com.online.shop.view.ShopView;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
- 
+
 public class ShopControllerTest {
 
 	private static final String PRODUCT_CODE = "1";
@@ -34,7 +34,7 @@ public class ShopControllerTest {
 	public void setUp() throws Exception {
 		MockitoAnnotations.initMocks(this);
 	}
- 
+
 	@Test
 	public void testAllItems() {
 		// setup
@@ -46,6 +46,7 @@ public class ShopControllerTest {
 		verify(itemsView).updateItemsShop(items);
 	}
 
+	
 	@Test
 	public void testNewItemWhenQuantityIsNegative() {
 		// setup
@@ -53,7 +54,7 @@ public class ShopControllerTest {
 		when(itemsRepository.findByProductCode(PRODUCT_CODE)).thenReturn(null);
 		// exercise + verify
 		assertThatThrownBy(() -> shopController.newItem(item)).isInstanceOf(IllegalArgumentException.class)
-				.hasMessage("Negative amount: -1");
+		.hasMessage("Negative amount: -1");
 		verifyNoMoreInteractions(ignoreStubs(itemsRepository));
 	}
 
@@ -64,7 +65,7 @@ public class ShopControllerTest {
 		when(itemsRepository.findByProductCode(PRODUCT_CODE)).thenReturn(null);
 		// exercise + verify
 		assertThatThrownBy(() -> shopController.newItem(item)).isInstanceOf(IllegalArgumentException.class)
-				.hasMessage("Negative amount: 0");
+		.hasMessage("Negative amount: 0");
 		verifyNoMoreInteractions(ignoreStubs(itemsRepository));
 	}
 
@@ -160,7 +161,7 @@ public class ShopControllerTest {
 		verify(itemsRepository).remove(itemToModify.getProductCode());
 		verifyNoMoreInteractions(ignoreStubs(itemsRepository));
 	}
-	
+
 	@Test
 	public void testModifyQuantityWhenModifierIsZero() {
 		// Setup

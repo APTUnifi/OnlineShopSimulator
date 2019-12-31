@@ -41,12 +41,12 @@ public class ShopSwingTotalAppE2E  extends AssertJSwingJUnitTestCase{
 	@SuppressWarnings("rawtypes")
 	@ClassRule
 	public static final GenericContainer mongo = new GenericContainer("mongo:4.0.5").withExposedPorts(27017);
-	
+
 	private static final String SHOP_DB_NAME = "test-shop";
 	private static final String ITEMS_COLLECTION_NAME = "test-items";
 	private static final String CARTS_COLLECTION_NAME = "test-carts";
 	private static final int FIRST_ITEM = 0;
-	
+
 	private MongoClient mongoClient;
 	private FrameFixture window;
 	private List<Document> list;
@@ -64,12 +64,12 @@ public class ShopSwingTotalAppE2E  extends AssertJSwingJUnitTestCase{
 				new Item(ITEM_FIXTURE_2_PRODUCTCODE,ITEM_FIXTURE_2_NAME,ITEM_FIXTURE_2_QUANTITY));
 		addTestCartToDatabase(CART_FIXTURE_LABEL, CART_FIXTURE_DATE, list);
 		application("com.online.shop.app.swing.ShopSwingApp").withArgs(
-					"--mongo-host=" + containerIpAddress,
-					"--mongo-port=" + mappedPort.toString(),
-					"--db-name=" + SHOP_DB_NAME,
-					"--db-collectionItems=" + ITEMS_COLLECTION_NAME,
-					"--db-collectionCarts=" + CARTS_COLLECTION_NAME
-					).start();
+				"--mongo-host=" + containerIpAddress,
+				"--mongo-port=" + mappedPort.toString(),
+				"--db-name=" + SHOP_DB_NAME,
+				"--db-collectionItems=" + ITEMS_COLLECTION_NAME,
+				"--db-collectionCarts=" + CARTS_COLLECTION_NAME
+				).start();
 		window = WindowFinder.findFrame(new GenericTypeMatcher<JFrame>(JFrame.class) {
 			@Override
 			protected boolean isMatching(JFrame frame) {
@@ -77,12 +77,12 @@ public class ShopSwingTotalAppE2E  extends AssertJSwingJUnitTestCase{
 			}
 		}).using(robot());
 	}
-	
+
 	@Override
 	protected void onTearDown() {
 		mongoClient.close();
 	}
-	
+
 	private void addTestItemToDatabase(String productCode, String name, int quantity) { 
 		mongoClient
 		.getDatabase(SHOP_DB_NAME)
@@ -90,14 +90,14 @@ public class ShopSwingTotalAppE2E  extends AssertJSwingJUnitTestCase{
 		.insertOne(
 				new Document() .append("productCode", productCode) .append("name", name).append("quantity", quantity));
 	}
-	
+
 	private List<Document> AddTestItemsToCart(Item item1,Item item2) {
 		list = new ArrayList<>();
 		list.add(new Document() .append("productCode", item1.getProductCode()) .append("name", item1.getName()).append("quantity", item1.getQuantity()));
 		list.add(new Document() .append("productCode", item2.getProductCode()) .append("name", item2.getName()).append("quantity", item2.getQuantity()));
 		return list;
 	}
-	
+
 	private void addTestCartToDatabase(String label, String date,List<Document> list) {
 		mongoClient
 		.getDatabase(SHOP_DB_NAME)
@@ -105,13 +105,13 @@ public class ShopSwingTotalAppE2E  extends AssertJSwingJUnitTestCase{
 		.insertOne(new Document().append("label",label)
 				.append("date", date).append("items", list));	
 	}
-	
+
 	private void removeTestItemFromDatabase(String productCode) {
 		mongoClient.getDatabase(SHOP_DB_NAME)
-			.getCollection(ITEMS_COLLECTION_NAME)
-			.deleteOne(new Document().append("productCode", ITEM_FIXTURE_1_PRODUCTCODE));
+		.getCollection(ITEMS_COLLECTION_NAME)
+		.deleteOne(new Document().append("productCode", ITEM_FIXTURE_1_PRODUCTCODE));
 	}
-	
+
 	private void removeTestCartFromDatabase(String label, String date) {
 		mongoClient
 		.getDatabase(SHOP_DB_NAME)
@@ -119,14 +119,14 @@ public class ShopSwingTotalAppE2E  extends AssertJSwingJUnitTestCase{
 		.deleteOne(new Document().append("label",label)
 				.append("date",date));
 	}
-	
+
 	@Test @GUITest
 	public void testOnStartAllDatabaseElementsAreShown() {
 		assertThat(window.list("itemListShop").contents())
-			.anySatisfy(list -> assertThat(list).contains(
-					new Item(ITEM_FIXTURE_1_PRODUCTCODE,ITEM_FIXTURE_1_NAME,ITEM_FIXTURE_1_QUANTITY).toString()))
-			.anySatisfy(list -> assertThat(list).contains(
-					new Item(ITEM_FIXTURE_2_PRODUCTCODE,ITEM_FIXTURE_2_NAME,ITEM_FIXTURE_2_QUANTITY).toString()));
+		.anySatisfy(list -> assertThat(list).contains(
+				new Item(ITEM_FIXTURE_1_PRODUCTCODE,ITEM_FIXTURE_1_NAME,ITEM_FIXTURE_1_QUANTITY).toString()))
+		.anySatisfy(list -> assertThat(list).contains(
+				new Item(ITEM_FIXTURE_2_PRODUCTCODE,ITEM_FIXTURE_2_NAME,ITEM_FIXTURE_2_QUANTITY).toString()));
 	}
 
 	@Test @GUITest
@@ -141,7 +141,7 @@ public class ShopSwingTotalAppE2E  extends AssertJSwingJUnitTestCase{
 				e -> assertThat(e).contains(
 						new Item(ITEM_FIXTURE_2_PRODUCTCODE,ITEM_FIXTURE_2_NAME,ITEM_FIXTURE_2_QUANTITY-MODIFIER).toString()));
 	}
-	
+
 	@Test @GUITest
 	public void testBuyButtonError() {
 		window.list("itemListShop").selectItem(FIRST_ITEM);
@@ -151,26 +151,24 @@ public class ShopSwingTotalAppE2E  extends AssertJSwingJUnitTestCase{
 		removeTestItemFromDatabase(ITEM_FIXTURE_1_PRODUCTCODE);
 		window.button(JButtonMatcher.withText("Buy")).click();
 		assertThat(window.label("errorMessageLabel").text())
-         	.contains("Item/s not found: " + ITEM_FIXTURE_1_NAME);
+		.contains("Item/s not found: " + ITEM_FIXTURE_1_NAME);
 	}
-	
+
 	@Test @GUITest
 	public void testRemoveCartSuccess() {
 		window.list("listCart").selectItem(FIRST_ITEM);
 		window.button(JButtonMatcher.withText("Delete")).click();
 		assertThat(window.list("listCart").contents()).isEmpty();
 		assertThat(window.list("listItemsCart").contents()).isEmpty();
-
 	}
-	
+
 	@Test @GUITest
 	public void testRemoveCartError() {
 		window.list("listCart").selectItem(FIRST_ITEM);
 		removeTestCartFromDatabase(CART_FIXTURE_LABEL,CART_FIXTURE_DATE);
 		window.button(JButtonMatcher.withText("Delete")).click();
 		assertThat(window.label("errorMessageLabel").text())
-     	.contains("Cart not found: " + CART_FIXTURE_LABEL );
+		.contains("Cart not found: " + CART_FIXTURE_LABEL );
 		assertThat(window.list("listItemsCart").contents()).isEmpty();
-
 	}
 }

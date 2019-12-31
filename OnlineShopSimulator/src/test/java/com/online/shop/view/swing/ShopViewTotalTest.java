@@ -63,8 +63,8 @@ public class ShopViewTotalTest extends AssertJSwingJUnitTestCase{
 		window = new FrameFixture(robot(), shopViewTotal);
 		Dimension dimension = new Dimension(WIDTH, HEIGHT);
 		window.show(dimension);
-
 	}
+	
 	@Test @GUITest
 	public void testControlsInitialStates() {
 		window.textBox("itemName").requireEnabled();
@@ -84,7 +84,6 @@ public class ShopViewTotalTest extends AssertJSwingJUnitTestCase{
 		window.label("errorMessageLabel").requireText(" ");
 		window.label("lblItemsCart").requireText("Items Cart");
 		window.label("lblCartsHistory").requireText("Carts");
-		
 	}
 
 	@Test
@@ -136,7 +135,7 @@ public class ShopViewTotalTest extends AssertJSwingJUnitTestCase{
 		String[] listContents = window.list("itemListShop").contents();
 		assertThat(listContents).containsExactly(item1.toString(),item2.toString());
 	}
-	
+
 	@Test
 	public void testBuyButtonShouldBeEnabledWhenThereIsOneOrMoreItemsInItemListCartAndNameInCartNameText() {
 		GuiActionRunner.execute(
@@ -151,7 +150,6 @@ public class ShopViewTotalTest extends AssertJSwingJUnitTestCase{
 		window.list("itemListCart").clearSelection();
 		buyButton.requireDisabled();
 	}
-
 
 	@Test
 	public void testDeleteButtonShouldBeEnabledWhenAnItemIsSelectedInItemListCart() {
@@ -169,7 +167,7 @@ public class ShopViewTotalTest extends AssertJSwingJUnitTestCase{
 		window.list("itemListCart").clearSelection();
 		deleteButton.requireDisabled();
 	}
-	
+
 	@Test
 	public void testShowItemsShopShouldAddItemsToTheItemShopList() {
 		Item item1 = new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1);
@@ -194,7 +192,7 @@ public class ShopViewTotalTest extends AssertJSwingJUnitTestCase{
 		window.label("errorMessageLabel").requireText("error Message: " + item.getName() + " "+ item1.getName() + " ");
 		assertThat(JLabelMatcher.withText("errorMessageLabel").andShowing());
 	}
-	
+
 	@Test
 	public void testItemAddedToCartShouldAddTheItemToTheItemListCartAndResetTheErrorLabel() {
 		Item item = new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1);
@@ -279,7 +277,7 @@ public class ShopViewTotalTest extends AssertJSwingJUnitTestCase{
 		window.button(JButtonMatcher.withText("Search")).click();
 		verify(shopController).searchItem(window.textBox("itemName").text());	
 	}
-	
+
 	@Test
 	public void testBuyButtonShouldDelegateToTheCartControllerCompletePurchase() {
 		Item item1 = new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1);
@@ -295,7 +293,7 @@ public class ShopViewTotalTest extends AssertJSwingJUnitTestCase{
 		window.button(JButtonMatcher.withText("Buy")).click();
 		verify(cartController).completePurchase(window.textBox("cartNameText").text());
 	}
-	
+
 	@Test
 	public void testShowItemsCartShouldShowItemsWhenACartIsSelected() {
 		Item item1 = new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1);
@@ -353,7 +351,7 @@ public class ShopViewTotalTest extends AssertJSwingJUnitTestCase{
 		window.button(JButtonMatcher.withText("Delete")).click();
 		verify(cartController).removeCart(cart1);
 	}
-	
+
 	@Test
 	public void testRemoveButtonShouldBeEnabledOnlyForTheFirstList() {
 		Cart cart = new Cart();
