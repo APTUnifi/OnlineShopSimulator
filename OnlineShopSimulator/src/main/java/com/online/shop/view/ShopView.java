@@ -19,5 +19,10 @@ public interface ShopView {
 	void itemRemovedFromCart(Item item);
 	void updateItemsCart(List<Item> items);
 	void updateItemsShop(List<Item> items);
+	
+	public void showHistory(List<Cart> carts);
+	public void showItemsCart(Cart cart);
+	public void removeCart(Cart cart);
+
 
 }

@@ -21,7 +21,6 @@ import org.mockito.MockitoAnnotations;
 import com.online.shop.model.Cart;
 import com.online.shop.model.Item;
 import com.online.shop.repository.ShopRepository;
-import com.online.shop.view.HistoryView;
 import com.online.shop.view.ShopView;
 
 import static org.assertj.core.api.Assertions.*;
@@ -34,13 +33,10 @@ public class CartControllerTest {
 	private static final String ITEM_PRODUCT_CODE = "1";
 
 	@Mock
-	ShopView itemsView;
+	ShopView shopView;
 
 	@Mock
-	HistoryView historyView;
-
-	@Mock
-	ShopRepository itemsRepository;
+	ShopRepository shopRepository;
 
 	@InjectMocks
 	CartController cartController;
@@ -65,7 +61,7 @@ public class CartControllerTest {
 		cartController.addToCart(itemToAdd);
 		assertThat(cartController.cartSize()).isEqualTo(1);
 		assertThat(cartController.findItemQuantity(itemToAdd)).isEqualTo(1);
-		verify(itemsView).itemAddedToCart(itemToAdd);
+		verify(shopView).itemAddedToCart(itemToAdd);
 	}
 
 	@Test
@@ -80,7 +76,7 @@ public class CartControllerTest {
 		assertThat(cartController.cartSize()).isEqualTo(1);
 		assertThat(cartController.findItemQuantity(existingCartItem)).isEqualTo(EXISTING_QUANTITY - 1);
 
-		verify(itemsView).updateItemsCart(cartController.cartItems());
+		verify(shopView).updateItemsCart(cartController.cartItems());
 	}
 
 	@Test
@@ -95,7 +91,7 @@ public class CartControllerTest {
 
 		assertThat(cartController.cartSize()).isEqualTo(1);
 		assertThat(cartController.findItemQuantity(existingCartItem)).isEqualTo(EXISTING_QUANTITY);
-		verifyNoMoreInteractions(itemsView);
+		verifyNoMoreInteractions(shopView);
 	}
 
 	@Test
@@ -109,7 +105,7 @@ public class CartControllerTest {
 
 		assertThat(cartController.cartSize()).isEqualTo(0);
 		assertThat(cartController.findItemQuantity(itemToRemove)).isEqualTo(0);
-		verify(itemsView).itemRemovedFromCart(itemToRemove);
+		verify(shopView).itemRemovedFromCart(itemToRemove);
 	}
 
 	@Test
@@ -123,7 +119,7 @@ public class CartControllerTest {
 		assertThat(cartController.cartSize()).isEqualTo(1);
 		assertThat(cartController.findItemQuantity(itemToRemove)).isEqualTo(EXISTING_QUANTITY - 1);
 
-		verify(itemsView).updateItemsCart(cartController.cartItems());
+		verify(shopView).updateItemsCart(cartController.cartItems());
 	}
 
 	@Test
@@ -134,11 +130,11 @@ public class CartControllerTest {
 		items.add(new Item(ITEM_PRODUCT_CODE, ITEM_NAME));
 		items.add(new Item("2", "test2", 2));
 		cartController.setCart(new Cart(items, CART_LABEL));
-		when(itemsRepository.findItemByProductCode(ITEM_PRODUCT_CODE)).thenReturn(firstExistingItem);
-		when(itemsRepository.findItemByProductCode("2")).thenReturn(secondExistingItem);
+		when(shopRepository.findItemByProductCode(ITEM_PRODUCT_CODE)).thenReturn(firstExistingItem);
+		when(shopRepository.findItemByProductCode("2")).thenReturn(secondExistingItem);
 		cartController.completePurchase(CART_LABEL);
-		verify(itemsRepository).removeItem(ITEM_PRODUCT_CODE);
-		verify(itemsRepository).removeItem("2");
+		verify(shopRepository).removeItem(ITEM_PRODUCT_CODE);
+		verify(shopRepository).removeItem("2");
 	}
 
 	@Test
@@ -149,13 +145,13 @@ public class CartControllerTest {
 		items.add(new Item(ITEM_PRODUCT_CODE, ITEM_NAME, 1));
 		items.add(new Item("2", "test2", 2));
 		cartController.setCart(new Cart(items, CART_LABEL));
-		when(itemsRepository.findItemByProductCode(ITEM_PRODUCT_CODE)).thenReturn(firstExistingItem);
-		when(itemsRepository.findItemByProductCode("2")).thenReturn(secondExistingItem);
+		when(shopRepository.findItemByProductCode(ITEM_PRODUCT_CODE)).thenReturn(firstExistingItem);
+		when(shopRepository.findItemByProductCode("2")).thenReturn(secondExistingItem);
 
 		cartController.completePurchase(CART_LABEL);
 
-		verify(itemsRepository).modifyItemQuantity(firstExistingItem, -1);
-		verify(itemsRepository).modifyItemQuantity(secondExistingItem, -2);
+		verify(shopRepository).modifyItemQuantity(firstExistingItem, -1);
+		verify(shopRepository).modifyItemQuantity(secondExistingItem, -2);
 	}
 
 	@Test
@@ -166,10 +162,10 @@ public class CartControllerTest {
 		items.add(new Item(ITEM_PRODUCT_CODE, ITEM_NAME, 1));
 		items.add(notExistingItem);
 		cartController.setCart(new Cart(items, CART_LABEL));
-		when(itemsRepository.findItemByProductCode(ITEM_PRODUCT_CODE)).thenReturn(firstExistingItem);
-		when(itemsRepository.findItemByProductCode("2")).thenReturn(null);
+		when(shopRepository.findItemByProductCode(ITEM_PRODUCT_CODE)).thenReturn(firstExistingItem);
+		when(shopRepository.findItemByProductCode("2")).thenReturn(null);
 		cartController.completePurchase(CART_LABEL);
-		verify(itemsView).errorLog("Item/s not found", Arrays.asList(notExistingItem));
+		verify(shopView).errorLog("Item/s not found", Arrays.asList(notExistingItem));
 	}
 
 	@Test
@@ -180,10 +176,10 @@ public class CartControllerTest {
 		items.add(new Item(ITEM_PRODUCT_CODE, ITEM_NAME));
 		items.add(new Item("2", "test2", 2));
 		cartController.setCart(new Cart(items, CART_LABEL));
-		when(itemsRepository.findItemByProductCode(ITEM_PRODUCT_CODE)).thenReturn(firstExistingItem);
-		when(itemsRepository.findItemByProductCode("2")).thenReturn(secondExistingItem);
+		when(shopRepository.findItemByProductCode(ITEM_PRODUCT_CODE)).thenReturn(firstExistingItem);
+		when(shopRepository.findItemByProductCode("2")).thenReturn(secondExistingItem);
 		cartController.completePurchase(CART_LABEL);
-		verify(itemsView).updateItemsShop(itemsRepository.findAllItems());
+		verify(shopView).updateItemsShop(shopRepository.findAllItems());
 	}
 
 	@Test
@@ -194,10 +190,10 @@ public class CartControllerTest {
 		items.add(new Item(ITEM_PRODUCT_CODE, ITEM_NAME));
 		items.add(new Item("2", "test2", 2));
 		cartController.setCart(new Cart(items, CART_LABEL));
-		when(itemsRepository.findItemByProductCode(ITEM_PRODUCT_CODE)).thenReturn(firstExistingItem);
-		when(itemsRepository.findItemByProductCode("2")).thenReturn(secondExistingItem);
+		when(shopRepository.findItemByProductCode(ITEM_PRODUCT_CODE)).thenReturn(firstExistingItem);
+		when(shopRepository.findItemByProductCode("2")).thenReturn(secondExistingItem);
 		cartController.completePurchase(CART_LABEL);
-		verify(itemsView).updateItemsCart(itemsRepository.findAllItems());
+		verify(shopView).updateItemsCart(shopRepository.findAllItems());
 	}
 
 	@Test
@@ -208,8 +204,8 @@ public class CartControllerTest {
 		items.add(new Item(ITEM_PRODUCT_CODE, ITEM_NAME));
 		items.add(new Item("2", "test2", 2));
 		cartController.setCart(new Cart(items, CART_LABEL));
-		when(itemsRepository.findItemByProductCode(ITEM_PRODUCT_CODE)).thenReturn(firstExistingItem);
-		when(itemsRepository.findItemByProductCode("2")).thenReturn(secondExistingItem);
+		when(shopRepository.findItemByProductCode(ITEM_PRODUCT_CODE)).thenReturn(firstExistingItem);
+		when(shopRepository.findItemByProductCode("2")).thenReturn(secondExistingItem);
 		cartController.completePurchase(CART_LABEL);
 		assertThat(cartController.cartItems()).isEmpty();
 	}
@@ -224,20 +220,20 @@ public class CartControllerTest {
 		items.add(new Item("2", "test2", 2));
 		cart.setItems(items);
 		cartController.setCart(cart);
-		when(itemsRepository.findItemByProductCode(ITEM_PRODUCT_CODE)).thenReturn(firstExistingItem);
-		when(itemsRepository.findItemByProductCode("2")).thenReturn(secondExistingItem);
+		when(shopRepository.findItemByProductCode(ITEM_PRODUCT_CODE)).thenReturn(firstExistingItem);
+		when(shopRepository.findItemByProductCode("2")).thenReturn(secondExistingItem);
 		cartController.completePurchase(CART_LABEL);
-		InOrder inOrder = inOrder(itemsRepository, cart);
-		inOrder.verify(itemsRepository).storeCart(cart);
+		InOrder inOrder = inOrder(shopRepository, cart);
+		inOrder.verify(shopRepository).storeCart(cart);
 		inOrder.verify(cart).setItems(new ArrayList<Item>());
 	}
 
 	@Test
 	public void testAllCarts() {
 		List<Cart> carts = Arrays.asList(new Cart());
-		when(itemsRepository.findAllCarts()).thenReturn(carts);
+		when(shopRepository.findAllCarts()).thenReturn(carts);
 		cartController.allCarts();
-		verify(historyView).showHistory(carts);
+		verify(shopView).showHistory(carts);
 	}
 
 	@Test
@@ -247,11 +243,11 @@ public class CartControllerTest {
 		items.add(item);
 		Cart cartToRemove = new Cart(items, CART_LABEL);
 		cartController.setCart(cartToRemove);
-		when(itemsRepository.findCart(LocalDate.now().toString(), CART_LABEL)).thenReturn(cartToRemove);
+		when(shopRepository.findCart(LocalDate.now().toString(), CART_LABEL)).thenReturn(cartToRemove);
 		cartController.removeCart(cartToRemove);
-		InOrder inOrder = inOrder(itemsRepository, historyView);
-		inOrder.verify(itemsRepository).removeCart(LocalDate.now().toString(), CART_LABEL);
-		inOrder.verify(historyView).removeCart(cartToRemove);
+		InOrder inOrder = inOrder(shopRepository, shopView);
+		inOrder.verify(shopRepository).removeCart(LocalDate.now().toString(), CART_LABEL);
+		inOrder.verify(shopView).removeCart(cartToRemove);
 	}
 
 	@Test
@@ -260,10 +256,10 @@ public class CartControllerTest {
 		Item item = new Item(ITEM_PRODUCT_CODE, ITEM_NAME);
 		items.add(item);
 		Cart cartToRemove = new Cart(items, CART_LABEL);
-		when(itemsRepository.findCart(LocalDate.now().toString(), CART_LABEL)).thenReturn(null);
+		when(shopRepository.findCart(LocalDate.now().toString(), CART_LABEL)).thenReturn(null);
 		cartController.removeCart(cartToRemove);
-		verify(itemsView).errorLogCart("Cart not found" , cartToRemove);
-		verifyNoMoreInteractions(ignoreStubs(historyView));
+		verify(shopView).errorLogCart("Cart not found" , cartToRemove);
+		verifyNoMoreInteractions(ignoreStubs(shopView));
 	}
 	
 	@Test
@@ -271,13 +267,13 @@ public class CartControllerTest {
 		List<Item> items = new ArrayList<>();
 		Cart cartToAdd = new Cart(CART_LABEL,LocalDate.now().toString(), items);
 		Cart cartExist = new Cart(CART_LABEL, LocalDate.now().toString(),items);
-		itemsRepository.storeCart(cartExist);
+		shopRepository.storeCart(cartExist);
 		cartController.setCart(cartToAdd);
-		when(itemsRepository.findAllCarts()).thenReturn(Arrays.asList(cartExist));
+		when(shopRepository.findAllCarts()).thenReturn(Arrays.asList(cartExist));
 		cartController.completePurchase(CART_LABEL);
 		//verify(itemsRepository).storeCart(cartExist);
-		verify(itemsView).errorLogCart("Cart with this label already exists: ", cartExist);
-		verifyNoMoreInteractions(ignoreStubs(historyView));
+		verify(shopView).errorLogCart("Cart with this label already exists: ", cartExist);
+		verifyNoMoreInteractions(ignoreStubs(shopView));
 	}
 
 }

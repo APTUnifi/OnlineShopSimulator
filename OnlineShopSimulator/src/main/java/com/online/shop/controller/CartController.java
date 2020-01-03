@@ -5,20 +5,17 @@ import java.util.List;
 import com.online.shop.model.Cart;
 import com.online.shop.model.Item;
 import com.online.shop.repository.ShopRepository;
-import com.online.shop.view.HistoryView;
 import com.online.shop.view.ShopView;
 
 public class CartController {
 	
-	private ShopView itemsView;
-	private ShopRepository itemsRepository;
-	private HistoryView historyView;
+	private ShopView shopView;
+	private ShopRepository shopRepository;
 	private Cart cart;
 
-	public CartController(ShopView ShopView, ShopRepository itemsRepository,HistoryView historyView) {
-		this.itemsView = ShopView;
-		this.itemsRepository = itemsRepository;
-		this.historyView = historyView;
+	public CartController(ShopView ShopView, ShopRepository shopRepository) {
+		this.shopView = ShopView;
+		this.shopRepository = shopRepository;
 		this.cart = new Cart();
 	}
 
@@ -26,12 +23,12 @@ public class CartController {
 		List<Item> items = cart.getItems();
 		if (!items.contains(item)) {
 			item.setQuantity(1);
-			itemsView.itemAddedToCart(item);
+			shopView.itemAddedToCart(item);
 			items.add(item);
 		} else {
 			if (items.get(items.indexOf(item)).getQuantity() < item.getQuantity()) {
 				items.get(items.indexOf(item)).setQuantity(items.get(items.indexOf(item)).getQuantity() + 1);
-				itemsView.updateItemsCart(items);
+				shopView.updateItemsCart(items);
 			} else
 				return;
 		}
@@ -63,18 +60,18 @@ public class CartController {
 
 		if (items.get(items.indexOf(item)).getQuantity() == 1) {
 			items.remove(items.indexOf(item));
-			itemsView.itemRemovedFromCart(item);
+			shopView.itemRemovedFromCart(item);
 		} else {
 			items.get(items.indexOf(item)).setQuantity(items.get(items.indexOf(item)).getQuantity() - 1);
-			itemsView.updateItemsCart(items);
+			shopView.updateItemsCart(items);
 		}
 	}
 
 	public void completePurchase(String label) {
 		cart.setLabel(label);
-		for(Cart carts : itemsRepository.findAllCarts()) {
+		for(Cart carts : shopRepository.findAllCarts()) {
 			if(cart.getLabel().equals(carts.getLabel())) {
-				itemsView.errorLogCart("Cart with this label already exists: " , cart);
+				shopView.errorLogCart("Cart with this label already exists: " , cart);
 				return;
 			}
 		}
@@ -84,44 +81,44 @@ public class CartController {
 		boolean isStored = true;
 
 		for (Item item : items) {
-			retrievedItem = itemsRepository.findItemByProductCode(item.getProductCode());
+			retrievedItem = shopRepository.findItemByProductCode(item.getProductCode());
 			if (retrievedItem == null) {
 				isStored = false;
 				itemsNotStored.add(item);
 			} else {
 				if (retrievedItem.getQuantity() == item.getQuantity()) {
-					itemsRepository.removeItem(item.getProductCode());
+					shopRepository.removeItem(item.getProductCode());
 				} else {
-					itemsRepository.modifyItemQuantity(retrievedItem, -item.getQuantity());
+					shopRepository.modifyItemQuantity(retrievedItem, -item.getQuantity());
 				}
 			}
 		}
 		if (isStored && !items.isEmpty()) {
-			itemsRepository.storeCart(cart);
+			shopRepository.storeCart(cart);
 			cart.setItems(new ArrayList<Item>());
 			items = cart.getItems();
-			historyView.showHistory(itemsRepository.findAllCarts());
-			itemsView.updateItemsCart(items);
-			itemsView.updateItemsShop(itemsRepository.findAllItems());
+			shopView.showHistory(shopRepository.findAllCarts());
+			shopView.updateItemsCart(items);
+			shopView.updateItemsShop(shopRepository.findAllItems());
 		} else {
-			itemsView.errorLog("Item/s not found", itemsNotStored);
+			shopView.errorLog("Item/s not found", itemsNotStored);
 		}
 	}
 
 	public void allCarts() {
-		historyView.showHistory(itemsRepository.findAllCarts());
+		shopView.showHistory(shopRepository.findAllCarts());
 	}
 
 	public void allItemsCart(Cart cart) {
-		historyView.showItemsCart(cart);
+		shopView.showItemsCart(cart);
 	}
 
 	public void removeCart(Cart cartToRemove) {
-		if (itemsRepository.findCart(cartToRemove.getDate(), cartToRemove.getLabel()) == null) {
-			itemsView.errorLogCart("Cart not found", cartToRemove );
+		if (shopRepository.findCart(cartToRemove.getDate(), cartToRemove.getLabel()) == null) {
+			shopView.errorLogCart("Cart not found", cartToRemove );
 			return;
 		}
-		itemsRepository.removeCart(cartToRemove.getDate(), cartToRemove.getLabel());
-		historyView.removeCart(cartToRemove);
+		shopRepository.removeCart(cartToRemove.getDate(), cartToRemove.getLabel());
+		shopView.removeCart(cartToRemove);
 	}
 }
