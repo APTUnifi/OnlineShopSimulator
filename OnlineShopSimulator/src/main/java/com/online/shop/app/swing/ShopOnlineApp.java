@@ -45,7 +45,7 @@ public class ShopOnlineApp implements Callable<Void> {
 						databaseName, collectionItems, collectionCarts);
 				ShopOnlineView shopView = new ShopOnlineView();
 				ShopController shopController = new ShopController(shopView, itemsRepository);
-				CartController cartController = new CartController(shopView, itemsRepository,shopView);
+				CartController cartController = new CartController(shopView, itemsRepository);
 				shopView.setShopController(shopController);
 				shopView.setCartController(cartController);
 				shopView.setVisible(true);	

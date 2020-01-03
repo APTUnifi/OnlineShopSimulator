@@ -7,42 +7,42 @@ import com.online.shop.view.ShopView;
 public class ShopController {
 
 	private ShopView itemsView;
-	private ShopRepository itemsRepository;
+	private ShopRepository shopRepository;
 
-	public ShopController(ShopView itemsView, ShopRepository itemsRepository) {
+	public ShopController(ShopView itemsView, ShopRepository shopRepository) {
 		this.itemsView = itemsView;
-		this.itemsRepository = itemsRepository;
+		this.shopRepository = shopRepository;
 	}
 
 	public void allItems() {
-		itemsView.updateItemsShop(itemsRepository.findAllItems());
+		itemsView.updateItemsShop(shopRepository.findAllItems());
 	}
 
 	public void newItem(Item item) {
-		Item retrievedItem = itemsRepository.findItemByProductCode(item.getProductCode());
+		Item retrievedItem = shopRepository.findItemByProductCode(item.getProductCode());
 
 		if (item.getQuantity() <= 0) {
 			throw new IllegalArgumentException("Negative amount: " + item.getQuantity());
 		}
 
 		if (retrievedItem != null) {
-			itemsRepository.modifyItemQuantity(retrievedItem, item.getQuantity());
+			shopRepository.modifyItemQuantity(retrievedItem, item.getQuantity());
 			return;
 		}
 
-		itemsRepository.storeItem(item);
+		shopRepository.storeItem(item);
 		allItems();
 	}
 
 	public void removeItem(Item item) {
-		if (itemsRepository.findItemByProductCode(item.getProductCode()) == null) {
+		if (shopRepository.findItemByProductCode(item.getProductCode()) == null) {
 			return;
 		}
-		itemsRepository.removeItem(item.getProductCode());
+		shopRepository.removeItem(item.getProductCode());
 	}
 
 	public void searchItem(String itemName) {
-		Item retrievedItem = itemsRepository.findItemByName(itemName);
+		Item retrievedItem = shopRepository.findItemByName(itemName);
 
 		if (retrievedItem == null) {
 			itemsView.errorLog("Item with name " + itemName + " doest not exists", null);
@@ -56,12 +56,12 @@ public class ShopController {
 			return;
 		}
 		if (modifier + item.getQuantity() == 0) {
-			itemsRepository.removeItem(item.getProductCode());
+			shopRepository.removeItem(item.getProductCode());
 			return;
 		}
 		if (modifier + item.getQuantity() < 0) {
 			return;
 		}
-		itemsRepository.modifyItemQuantity(item, modifier);
+		shopRepository.modifyItemQuantity(item, modifier);
 	}
 }

@@ -18,12 +18,11 @@ import com.online.shop.controller.CartController;
 import com.online.shop.controller.ShopController;
 import com.online.shop.model.Cart;
 import com.online.shop.model.Item;
-import com.online.shop.view.HistoryView;
 import com.online.shop.view.ShopView;
 import javax.swing.JSeparator;
 
 @SuppressWarnings("serial")
-public class ShopOnlineView extends JFrame  implements ShopView, HistoryView{
+public class ShopOnlineView extends JFrame  implements ShopView{
 
 	private transient ShopController shopController;
 	private transient CartController cartController;
