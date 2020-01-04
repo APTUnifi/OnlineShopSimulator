@@ -40,7 +40,7 @@ public class ShopOnlineTest extends AssertJSwingJUnitTestCase{
 	private static final String ITEM_FIXTURE_NAME_1 = "test";
 	private static final String ITEM_FIXTURE_PRODUCTCODE_1 = "1";
 	private static final int HEIGHT = 600;
-	private static final int WIDTH = 676;
+	private static final int WIDTH = 760;
 	private static final int FIRST_ITEM = 0;
 	private FrameFixture window;
 	private ShopOnlineView shopOnlineView;
@@ -69,21 +69,22 @@ public class ShopOnlineTest extends AssertJSwingJUnitTestCase{
 	public void testControlsInitialStates() {
 		window.textBox("itemName").requireEnabled();
 		window.textBox("cartNameText").requireEnabled();
-		window.button(JButtonMatcher.withText("Add")).requireDisabled();
-		window.button(JButtonMatcher.withText("Remove")).requireDisabled();
-		window.button(JButtonMatcher.withText("Buy")).requireDisabled();
+		window.button(JButtonMatcher.withName("btnAdd")).requireDisabled();
+		window.button(JButtonMatcher.withName("btnRemove")).requireDisabled();
+		window.button(JButtonMatcher.withName("btnAdd")).requireDisabled();
 		window.button(JButtonMatcher.withText("Search")).requireEnabled();
-		window.button(JButtonMatcher.withText("Delete")).requireDisabled();
+		window.button(JButtonMatcher.withName("btnDelete")).requireDisabled();
 		window.list("itemListShop");
 		window.list("itemListCart");
 		window.list("listItemsCart");
 		window.list("listCart");
-		window.label("lblCartName").requireText("Cart Name : ");
+		window.label("lblCartName").requireText("Choose a Cart Name");
 		window.label("lblYourCart").requireText("Your Cart");
-		window.label("lblShop").requireText("Items Shop");
+		window.label("lblShop").requireText("Items In Shop");
 		window.label("errorMessageLabel").requireText(" ");
 		window.label("lblItemsCart").requireText("Items Cart");
 		window.label("lblCartsHistory").requireText("Carts");
+		window.label("lblPurchaseHistory").requireText("Purchase History");
 	}
 
 	@Test
@@ -93,7 +94,7 @@ public class ShopOnlineTest extends AssertJSwingJUnitTestCase{
 						new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1))
 				);
 		window.list("itemListShop").selectItem(FIRST_ITEM);
-		JButtonFixture addButton = window.button(JButtonMatcher.withText("Add"));
+		JButtonFixture addButton = window.button(JButtonMatcher.withName("btnAdd"));
 		addButton.requireEnabled();
 		assertThat(addButton).matches(p -> p.isEnabled());
 		window.list("itemListShop").clearSelection();
@@ -144,7 +145,7 @@ public class ShopOnlineTest extends AssertJSwingJUnitTestCase{
 				);
 		window.textBox("cartNameText").enterText("testCart");
 		window.list("itemListCart").selectItem(0);
-		JButtonFixture buyButton = window.button(JButtonMatcher.withText("Remove"));	
+		JButtonFixture buyButton = window.button(JButtonMatcher.withName("btnBuy"));
 		buyButton.requireEnabled();
 		assertThat(buyButton).matches(p -> p.isEnabled());
 		window.list("itemListCart").clearSelection();
@@ -152,7 +153,7 @@ public class ShopOnlineTest extends AssertJSwingJUnitTestCase{
 	}
 
 	@Test
-	public void testDeleteButtonShouldBeEnabledWhenAnItemIsSelectedInItemListCart() {
+	public void testRemoveButtonShouldBeEnabledWhenAnItemIsSelectedInItemListCart() {
 		GuiActionRunner.execute(
 				()->{ 
 					shopOnlineView.getItemListCartModel().addElement(
@@ -161,11 +162,11 @@ public class ShopOnlineTest extends AssertJSwingJUnitTestCase{
 							new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1, ITEM_FIXTURE_QUANTITY_2));
 				});
 		window.list("itemListCart").selectItem(FIRST_ITEM);
-		JButtonFixture deleteButton = window.button(JButtonMatcher.withText("Remove"));	
-		deleteButton.requireEnabled();
-		assertThat(deleteButton).matches(p -> p.isEnabled());
+		JButtonFixture removeButton = window.button(JButtonMatcher.withName("btnRemove"));
+		removeButton.requireEnabled();
+		assertThat(removeButton).matches(p -> p.isEnabled());
 		window.list("itemListCart").clearSelection();
-		deleteButton.requireDisabled();
+		removeButton.requireDisabled();
 	}
 
 	@Test
@@ -190,6 +191,16 @@ public class ShopOnlineTest extends AssertJSwingJUnitTestCase{
 				() -> shopOnlineView.errorLog("error Message", items)
 				);		
 		window.label("errorMessageLabel").requireText("error Message: " + item.getName() + " "+ item1.getName() + " ");
+		assertThat(JLabelMatcher.withText("errorMessageLabel").andShowing());
+	}
+	@Test
+	public void testErrorLogItemShouldShowTheMessageInTheErrorMessageLabel() {
+		Item item = new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1);
+		Item item1 = new Item(ITEM_FIXTURE_PRODUCTCODE_2,ITEM_FIXTURE_NAME_2);
+		GuiActionRunner.execute(
+				() -> shopOnlineView.errorLogItem("error Message", item.getName())
+				);		
+		window.label("errorMessageLabel").requireText("error Message: " + item.getName());
 		assertThat(JLabelMatcher.withText("errorMessageLabel").andShowing());
 	}
 
@@ -248,7 +259,7 @@ public class ShopOnlineTest extends AssertJSwingJUnitTestCase{
 				()-> shopOnlineView.getItemListShopModel().addElement(item)
 				);
 		window.list("itemListShop").selectItem(FIRST_ITEM);
-		window.button(JButtonMatcher.withText("Add")).click();
+		window.button(JButtonMatcher.withName("btnAdd")).click();
 		verify(cartController).addToCart(item);
 	}
 
@@ -259,7 +270,7 @@ public class ShopOnlineTest extends AssertJSwingJUnitTestCase{
 				()-> shopOnlineView.getItemListCartModel().addElement(item)
 				);
 		window.list("itemListCart").selectItem(FIRST_ITEM);
-		window.button(JButtonMatcher.withText("Remove")).click();
+		window.button(JButtonMatcher.withName("btnRemove")).click();
 		verify(cartController).removeFromCart(item);
 	}
 
@@ -290,7 +301,7 @@ public class ShopOnlineTest extends AssertJSwingJUnitTestCase{
 				});
 		window.textBox("cartNameText").enterText("testCart");
 		window.list("itemListCart").selectItem(FIRST_ITEM);
-		window.button(JButtonMatcher.withText("Buy")).click();
+		window.button(JButtonMatcher.withName("btnBuy")).click();
 		verify(cartController).completePurchase(window.textBox("cartNameText").text());
 	}
 
@@ -348,7 +359,7 @@ public class ShopOnlineTest extends AssertJSwingJUnitTestCase{
 				()-> shopOnlineView.getListCartModel().addElement(cart1)
 				);
 		window.list("listCart").selectItem(FIRST_ITEM);
-		window.button(JButtonMatcher.withText("Delete")).click();
+		window.button(JButtonMatcher.withName("btnDelete")).click();
 		verify(cartController).removeCart(cart1);
 	}
 
@@ -362,7 +373,7 @@ public class ShopOnlineTest extends AssertJSwingJUnitTestCase{
 				}
 				);
 		window.list("listCart").selectItem(FIRST_ITEM);
-		JButtonFixture deleteButton = window.button(JButtonMatcher.withText("Delete"));
+		JButtonFixture deleteButton = window.button(JButtonMatcher.withName("btnDelete"));
 		deleteButton.requireEnabled();
 		assertThat(deleteButton).matches(p -> p.isEnabled());
 		window.list("listCart").clearSelection();

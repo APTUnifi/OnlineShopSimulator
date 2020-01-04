@@ -69,4 +69,10 @@ public class Cart {
 	public int hashCode() {
 		return Objects.hash(label, date);
 	}
+	
+	@Override
+	public String toString() {
+		return "Cart [ label = " + label + ", date = " + date + " ]";
+		
+	}
 }

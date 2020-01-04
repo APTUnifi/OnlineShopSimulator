@@ -71,7 +71,7 @@ public class CartController {
 		cart.setLabel(label);
 		for(Cart carts : shopRepository.findAllCarts()) {
 			if(cart.getLabel().equals(carts.getLabel())) {
-				shopView.errorLogCart("Cart with this label already exists: " , cart);
+				shopView.errorLogCart("Cart with this label already exists " , cart.getLabel());
 				return;
 			}
 		}
@@ -115,7 +115,7 @@ public class CartController {
 
 	public void removeCart(Cart cartToRemove) {
 		if (shopRepository.findCart(cartToRemove.getDate(), cartToRemove.getLabel()) == null) {
-			shopView.errorLogCart("Cart not found", cartToRemove );
+			shopView.errorLogCart("Cart not found", cartToRemove.getLabel() );
 			return;
 		}
 		shopRepository.removeCart(cartToRemove.getDate(), cartToRemove.getLabel());

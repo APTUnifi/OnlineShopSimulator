@@ -1,5 +1,7 @@
 package com.online.shop.controller;
 
+import java.util.Arrays;
+
 import com.online.shop.model.Item;
 import com.online.shop.repository.ShopRepository;
 import com.online.shop.view.ShopView;
@@ -45,7 +47,7 @@ public class ShopController {
 		Item retrievedItem = shopRepository.findItemByName(itemName);
 
 		if (retrievedItem == null) {
-			itemsView.errorLog("Item with name " + itemName + " doest not exists", null);
+			itemsView.errorLogItem("Item with name does not exists",itemName);
 			return;
 		}
 		itemsView.showSearchResult(retrievedItem);

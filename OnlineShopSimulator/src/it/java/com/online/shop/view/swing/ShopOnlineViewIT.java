@@ -13,8 +13,8 @@ import org.assertj.swing.annotation.GUITest;
 import org.assertj.swing.core.matcher.JButtonMatcher;
 import org.assertj.swing.edt.GuiActionRunner;
 import org.assertj.swing.fixture.FrameFixture;
-import org.assertj.swing.fixture.JButtonFixture;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
+
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
@@ -23,6 +23,7 @@ import org.testcontainers.containers.GenericContainer;
 
 import com.mongodb.MongoClient;
 import com.mongodb.ServerAddress;
+
 import com.online.shop.controller.CartController;
 import com.online.shop.controller.ShopController;
 import com.online.shop.model.Cart;
@@ -34,18 +35,18 @@ import de.bwaldvogel.mongo.backend.memory.MemoryBackend;
 
 public class ShopOnlineViewIT extends AssertJSwingJUnitTestCase {
 
-
 	private static final String CART_FIXTURE_LABEL_TEST = "cartTest";
 	private static final String ITEM_FIXTURE_NAME_2 = "test1";
 	private static final String ITEM_FIXTURE_PRODUCTCODE_2 = "2";
 	private static final String ITEM_FIXTURE_NAME_1 = "test";
 	private static final String ITEM_FIXTURE_PRODUCTCODE_1 = "1";
+	private static final String ITEM_SEARCHED = "test";
 	private static final String CART_FIXTURE_LABEL_1 = "test";
 	private static final int ITEM_FIXTURE_NEW_QUANTITY = 1;
 	private static final int ITEM_FIXTURE_QUANTITY_1 = 10;
 	private static final int MODIFIER = 1;
 	private static final int HEIGHT = 600;
-	private static final int WIDTH = 676;
+	private static final int WIDTH = 760;
 	private static final int FIRST_ITEM = 0;
 	private static final int SECOND_ITEM = 1;
 
@@ -83,7 +84,6 @@ public class ShopOnlineViewIT extends AssertJSwingJUnitTestCase {
 		}
 		for(Cart cart: shopRepository.findAllCarts()) {
 			shopRepository.removeCart(cart.getDate(),cart.getLabel());
-
 		}
 		GuiActionRunner.execute(
 				()->{
@@ -92,7 +92,6 @@ public class ShopOnlineViewIT extends AssertJSwingJUnitTestCase {
 					cartController = new CartController(shopOnlineView,shopRepository);
 					shopOnlineView.setCartController(cartController);
 					shopOnlineView.setShopController(shopController);
-					return shopOnlineView;
 				});
 		window = new FrameFixture(robot(),shopOnlineView);
 		Dimension dimension = new Dimension(WIDTH, HEIGHT);
@@ -111,9 +110,8 @@ public class ShopOnlineViewIT extends AssertJSwingJUnitTestCase {
 		shopRepository.storeItem(itemExist1);
 		shopRepository.storeItem(itemExist2);
 		GuiActionRunner.execute(
-				()->{
-					shopController.allItems();
-				});
+				()->shopController.allItems()
+				);
 		assertThat(window.list("itemListShop").contents()).containsExactly(itemExist1.toString(),itemExist2.toString());
 	}
 	@Test @GUITest
@@ -129,15 +127,43 @@ public class ShopOnlineViewIT extends AssertJSwingJUnitTestCase {
 				);
 		assertThat(window.list("listCart").contents()).containsExactly(cartExist.toString());
 	}
+
+	@Test @GUITest
+	public void testSearchButtonSuccess() {
+		Item item1 = new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1,ITEM_FIXTURE_QUANTITY_1);
+		Item item2 = new Item(ITEM_FIXTURE_PRODUCTCODE_2,ITEM_FIXTURE_NAME_2,ITEM_FIXTURE_QUANTITY_1);
+		shopRepository.storeItem(item1);
+		shopRepository.storeItem(item2);
+		GuiActionRunner.execute(
+				()-> shopController.allItems()
+				);
+		window.textBox("itemName").setText(ITEM_SEARCHED);
+		window.button(JButtonMatcher.withText("Search")).click();
+		assertThat(window.list("itemListShop").contents()).containsExactly(
+				new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1,ITEM_FIXTURE_QUANTITY_1).toString());
+	}
+	@Test @GUITest
+	public void testSearchButtonError() {
+			Item item2 = new Item(ITEM_FIXTURE_PRODUCTCODE_2,ITEM_FIXTURE_NAME_2,ITEM_FIXTURE_QUANTITY_1);
+			shopRepository.storeItem(item2);
+			GuiActionRunner.execute(
+					()-> shopController.allItems()
+					);
+			window.textBox("itemName").setText(ITEM_SEARCHED);
+			window.button(JButtonMatcher.withText("Search")).click();
+			window.label("errorMessageLabel").requireText("Item with name does not exists: " + ITEM_SEARCHED);
+			assertThat(window.list("itemListShop").contents()).containsExactly(
+				item2.toString());
+	}	
+
 	@Test @GUITest
 	public void testAddButtonSuccess() {
 		Item item1 = new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1,ITEM_FIXTURE_QUANTITY_1);
 		GuiActionRunner.execute(
-				()-> {
-					shopController.newItem(item1);
-				});
+				()->shopController.newItem(item1)
+				);
 		window.list("itemListShop").selectItem(0);
-		window.button(JButtonMatcher.withText("Add")).click();
+		window.button(JButtonMatcher.withName("btnAdd")).click();
 		assertThat(window.list("itemListCart").contents()).containsExactly(
 				new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1,ITEM_FIXTURE_NEW_QUANTITY).toString());
 	}
@@ -151,38 +177,19 @@ public class ShopOnlineViewIT extends AssertJSwingJUnitTestCase {
 					cartController.addToCart(item1);
 				});
 		window.list("itemListShop").selectItem(FIRST_ITEM);
-		window.button(JButtonMatcher.withText("Add")).click();
+		window.button(JButtonMatcher.withName("btnAdd")).click();
 		assertThat(window.list("itemListCart").contents()).containsExactly(
 				new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1,ITEM_FIXTURE_NEW_QUANTITY+MODIFIER).toString());
-	}
-
-	@Test @GUITest
-	public void testAddButtonError() {
-		Item item1 = new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1,ITEM_FIXTURE_QUANTITY_1);
-		shopRepository.storeItem(item1);
-		GuiActionRunner.execute(
-				()-> {
-					shopController.allItems();
-					cartController.addToCart(item1);
-				});
-		window.list("itemListShop").selectItem(FIRST_ITEM);
-		window.button(JButtonMatcher.withText("Add")).click();
-		assertThat(window.list("itemListCart").contents()).containsExactly(
-				new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1,ITEM_FIXTURE_QUANTITY_1).toString());
-		JButtonFixture addButton = window.button(JButtonMatcher.withText("Add"));	
-		window.list("itemListShop").clearSelection();
-		addButton.requireDisabled();
 	}
 
 	@Test @GUITest
 	public void testRemoveButtonSuccess() {
 		Item item1 = new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1,ITEM_FIXTURE_NEW_QUANTITY);
 		GuiActionRunner.execute(
-				()-> {
-					cartController.addToCart(item1);
-				});
+				()->cartController.addToCart(item1)
+				);
 		window.list("itemListCart").selectItem(0);
-		window.button(JButtonMatcher.withText("Remove")).click();
+		window.button(JButtonMatcher.withName("btnRemove")).click();
 		assertThat(window.list("itemListCart").contents()).isEmpty();
 	}
 
@@ -195,9 +202,9 @@ public class ShopOnlineViewIT extends AssertJSwingJUnitTestCase {
 					cartController.addToCart(item1);
 				});
 		window.list("itemListShop").selectItem(FIRST_ITEM);
-		window.button(JButtonMatcher.withText("Add")).click();
+		window.button(JButtonMatcher.withName("btnAdd")).click();
 		window.list("itemListCart").selectItem(FIRST_ITEM);
-		window.button(JButtonMatcher.withText("Remove")).click();
+		window.button(JButtonMatcher.withName("btnRemove")).click();
 		assertThat(window.list("itemListCart").contents()).containsExactly(
 				new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1,ITEM_FIXTURE_NEW_QUANTITY).toString());
 	}
@@ -212,7 +219,7 @@ public class ShopOnlineViewIT extends AssertJSwingJUnitTestCase {
 				});
 		window.textBox("cartNameText").enterText(CART_FIXTURE_LABEL_TEST);
 		window.list("itemListCart").selectItem(FIRST_ITEM);
-		window.button(JButtonMatcher.withText("Buy")).click();
+		window.button(JButtonMatcher.withName("btnBuy")).click();
 		assertThat(window.list("itemListCart").contents()).isEmpty();
 		assertThat(window.list("itemListShop").contents()).containsExactly(
 				new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1,ITEM_FIXTURE_QUANTITY_1-MODIFIER).toString());
@@ -222,21 +229,25 @@ public class ShopOnlineViewIT extends AssertJSwingJUnitTestCase {
 		assertThat(window.list("listItemsCart").contents()).containsExactly(
 				new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1,ITEM_FIXTURE_NEW_QUANTITY).toString());
 	}
-	
+
 	@Test @GUITest
 	public void testBuyButtonError() {
 		Item item1 = new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1,ITEM_FIXTURE_QUANTITY_1);
+		Cart cart = new Cart(CART_FIXTURE_LABEL_TEST, LocalDate.now().toString());
+		shopRepository.storeCart(cart);
 		GuiActionRunner.execute(
 				()->{ 
 					DefaultListModel<Item> items = shopOnlineView.getItemListCartModel();
 					items.addElement(item1);
+					cartController.allCarts();
 				});
 		window.textBox("cartNameText").enterText(CART_FIXTURE_LABEL_TEST);
 		window.list("itemListCart").selectItem(FIRST_ITEM);
-		window.button(JButtonMatcher.withText("Buy")).click();
-		assertThat(window.list("itemListCart").contents()).containsExactly(item1.toString());
+		window.button(JButtonMatcher.withName("btnBuy")).click();
+		window.label("errorMessageLabel").requireText("Cart with this label already exists : " + cart.getLabel());
+		assertThat(window.list("itemListCart").contents()).containsExactly(item1.toString());	
 	}
-	
+
 	@Test @GUITest
 	public void testAllCartItems() {
 		Item item1 = new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1);
@@ -268,12 +279,12 @@ public class ShopOnlineViewIT extends AssertJSwingJUnitTestCase {
 				()-> cartController.allCarts()		
 				);
 		window.list("listCart").selectItem(FIRST_ITEM);
-		window.button(JButtonMatcher.withText("Delete")).click();
+		window.button(JButtonMatcher.withName("btnDelete")).click();
 		assertThat(window.list("listCart").contents()).isEmpty();
 	}
 
 	@Test @GUITest
-	public void testRemoveButtonError() {
+	public void testDeleteButtonError() {
 		Item item1 = new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1);
 		Item item2 = new Item(ITEM_FIXTURE_PRODUCTCODE_2,ITEM_FIXTURE_NAME_2);
 		Cart cart = new Cart(Arrays.asList(item1,item2),CART_FIXTURE_LABEL_1);
@@ -283,8 +294,8 @@ public class ShopOnlineViewIT extends AssertJSwingJUnitTestCase {
 					carts.addElement(cart);
 				});
 		window.list("listCart").selectItem(FIRST_ITEM);
-		window.button(JButtonMatcher.withText("Delete")).click();
+		window.button(JButtonMatcher.withName("btnDelete")).click();
 		assertThat(window.list("listCart").contents()).containsExactly(cart.toString());
+		window.label("errorMessageLabel").requireText("Cart not found: " + cart.getLabel());
 	}	
-
 }

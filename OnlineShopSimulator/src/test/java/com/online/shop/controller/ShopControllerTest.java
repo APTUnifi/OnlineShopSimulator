@@ -136,7 +136,7 @@ public class ShopControllerTest {
 		// exercise
 		shopController.searchItem(ITEM_NAME);
 		// verify
-		verify(shopView).errorLog("Item with name battery doest not exists", null);
+		verify(shopView).errorLogItem("Item with name does not exists" , ITEM_NAME);
 		verifyNoMoreInteractions(ignoreStubs(shopRepository));
 	}
 
