@@ -37,7 +37,6 @@ public class ShopOnlineAppE2E  extends AssertJSwingJUnitTestCase{
 	private static final String ITEM_FIXTURE_1_NAME = "firstItem";
 	private static final String ITEM_FIXTURE_2_PRODUCTCODE = "2";
 	private static final String ITEM_FIXTURE_1_PRODUCTCODE = "1";
-	private static final int MODIFIER = 1;
 
 	@SuppressWarnings("rawtypes")
 	@ClassRule
@@ -133,24 +132,24 @@ public class ShopOnlineAppE2E  extends AssertJSwingJUnitTestCase{
 	@Test @GUITest
 	public void testBuyButtonSuccess() {
 		window.list("itemListShop").selectItem(FIRST_ITEM);
-		window.button(JButtonMatcher.withText("Add")).click();
+		window.button(JButtonMatcher.withName("btnAdd")).click();
 		window.textBox("cartNameText").enterText(CART_FIXTURE_LABEL_2);
 		window.list("itemListCart").selectItem(FIRST_ITEM);
-		window.button(JButtonMatcher.withText("Buy")).click();
+		window.button(JButtonMatcher.withName("btnBuy")).click();
 		assertThat(window.list("itemListCart").contents()).isEmpty();
 		assertThat(window.list("itemListShop").contents()).anySatisfy(
 				e -> assertThat(e).contains(
-						new Item(ITEM_FIXTURE_2_PRODUCTCODE,ITEM_FIXTURE_2_NAME,ITEM_FIXTURE_2_QUANTITY-MODIFIER).toString()));
+						new Item(ITEM_FIXTURE_2_PRODUCTCODE,ITEM_FIXTURE_2_NAME,ITEM_FIXTURE_2_QUANTITY).toString()));
 	}
 
 	@Test @GUITest
 	public void testBuyButtonError() {
 		window.list("itemListShop").selectItem(FIRST_ITEM);
-		window.button(JButtonMatcher.withText("Add")).click();
+		window.button(JButtonMatcher.withName("btnAdd")).click();
 		window.textBox("cartNameText").enterText(CART_FIXTURE_LABEL_2);
 		window.list("itemListCart").selectItem(FIRST_ITEM);
 		removeTestItemFromDatabase(ITEM_FIXTURE_1_PRODUCTCODE);
-		window.button(JButtonMatcher.withText("Buy")).click();
+		window.button(JButtonMatcher.withName("btnBuy")).click();
 		assertThat(window.label("errorMessageLabel").text())
 		.contains("Item/s not found: " + ITEM_FIXTURE_1_NAME);
 	}
@@ -158,7 +157,7 @@ public class ShopOnlineAppE2E  extends AssertJSwingJUnitTestCase{
 	@Test @GUITest
 	public void testRemoveCartSuccess() {
 		window.list("listCart").selectItem(FIRST_ITEM);
-		window.button(JButtonMatcher.withText("Delete")).click();
+		window.button(JButtonMatcher.withName("btnDelete")).click();
 		assertThat(window.list("listCart").contents()).isEmpty();
 		assertThat(window.list("listItemsCart").contents()).isEmpty();
 	}
@@ -167,7 +166,7 @@ public class ShopOnlineAppE2E  extends AssertJSwingJUnitTestCase{
 	public void testRemoveCartError() {
 		window.list("listCart").selectItem(FIRST_ITEM);
 		removeTestCartFromDatabase(CART_FIXTURE_LABEL_1,CART_FIXTURE_DATE);
-		window.button(JButtonMatcher.withText("Delete")).click();
+		window.button(JButtonMatcher.withName("btnDelete")).click();
 		assertThat(window.label("errorMessageLabel").text())
 		.contains("Cart not found: " + CART_FIXTURE_LABEL_1 );
 		assertThat(window.list("listItemsCart").contents()).isEmpty();

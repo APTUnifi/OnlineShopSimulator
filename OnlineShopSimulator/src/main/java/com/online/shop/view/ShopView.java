@@ -7,13 +7,10 @@ import com.online.shop.model.Item;
 
 public interface ShopView {
   
-	void itemAdded(Item item);
-	void itemQuantityAdded(Item item);
-	void itemRemoved(Item item);
-  
 	void showItemsShop(List<Item> items);
 	void errorLog(String error, List<Item> items);
-	void errorLogCart(String error, Cart cart);
+	void errorLogCart(String error, String cart);
+	void errorLogItem(String error, String Item);
 	void showSearchResult(Item item);
 	void itemAddedToCart(Item item); 
 	void itemRemovedFromCart(Item item);

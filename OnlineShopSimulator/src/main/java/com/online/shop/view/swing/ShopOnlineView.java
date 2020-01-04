@@ -21,12 +21,16 @@ import com.online.shop.model.Item;
 import com.online.shop.view.ShopView;
 import javax.swing.JSeparator;
 
-@SuppressWarnings("serial")
+
 public class ShopOnlineView extends JFrame  implements ShopView{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private transient ShopController shopController;
 	private transient CartController cartController;
-	private JPanel contentPane;
+	private final JPanel contentPane;
 
 	private JTextField itemName;
 	private JTextField cartNameText;
@@ -54,6 +58,7 @@ public class ShopOnlineView extends JFrame  implements ShopView{
 	private JLabel lblCartsHistory;
 	private JLabel lblErrorMessageLabel;
 	private JLabel lblItemsCart;
+	private JLabel lblPurchaseHistory;
 
 	DefaultListModel<Cart> getListCartModel(){
 		return listCartModel;
@@ -81,7 +86,7 @@ public class ShopOnlineView extends JFrame  implements ShopView{
 
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setTitle("ShopOnline");
-		setBounds(100, 100, 676, 594);
+		setBounds(100, 100, 759, 580);
 		contentPane = new JPanel();
 		contentPane.setName("MainPanel");
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -89,18 +94,18 @@ public class ShopOnlineView extends JFrame  implements ShopView{
 		contentPane.setLayout(null);
 
 		itemName = new JTextField();
-		itemName.setBounds(96, 6, 409, 26);
+		itemName.setBounds(143, 26, 213, 26);
 		itemName.setName("itemName");
 		contentPane.add(itemName);
 		itemName.setColumns(10);
 
 		btnSearch = new JButton("Search");
-		btnSearch.setBounds(6, 5, 85, 29);
+		btnSearch.setBounds(0, 26, 131, 29);
 		btnSearch.setEnabled(true);
 		contentPane.add(btnSearch);
 
 		lblErrorMessageLabel = new JLabel(" ");
-		lblErrorMessageLabel.setBounds(106, 44, 441, 16);
+		lblErrorMessageLabel.setBounds(162, 279, 441, 16);
 		lblErrorMessageLabel.setName("errorMessageLabel");
 		lblErrorMessageLabel.setOpaque(true);
 		contentPane.add(lblErrorMessageLabel);
@@ -109,19 +114,19 @@ public class ShopOnlineView extends JFrame  implements ShopView{
 		itemListCartModel = new DefaultListModel<>();
 
 		itemListShop = new JList<>();
-		itemListShop.setBounds(6, 91, 281, 169);
+		itemListShop.setBounds(6, 64, 350, 169);
 		itemListShop.setModel(itemListShopModel);
 		itemListShop.addListSelectionListener(e -> 
 		btnAdd.setEnabled(itemListShop.getSelectedIndex() != -1)
 				);
 
-		lblCartName = new JLabel("Cart Name : ");
-		lblCartName.setBounds(316, 274, 78, 16);
+		lblCartName = new JLabel("Choose a Cart Name");
+		lblCartName.setBounds(399, 31, 129, 16);
 		lblCartName.setName("lblCartName");
 		contentPane.add(lblCartName);
 
 		cartNameText = new JTextField("");
-		cartNameText.setBounds(399, 269, 260, 26);
+		cartNameText.setBounds(540, 26, 213, 26);
 		cartNameText.setName("cartNameText");
 		contentPane.add(cartNameText);
 		cartNameText.setColumns(10);
@@ -131,7 +136,7 @@ public class ShopOnlineView extends JFrame  implements ShopView{
 		contentPane.add(itemListShop);
 
 		itemListCart = new JList<>(itemListCartModel);
-		itemListCart.setBounds(399, 91, 260, 169);
+		itemListCart.setBounds(399, 64, 351, 169);
 		itemListCart.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		itemListCart.addListSelectionListener(e -> {
@@ -144,10 +149,10 @@ public class ShopOnlineView extends JFrame  implements ShopView{
 		itemListCart.setName("itemListCart");
 		contentPane.add(itemListCart);
 
-		btnAdd = new JButton("Add");
-		btnAdd.setBounds(299, 121, 75, 29);
+		btnAdd = new JButton("Add Selected Item to Cart");
 		btnAdd.setEnabled(false);
-		btnAdd.setName("Add");
+		btnAdd.setBounds(0, 245, 356, 29);
+		btnAdd.setName("btnAdd");
 		contentPane.add(btnAdd);
 
 		btnAdd.addActionListener(
@@ -156,10 +161,10 @@ public class ShopOnlineView extends JFrame  implements ShopView{
 					itemListShop.clearSelection();
 				});
 
-		btnRemove = new JButton("Remove");
-		btnRemove.setBounds(294, 162, 93, 29);
-		btnRemove.setName("Remove");
+		btnRemove = new JButton("Remove Selected Item from Cart");
 		btnRemove.setEnabled(false);
+		btnRemove.setBounds(399, 245, 247, 29);
+		btnRemove.setName("btnRemove");
 		contentPane.add(btnRemove);
 
 		btnRemove.addActionListener(
@@ -167,15 +172,12 @@ public class ShopOnlineView extends JFrame  implements ShopView{
 				);
 
 		btnSearch.addActionListener(
-				e ->{ new Thread(
-						()->
-						shopController.searchItem(itemName.getText())
-						).start();
-				});
+				e ->shopController.searchItem(itemName.getText())		
+				);
 
-		btnBuy = new JButton("Buy");
-		btnBuy.setBounds(299, 203, 75, 29);
-		btnBuy.setName("Buy");
+		btnBuy = new JButton("Purchase");
+		btnBuy.setBounds(644, 245, 115, 29);
+		btnBuy.setName("btnBuy");
 		btnBuy.setEnabled(false);
 		contentPane.add(btnBuy);
 
@@ -185,7 +187,7 @@ public class ShopOnlineView extends JFrame  implements ShopView{
 
 		listCart = new JList<Cart>(listCartModel);
 		listCart.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		listCart.setBounds(4, 359, 283, 186);
+		listCart.setBounds(6, 376, 350, 138);
 		listCart.setName("listCart");
 		contentPane.add(listCart);
 		listCart.addListSelectionListener(e -> {
@@ -199,44 +201,48 @@ public class ShopOnlineView extends JFrame  implements ShopView{
 		listItemsCart = new JList<Item>(listItemsCartModel);
 		listItemsCart.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listItemsCart.setName("listItemsCart");
-		listItemsCart.setBounds(406, 359, 253, 186);
+		listItemsCart.setBounds(406, 376, 347, 169);
 		contentPane.add(listItemsCart);
 
-		btnDelete = new JButton("Delete");
-		btnDelete.setName("Delete");
+		btnDelete = new JButton("Delete Selected Cart");
 		btnDelete.setEnabled(false);
-		btnDelete.setBounds(296, 449, 98, 29);
+		btnDelete.setName("btnDelete");
+		btnDelete.setBounds(0, 526, 356, 29);
 		contentPane.add(btnDelete);
 		btnDelete.addActionListener(
 				e -> {
 					cartController.removeCart(listCart.getSelectedValue());
-					//setDefaultListModel(updateListCarts());
 					showItemsCart(new Cart());
 				});
 
 		lblCartsHistory = new JLabel("Carts");
 		lblCartsHistory.setName("lblCartsHistory");
-		lblCartsHistory.setBounds(4, 334, 61, 16);
+		lblCartsHistory.setBounds(6, 348, 61, 16);
 		contentPane.add(lblCartsHistory);
 
 		lblItemsCart = new JLabel("Items Cart");
 		lblItemsCart.setName("lblItemsCart");
-		lblItemsCart.setBounds(403, 334, 108, 16);
+		lblItemsCart.setBounds(406, 348, 108, 16);
 		contentPane.add(lblItemsCart);
 
-		lblShop = new JLabel("Items Shop");
+		lblShop = new JLabel("Items In Shop");
 		lblShop.setName("lblShop");
-		lblShop.setBounds(6, 73, 85, 16);
+		lblShop.setBounds(6, 6, 125, 16);
 		contentPane.add(lblShop);
 
 		lblYourCart = new JLabel("Your Cart");
 		lblYourCart.setName("lblYourCart");
-		lblYourCart.setBounds(399, 73, 61, 16);
+		lblYourCart.setBounds(399, 6, 61, 16);
 		contentPane.add(lblYourCart);
 
 		separator = new JSeparator();
 		separator.setBounds(6, 307, 668, 12);
 		contentPane.add(separator);
+		
+		lblPurchaseHistory = new JLabel("Purchase History");
+		lblPurchaseHistory.setBounds(328, 320, 152, 16);
+		lblPurchaseHistory.setName("lblPurchaseHistory");
+		contentPane.add(lblPurchaseHistory);
 
 		btnBuy.addActionListener(
 				e ->{
@@ -263,9 +269,15 @@ public class ShopOnlineView extends JFrame  implements ShopView{
 	}
 
 	@Override
-	public void errorLogCart(String error, Cart cart) {
+	public void errorLogCart(String error, String cart) {
 		SwingUtilities.invokeLater(
-				()->lblErrorMessageLabel.setText(error +": " + cart.getLabel() )
+				()->lblErrorMessageLabel.setText(error + ": " + cart)
+				);
+	}
+	@Override
+	public void errorLogItem(String error, String item) {
+		SwingUtilities.invokeLater(
+				()->lblErrorMessageLabel.setText(error + ": " + item)
 				);
 	}
 
@@ -325,20 +337,6 @@ public class ShopOnlineView extends JFrame  implements ShopView{
 		itemListShop.setModel(listShopUpdated);  
 	}
 
-	@Override
-	public void itemAdded(Item item) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void itemQuantityAdded(Item item) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void itemRemoved(Item item) {
-		// TODO Auto-generated method stub
-	}
 	@Override
 	public void showHistory(List<Cart> carts) {
 		DefaultListModel<Cart> listCartUpdated = new DefaultListModel<>();

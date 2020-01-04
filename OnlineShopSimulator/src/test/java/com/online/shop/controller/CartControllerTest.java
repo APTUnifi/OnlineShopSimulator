@@ -258,7 +258,7 @@ public class CartControllerTest {
 		Cart cartToRemove = new Cart(items, CART_LABEL);
 		when(shopRepository.findCart(LocalDate.now().toString(), CART_LABEL)).thenReturn(null);
 		cartController.removeCart(cartToRemove);
-		verify(shopView).errorLogCart("Cart not found" , cartToRemove);
+		verify(shopView).errorLogCart("Cart not found" , cartToRemove.getLabel());
 		verifyNoMoreInteractions(ignoreStubs(shopView));
 	}
 	
@@ -272,7 +272,7 @@ public class CartControllerTest {
 		when(shopRepository.findAllCarts()).thenReturn(Arrays.asList(cartExist));
 		cartController.completePurchase(CART_LABEL);
 		//verify(itemsRepository).storeCart(cartExist);
-		verify(shopView).errorLogCart("Cart with this label already exists: ", cartExist);
+		verify(shopView).errorLogCart("Cart with this label already exists ", cartExist.getLabel());
 		verifyNoMoreInteractions(ignoreStubs(shopView));
 	}
 
