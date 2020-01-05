@@ -24,9 +24,6 @@ import javax.swing.JSeparator;
 
 public class ShopOnlineView extends JFrame  implements ShopView{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private transient ShopController shopController;
 	private transient CartController cartController;

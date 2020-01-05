@@ -1,7 +1,5 @@
 package com.online.shop.controller;
 
-import java.util.Arrays;
-
 import com.online.shop.model.Item;
 import com.online.shop.repository.ShopRepository;
 import com.online.shop.view.ShopView;
