@@ -114,6 +114,7 @@ public class ShopOnlineViewIT extends AssertJSwingJUnitTestCase {
 				);
 		assertThat(window.list("itemListShop").contents()).containsExactly(itemExist1.toString(),itemExist2.toString());
 	}
+	
 	@Test @GUITest
 	public void testAllCarts() {
 		Item itemExist1 = new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1);
@@ -126,6 +127,25 @@ public class ShopOnlineViewIT extends AssertJSwingJUnitTestCase {
 				()-> cartController.allCarts()
 				);
 		assertThat(window.list("listCart").contents()).containsExactly(cartExist.toString());
+	}
+	
+	@Test @GUITest
+	public void testAllItemsCart() {
+		Item item1 = new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1);
+		Item item2 = new Item(ITEM_FIXTURE_PRODUCTCODE_2,ITEM_FIXTURE_NAME_2);
+		Cart cart = new Cart(Arrays.asList(item1,item2),CART_FIXTURE_LABEL_1);
+		shopRepository.storeItem(item1);
+		shopRepository.storeItem(item2);
+		shopRepository.storeCart(cart);
+		GuiActionRunner.execute(
+				()-> cartController.allCarts()
+				);
+		window.list("listCart").selectItem(FIRST_ITEM);
+		GuiActionRunner.execute(
+				()-> cartController.allItemsCart(cart)
+				);
+		assertThat(window.list("listItemsCart").contents()).containsExactly(cart.getItems().get(FIRST_ITEM).toString(),
+				cart.getItems().get(SECOND_ITEM).toString());
 	}
 
 	@Test @GUITest
@@ -142,6 +162,7 @@ public class ShopOnlineViewIT extends AssertJSwingJUnitTestCase {
 		assertThat(window.list("itemListShop").contents()).containsExactly(
 				new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1,ITEM_FIXTURE_QUANTITY_1).toString());
 	}
+	
 	@Test @GUITest
 	public void testSearchButtonError() {
 			Item item2 = new Item(ITEM_FIXTURE_PRODUCTCODE_2,ITEM_FIXTURE_NAME_2,ITEM_FIXTURE_QUANTITY_1);
@@ -180,6 +201,22 @@ public class ShopOnlineViewIT extends AssertJSwingJUnitTestCase {
 		window.button(JButtonMatcher.withName("btnAdd")).click();
 		assertThat(window.list("itemListCart").contents()).containsExactly(
 				new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1,ITEM_FIXTURE_NEW_QUANTITY+MODIFIER).toString());
+	}
+	
+	@Test @GUITest
+	public void testAddButtonError_ModifyQuantity() {
+		Item item1 = new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1,ITEM_FIXTURE_NEW_QUANTITY);
+		shopRepository.storeItem(item1);
+		GuiActionRunner.execute(
+				()-> shopController.allItems()
+				);
+		window.list("itemListShop").selectItem(FIRST_ITEM);
+		window.button(JButtonMatcher.withName("btnAdd")).click();
+		window.list("itemListShop").selectItem(FIRST_ITEM);
+		window.button(JButtonMatcher.withName("btnAdd")).click();
+		window.label("errorMessageLabel").requireText("Can not add more this item: " + item1.getName());
+		assertThat(window.list("itemListCart").contents()).containsExactly(
+				new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1,ITEM_FIXTURE_NEW_QUANTITY).toString());
 	}
 
 	@Test @GUITest
@@ -246,25 +283,6 @@ public class ShopOnlineViewIT extends AssertJSwingJUnitTestCase {
 		window.button(JButtonMatcher.withName("btnBuy")).click();
 		window.label("errorMessageLabel").requireText("Cart with this label already exists : " + cart.getLabel());
 		assertThat(window.list("itemListCart").contents()).containsExactly(item1.toString());	
-	}
-
-	@Test @GUITest
-	public void testAllCartItems() {
-		Item item1 = new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1);
-		Item item2 = new Item(ITEM_FIXTURE_PRODUCTCODE_2,ITEM_FIXTURE_NAME_2);
-		Cart cart = new Cart(Arrays.asList(item1,item2),CART_FIXTURE_LABEL_1);
-		shopRepository.storeItem(item1);
-		shopRepository.storeItem(item2);
-		shopRepository.storeCart(cart);
-		GuiActionRunner.execute(
-				()-> cartController.allCarts()
-				);
-		window.list("listCart").selectItem(FIRST_ITEM);
-		GuiActionRunner.execute(
-				()-> cartController.allItemsCart(cart)
-				);
-		assertThat(window.list("listItemsCart").contents()).containsExactly(cart.getItems().get(FIRST_ITEM).toString(),
-				cart.getItems().get(SECOND_ITEM).toString());
 	}
 
 	@Test @GUITest

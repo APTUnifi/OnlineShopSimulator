@@ -29,8 +29,10 @@ public class CartController {
 			if (items.get(items.indexOf(item)).getQuantity() < item.getQuantity()) {
 				items.get(items.indexOf(item)).setQuantity(items.get(items.indexOf(item)).getQuantity() + 1);
 				shopView.updateItemsCart(items);
-			} else
-				return;
+			} else {
+				shopView.errorLogItem("Can not add more this item", item.getName());
+			}
+				
 		}
 	}
 

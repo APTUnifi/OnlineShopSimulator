@@ -193,10 +193,10 @@ public class ShopOnlineTest extends AssertJSwingJUnitTestCase{
 		window.label("errorMessageLabel").requireText("error Message: " + item.getName() + " "+ item1.getName() + " ");
 		assertThat(JLabelMatcher.withText("errorMessageLabel").andShowing());
 	}
+	
 	@Test
 	public void testErrorLogItemShouldShowTheMessageInTheErrorMessageLabel() {
 		Item item = new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1);
-		Item item1 = new Item(ITEM_FIXTURE_PRODUCTCODE_2,ITEM_FIXTURE_NAME_2);
 		GuiActionRunner.execute(
 				() -> shopOnlineView.errorLogItem("error Message", item.getName())
 				);		
@@ -229,9 +229,7 @@ public class ShopOnlineTest extends AssertJSwingJUnitTestCase{
 				);
 		String[] listContents = window.list("itemListCart").contents();
 		assertThat(listContents).containsExactly(item2.toString());
-
 	}
-
 
 	@Test
 	public void testItemRemovedToCartShouldRemoveTheItemFromTheItemListCartAndResetErrorLabel() {
@@ -379,5 +377,4 @@ public class ShopOnlineTest extends AssertJSwingJUnitTestCase{
 		window.list("listCart").clearSelection();
 		deleteButton.requireDisabled();
 	}
-
 }

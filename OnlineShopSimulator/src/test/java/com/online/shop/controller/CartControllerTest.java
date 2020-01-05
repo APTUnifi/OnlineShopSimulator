@@ -91,7 +91,7 @@ public class CartControllerTest {
 
 		assertThat(cartController.cartSize()).isEqualTo(1);
 		assertThat(cartController.findItemQuantity(existingCartItem)).isEqualTo(EXISTING_QUANTITY);
-		verifyNoMoreInteractions(shopView);
+		verify(shopView).errorLogItem("Can not add more this item", itemToAdd.getName());;
 	}
 
 	@Test
@@ -234,6 +234,15 @@ public class CartControllerTest {
 		when(shopRepository.findAllCarts()).thenReturn(carts);
 		cartController.allCarts();
 		verify(shopView).showHistory(carts);
+	}
+
+	@Test
+	public void testAllItemsCarts() {
+		Cart cart = new Cart();
+		List<Cart> carts = Arrays.asList(cart);
+		when(shopRepository.findAllCarts()).thenReturn(carts);
+		cartController.allItemsCart(cart);
+		verify(shopView).showItemsCart(cart);
 	}
 
 	@Test

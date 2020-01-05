@@ -54,6 +54,7 @@ public class ShopOnlineAppE2E  extends AssertJSwingJUnitTestCase{
 	@Override
 	protected void onSetUp() {
 		String containerIpAddress = mongo.getContainerIpAddress();
+		System.out.println(containerIpAddress);
 		Integer mappedPort = mongo.getMappedPort(27017);
 		mongoClient = new MongoClient(containerIpAddress, mappedPort);
 		mongoClient.getDatabase(SHOP_DB_NAME).drop();
