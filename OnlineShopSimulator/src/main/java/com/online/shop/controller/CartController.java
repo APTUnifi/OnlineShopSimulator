@@ -5,17 +5,20 @@ import java.util.List;
 import com.online.shop.model.Cart;
 import com.online.shop.model.Item;
 import com.online.shop.repository.ShopRepository;
+import com.online.shop.view.HistoryView;
 import com.online.shop.view.ShopView;
 
 public class CartController {
 	
 	private ShopView shopView;
 	private ShopRepository shopRepository;
+	private HistoryView historyView;
 	private Cart cart;
 
-	public CartController(ShopView ShopView, ShopRepository shopRepository) {
+	public CartController(ShopView ShopView, ShopRepository shopRepository,HistoryView historyView) {
 		this.shopView = ShopView;
 		this.shopRepository = shopRepository;
+		this.historyView = historyView;
 		this.cart = new Cart();
 	}
 
@@ -32,7 +35,6 @@ public class CartController {
 			} else {
 				shopView.errorLogItem("Can not add more this item", item.getName());
 			}
-				
 		}
 	}
 
@@ -99,7 +101,7 @@ public class CartController {
 			shopRepository.storeCart(cart);
 			cart.setItems(new ArrayList<Item>());
 			items = cart.getItems();
-			shopView.showHistory(shopRepository.findAllCarts());
+			historyView.showHistory(shopRepository.findAllCarts());
 			shopView.updateItemsCart(items);
 			shopView.updateItemsShop(shopRepository.findAllItems());
 		} else {
@@ -108,19 +110,19 @@ public class CartController {
 	}
 
 	public void allCarts() {
-		shopView.showHistory(shopRepository.findAllCarts());
+		historyView.showHistory(shopRepository.findAllCarts());
 	}
 
 	public void allItemsCart(Cart cart) {
-		shopView.showItemsCart(cart);
+		historyView.showItemsCart(cart);
 	}
 
 	public void removeCart(Cart cartToRemove) {
 		if (shopRepository.findCart(cartToRemove.getDate(), cartToRemove.getLabel()) == null) {
-			shopView.errorLogCart("Cart not found", cartToRemove.getLabel() );
+			historyView.errorLogCart("Cart not found", cartToRemove.getLabel() );
 			return;
 		}
 		shopRepository.removeCart(cartToRemove.getDate(), cartToRemove.getLabel());
-		shopView.removeCart(cartToRemove);
+		historyView.removeCart(cartToRemove);
 	}
 }

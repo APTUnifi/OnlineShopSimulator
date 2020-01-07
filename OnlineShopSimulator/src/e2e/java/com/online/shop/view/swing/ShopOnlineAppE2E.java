@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JFrame;
-
 import org.assertj.swing.annotation.GUITest;
 import org.assertj.swing.core.GenericTypeMatcher;
 import org.assertj.swing.core.matcher.JButtonMatcher;
@@ -54,7 +53,6 @@ public class ShopOnlineAppE2E  extends AssertJSwingJUnitTestCase{
 	@Override
 	protected void onSetUp() {
 		String containerIpAddress = mongo.getContainerIpAddress();
-		System.out.println(containerIpAddress);
 		Integer mappedPort = mongo.getMappedPort(27017);
 		mongoClient = new MongoClient(containerIpAddress, mappedPort);
 		mongoClient.getDatabase(SHOP_DB_NAME).drop();
@@ -77,6 +75,7 @@ public class ShopOnlineAppE2E  extends AssertJSwingJUnitTestCase{
 				return "ShopOnline".equals(frame.getTitle()) && frame.isShowing();
 			}
 		}).using(robot());
+		
 	}
 
 	@Override
@@ -157,6 +156,7 @@ public class ShopOnlineAppE2E  extends AssertJSwingJUnitTestCase{
 
 	@Test @GUITest
 	public void testRemoveCartSuccess() {
+		window.tabbedPane().selectTab("History");
 		window.list("listCart").selectItem(FIRST_ITEM);
 		window.button(JButtonMatcher.withName("btnDelete")).click();
 		assertThat(window.list("listCart").contents()).isEmpty();
@@ -165,6 +165,7 @@ public class ShopOnlineAppE2E  extends AssertJSwingJUnitTestCase{
 
 	@Test @GUITest
 	public void testRemoveCartError() {
+		window.tabbedPane().selectTab("History");
 		window.list("listCart").selectItem(FIRST_ITEM);
 		removeTestCartFromDatabase(CART_FIXTURE_LABEL_1,CART_FIXTURE_DATE);
 		window.button(JButtonMatcher.withName("btnDelete")).click();

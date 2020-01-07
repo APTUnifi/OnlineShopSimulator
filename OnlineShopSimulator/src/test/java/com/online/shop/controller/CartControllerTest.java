@@ -21,6 +21,7 @@ import org.mockito.MockitoAnnotations;
 import com.online.shop.model.Cart;
 import com.online.shop.model.Item;
 import com.online.shop.repository.ShopRepository;
+import com.online.shop.view.HistoryView;
 import com.online.shop.view.ShopView;
 
 import static org.assertj.core.api.Assertions.*;
@@ -34,6 +35,9 @@ public class CartControllerTest {
 
 	@Mock
 	ShopView shopView;
+	
+	@Mock
+	HistoryView historyView;
 
 	@Mock
 	ShopRepository shopRepository;
@@ -45,7 +49,6 @@ public class CartControllerTest {
 	public void setUp() throws Exception {
 		MockitoAnnotations.initMocks(this);
 	}
-
 	@Test
 	public void testFindItemQuantityWhenItemIsNotPresent() {
 		Item item = new Item(ITEM_PRODUCT_CODE, ITEM_NAME);
@@ -233,7 +236,7 @@ public class CartControllerTest {
 		List<Cart> carts = Arrays.asList(new Cart());
 		when(shopRepository.findAllCarts()).thenReturn(carts);
 		cartController.allCarts();
-		verify(shopView).showHistory(carts);
+		verify(historyView).showHistory(carts);
 	}
 
 	@Test
@@ -242,7 +245,7 @@ public class CartControllerTest {
 		List<Cart> carts = Arrays.asList(cart);
 		when(shopRepository.findAllCarts()).thenReturn(carts);
 		cartController.allItemsCart(cart);
-		verify(shopView).showItemsCart(cart);
+		verify(historyView).showItemsCart(cart);
 	}
 
 	@Test
@@ -254,9 +257,9 @@ public class CartControllerTest {
 		cartController.setCart(cartToRemove);
 		when(shopRepository.findCart(LocalDate.now().toString(), CART_LABEL)).thenReturn(cartToRemove);
 		cartController.removeCart(cartToRemove);
-		InOrder inOrder = inOrder(shopRepository, shopView);
+		InOrder inOrder = inOrder(shopRepository, historyView);
 		inOrder.verify(shopRepository).removeCart(LocalDate.now().toString(), CART_LABEL);
-		inOrder.verify(shopView).removeCart(cartToRemove);
+		inOrder.verify(historyView).removeCart(cartToRemove);
 	}
 
 	@Test
@@ -267,7 +270,7 @@ public class CartControllerTest {
 		Cart cartToRemove = new Cart(items, CART_LABEL);
 		when(shopRepository.findCart(LocalDate.now().toString(), CART_LABEL)).thenReturn(null);
 		cartController.removeCart(cartToRemove);
-		verify(shopView).errorLogCart("Cart not found" , cartToRemove.getLabel());
+		verify(historyView).errorLogCart("Cart not found" , cartToRemove.getLabel());
 		verifyNoMoreInteractions(ignoreStubs(shopView));
 	}
 	

@@ -46,7 +46,7 @@ public class ShopControllerTest {
 		verify(shopView).updateItemsShop(items);
 	}
 
-	
+
 	@Test
 	public void testNewItemWhenQuantityIsNegative() {
 		// setup
