@@ -1,4 +1,4 @@
-package com.online.shop.repository.mongo;
+package src.main.java.com.online.shop.repository.mongo;
 
 import java.util.ArrayList;
 import java.util.List;
