@@ -31,6 +31,10 @@ import de.bwaldvogel.mongo.MongoServer;
 import de.bwaldvogel.mongo.backend.memory.MemoryBackend;
 
 public class HistoryViewPanelIT  extends AssertJSwingJUnitTestCase{
+	
+	private static final String SHOP_DB_NAME = "shop";
+	private static final String ITEMS_COLLECTION_NAME = "items";
+	private static final String CARTS_COLLECTION_NAME = "carts";
 
 	private static final String ITEM_FIXTURE_NAME_2 = "test1";
 	private static final String ITEM_FIXTURE_PRODUCTCODE_2 = "2";
@@ -71,7 +75,7 @@ public class HistoryViewPanelIT  extends AssertJSwingJUnitTestCase{
 	@Override
 	protected void onSetUp() {
 		mongoClient = new MongoClient(new ServerAddress(serverAddress));
-		shopRepository = new ShopMongoRepository(mongoClient);
+		shopRepository = new ShopMongoRepository(mongoClient, SHOP_DB_NAME, ITEMS_COLLECTION_NAME, CARTS_COLLECTION_NAME);
 		for(Item item : shopRepository.findAllItems()) {
 			shopRepository.removeItem(item.getProductCode());
 		}

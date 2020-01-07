@@ -42,7 +42,7 @@ cache:
 before_script: cd $HOME/
 
 script:
-  - ./gradlew build --scan -s
+  - xvfb-run -a --server-args='-screen 0 1024x768x24' ./gradlew build --scan -s
   - ./gradlew sonarqube -Dsonar.login="3a59cd7138a693df1db4c23fc7aee8dbf818bf68"
 
 after_success:
