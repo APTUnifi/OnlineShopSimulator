@@ -61,6 +61,7 @@ public class ShopViewPanel extends JPanel implements ShopView {
 	}
 	
 	public ShopViewPanel() {
+		setSize(775,320);
 		setLayout(null);
 		itemListShopModel = new DefaultListModel<>();
 		itemListCartModel = new DefaultListModel<>();
