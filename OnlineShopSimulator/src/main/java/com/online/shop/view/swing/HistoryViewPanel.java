@@ -48,6 +48,7 @@ public class HistoryViewPanel extends JPanel implements HistoryView {
 		listCart.setModel(a);
 	}
 	public HistoryViewPanel() {
+		setSize(775,320);
 		setLayout(null);
 		listItemsCartModel =new DefaultListModel<>();		
 		listCartModel =  new DefaultListModel<>();
