@@ -27,6 +27,8 @@ import com.online.shop.repository.mongo.ShopMongoRepository;
 
 public class ShopMongoRepositoryIT {
 
+	private static final String DATE = LocalDate.now().toString();
+
 	@SuppressWarnings("rawtypes")
 	@ClassRule
 	public static final GenericContainer mongo = new GenericContainer("mongo:4.0.5").withExposedPorts(27017);
@@ -52,7 +54,7 @@ public class ShopMongoRepositoryIT {
 	@Before
 	public void setup() {
 		client = new MongoClient(new ServerAddress(mongo.getContainerIpAddress(), mongo.getMappedPort(27017)));
-		shopRepository = new ShopMongoRepository(client);
+		shopRepository = new ShopMongoRepository(client, SHOP_DB_NAME, ITEMS_COLLECTION_NAME, CARTS_COLLECTION_NAME);
 		MongoDatabase db = client.getDatabase(SHOP_DB_NAME);
 		db.drop(); // clean db
 		collectionItems = db.getCollection(ITEMS_COLLECTION_NAME);
@@ -152,7 +154,7 @@ public class ShopMongoRepositoryIT {
 
 	@Test
 	public void testFindAllCarts() {
-		addTestCartToRepository(CART_NAME_1, LocalDate.now().toString(),
+		addTestCartToRepository(CART_NAME_1, DATE,
 				Arrays.asList(new Item(PRODUCT_CODE_1, ITEM_NAME_1)));
 		assertThat(shopRepository.findAllCarts())
 				.containsExactly(new Cart(Arrays.asList(new Item(PRODUCT_CODE_1, ITEM_NAME_1)), CART_NAME_1));
@@ -161,21 +163,21 @@ public class ShopMongoRepositoryIT {
 
 	@Test
 	public void testFindCart() {
-		addTestCartToRepository(CART_NAME_1, LocalDate.now().toString(),
+		addTestCartToRepository(CART_NAME_1, DATE,
 				Arrays.asList(new Item(PRODUCT_CODE_1, ITEM_NAME_1)));
-		addTestCartToRepository(CART_NAME_2, LocalDate.now().toString(),
+		addTestCartToRepository(CART_NAME_2, DATE,
 				Arrays.asList(new Item(PRODUCT_CODE_1, ITEM_NAME_1)));
-		assertThat(shopRepository.findCart(LocalDate.now().toString(), CART_NAME_2))
+		assertThat(shopRepository.findCart(DATE, CART_NAME_2))
 				.isEqualTo(new Cart(Arrays.asList(new Item(PRODUCT_CODE_1, ITEM_NAME_1)), CART_NAME_2));
 
 	}
 
 	@Test
 	public void testRemoveCart() {
-		addTestCartToRepository(CART_NAME_1, LocalDate.now().toString(),
+		addTestCartToRepository(CART_NAME_1, DATE,
 				Arrays.asList(new Item(PRODUCT_CODE_1, ITEM_NAME_1)));
 
-		shopRepository.removeCart(LocalDate.now().toString(), CART_NAME_1);
+		shopRepository.removeCart(DATE, CART_NAME_1);
 
 		assertThat(retrieveAllCarts()).isEmpty();
 	}
@@ -185,9 +187,9 @@ public class ShopMongoRepositoryIT {
 		Item itemToBeModified = new Item(PRODUCT_CODE_1, ITEM_NAME_1, STARTER_QUANTITY);
 		addTestItemToRepository(itemToBeModified.getProductCode(), itemToBeModified.getName(),
 				itemToBeModified.getQuantity());
-		Cart cartToStore = new Cart(CART_NAME_1, LocalDate.now().toString(), Arrays.asList(itemToBeModified));
+		Cart cartToStore = new Cart(CART_NAME_1, DATE, Arrays.asList(itemToBeModified));
 		shopRepository.storeCart(cartToStore);
-		assertThat(retrieveAllCarts()).containsExactly(new Cart(CART_NAME_1, LocalDate.now().toString(),
+		assertThat(retrieveAllCarts()).containsExactly(new Cart(CART_NAME_1, DATE,
 				Arrays.asList(new Item(PRODUCT_CODE_1, ITEM_NAME_1))));
 	}
 }
