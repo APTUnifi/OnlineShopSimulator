@@ -16,18 +16,9 @@ import com.online.shop.model.Item;
 import com.online.shop.repository.ShopRepository;
 
 public class ShopMongoRepository implements ShopRepository {
-
-	private static final String SHOP_DB_NAME = "shop";
-	private static final String ITEMS_COLLECTION_NAME = "items";
-	private static final String CARTS_COLLECTION_NAME = "carts";
+	
 	private MongoCollection<Document> collectionItems;
 	private MongoCollection<Document> collectionCarts;
-
-	public ShopMongoRepository(MongoClient client) {
-		collectionItems = client.getDatabase(SHOP_DB_NAME).getCollection(ITEMS_COLLECTION_NAME);
-		collectionCarts = client.getDatabase(SHOP_DB_NAME).getCollection(CARTS_COLLECTION_NAME);
-
-	}
 
 	public ShopMongoRepository(MongoClient client, String databaseName, String itemsCollection,
 			String cartsCollection) {

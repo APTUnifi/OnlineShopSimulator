@@ -13,14 +13,11 @@ plugins {
     id 'java-library'
     id 'org.sonarqube' version '2.7'
     id 'jacoco'
-	id 'com.github.kt3k.coveralls' version '2.8.4'
-	id 'com.gradle.build-scan' version '2.1'	
-	id "org.flywaydb.flyway" version "6.0.8"
+    id 'com.github.kt3k.coveralls' version '2.8.4'
+    id 'com.gradle.build-scan' version '2.1'	
 }
 
 repositories {
-    // Use jcenter for resolving dependencies.
-    // You can declare any Maven/Ivy/file repository here.
     jcenter()
     mavenCentral()
 }
@@ -54,42 +51,23 @@ configurations {
 }
 
 dependencies {
-    // This dependency is exported to consumers, that is to say found on their compile classpath.
     api 'org.apache.commons:commons-math3:3.6.1'
 
-    // This dependency is used internally, and not exposed to consumers on their own compile classpath.
     implementation 'com.google.guava:guava:28.0-jre'
 
-    // https://mvnrepository.com/artifact/junit/junit/4.12
     testImplementation 'junit:junit:4.12'
 	
-	// https://mvnrepository.com/artifact/org.assertj/assertj-swing-junit
-	compile group: 'org.assertj', name: 'assertj-swing-junit', version: '3.9.2'
+    testCompile 'org.assertj:assertj-swing-junit:3.9.2'
 	
-	// https://mvnrepository.com/artifact/org.mongodb/mongodb-driver
-	compile group: 'org.mongodb', name: 'mongodb-driver', version: '3.11.1'
+    compile 'org.mongodb:mongodb-driver:3.11.1'
 	
-	// https://mvnrepository.com/artifact/org.testcontainers/testcontainers
-	compile group: 'org.testcontainers', name: 'testcontainers', version: '1.12.3'
+    compile 'org.testcontainers:testcontainers:1.12.3'
 	
-	// https://mvnrepository.com/artifact/org.mockito/mockito-core
-	testCompile group: 'org.mockito', name: 'mockito-core', version: '2.23.4'	
+    testCompile 'org.mockito:mockito-core:2.23.4'	
 	
-	// https://mvnrepository.com/artifact/de.bwaldvogel/mongo-java-server
-	testCompile group: 'de.bwaldvogel', name: 'mongo-java-server', version: '1.21.0'
+    testCompile 'de.bwaldvogel:mongo-java-server:1.21.0'
 	
-	// postgresql dependencies	
-	testImplementation('org.testcontainers:postgresql:1.12.3')
-	compile group: 'postgresql', name: 'postgresql', version: '9.1-901-1.jdbc4'
-	runtime group: 'org.postgresql', name: 'postgresql', version: '42.2.8'
-	compile 'org.flywaydb:flyway-core:6.0.8'
-    compile 'org.sqldroid:sqldroid:1.1.0-rc1'
-    // https://mvnrepository.com/artifact/org.springframework/spring-jdbc
-	compile group: 'org.springframework', name: 'spring-jdbc', version: '5.2.1.RELEASE'
-	// picocli dependecies
-	compile 'info.picocli:picocli:4.1.2'
-
-	
+    compile 'info.picocli:picocli:4.1.2'	
 }
 
 // TASKS
@@ -104,7 +82,7 @@ task e2eTest(type: Test) {
 }
 
 jacocoTestReport {	
-	executionData(file("${buildDir}/jacoco/test.exec"), file("${buildDir}/jacoco/integrationTest.exec"))
+	executionData(file("${buildDir}/jacoco/test.exec"), file("${buildDir}/jacoco/integrationTest.exec"), file("${buildDir}/jacoco/e2eTest.exec"))
 	
     reports {
         xml.enabled = true // coveralls plugin depends on xml format report
