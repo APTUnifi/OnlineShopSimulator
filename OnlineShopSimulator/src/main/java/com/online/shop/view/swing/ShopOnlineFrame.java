@@ -14,7 +14,7 @@ public class ShopOnlineFrame extends JFrame {
 	
 	public ShopOnlineFrame(ShopViewPanel shopPanel, HistoryViewPanel historyPanel) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(800, 400, 800, 400);
+		setBounds(100, 100, 800, 400);
 		setTitle("ShopOnline");
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
