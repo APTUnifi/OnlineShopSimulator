@@ -10,7 +10,7 @@ public interface ShopView {
 
 	void errorLog(String error, List<Item> items);
 
-	void errorLogItem(String error, String Item);
+	void errorLogItem(String error, String item);
 
 	void errorLogCart(String error, String cart);
 

@@ -15,8 +15,8 @@ public class CartController {
 	private HistoryView historyView;
 	private Cart cart;
 
-	public CartController(ShopView ShopView, ShopRepository shopRepository, HistoryView historyView) {
-		this.shopView = ShopView;
+	public CartController(ShopView shopView, ShopRepository shopRepository, HistoryView historyView) {
+		this.shopView = shopView;
 		this.shopRepository = shopRepository;
 		this.historyView = historyView;
 		this.cart = new Cart();
@@ -81,7 +81,7 @@ public class CartController {
 			}
 		}
 		List<Item> items = cart.getItems();
-		List<Item> itemsNotStored = new ArrayList<Item>();
+		List<Item> itemsNotStored = new ArrayList<>();
 		Item retrievedItem;
 		boolean isStored = true;
 

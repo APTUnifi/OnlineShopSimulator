@@ -28,7 +28,7 @@ public class HistoryViewPanel extends JPanel implements HistoryView {
 	private JList<Cart> listCart;
 	private JButton btnDelete;
 
-	private CartController cartController;
+	private transient CartController cartController;
 
 	private static final long serialVersionUID = 1L;
 
@@ -54,7 +54,7 @@ public class HistoryViewPanel extends JPanel implements HistoryView {
 		listItemsCartModel = new DefaultListModel<>();
 		listCartModel = new DefaultListModel<>();
 
-		listCart = new JList<Cart>(listCartModel);
+		listCart = new JList<>(listCartModel);
 		listCart.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listCart.setName("listCart");
 		listCart.setBounds(18, 62, 350, 169);
@@ -82,7 +82,7 @@ public class HistoryViewPanel extends JPanel implements HistoryView {
 			showItemsCart(new Cart());
 		});
 
-		listItemsCart = new JList<Item>(listItemsCartModel);
+		listItemsCart = new JList<>(listItemsCartModel);
 		listItemsCart.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listItemsCart.setName("listItemsCart");
 		listItemsCart.setBounds(407, 62, 347, 210);
