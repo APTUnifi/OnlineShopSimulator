@@ -36,15 +36,15 @@ public class ShopMongoRepositoryIT {
 	private static final String SHOP_DB_NAME = "shop";
 	private static final String ITEMS_COLLECTION_NAME = "items";
 	private static final String CARTS_COLLECTION_NAME = "carts";
-
 	private static final String ITEM_NAME_1 = "test1";
 	private static final String PRODUCT_CODE_1 = "1";
 	private static final String ITEM_NAME_2 = "test2";
 	private static final String PRODUCT_CODE_2 = "2";
-	private static final int STARTER_QUANTITY = 2;
-	private static final int QUANTITY_MODIFIER = 1;
 	private static final String CART_NAME_2 = "testCart2";
 	private static final String CART_NAME_1 = "testCart1";
+	
+	private static final int STARTER_QUANTITY = 2;
+	private static final int QUANTITY_MODIFIER = 1;
 
 	private MongoClient client;
 	private ShopMongoRepository shopRepository;

@@ -38,6 +38,7 @@ public class ShopViewPanel extends JPanel implements ShopView {
 
 	private transient ShopController shopController;
 	private transient CartController cartController;
+	
 	private JTextField itemName;
 	private JTextField cartNameText;
 
@@ -130,9 +131,10 @@ public class ShopViewPanel extends JPanel implements ShopView {
 		lblShop.setName("lblShop");
 		lblShop.setBounds(12, 11, 125, 16);
 		add(lblShop);
-		btnBuy.addActionListener(e -> 
-			cartController.completePurchase(cartNameText.getText())
-		);
+		btnBuy.addActionListener(e -> {
+			cartController.completePurchase(cartNameText.getText());
+			cartNameText.setText("");
+		});
 
 		btnRemove.addActionListener(e -> cartController.removeFromCart(itemListCart.getSelectedValue()));
 

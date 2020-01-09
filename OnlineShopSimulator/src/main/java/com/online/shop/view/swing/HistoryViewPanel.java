@@ -141,4 +141,5 @@ public class HistoryViewPanel extends JPanel implements HistoryView {
 	private void resetErrorLabel() {
 		lblErrorMessageLabel.setText(" ");
 	}
+	
 }

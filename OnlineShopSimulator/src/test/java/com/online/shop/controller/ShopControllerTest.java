@@ -12,7 +12,6 @@ import org.mockito.MockitoAnnotations;
 import com.online.shop.model.Item;
 import com.online.shop.repository.ShopRepository;
 import com.online.shop.view.ShopView;
-
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 

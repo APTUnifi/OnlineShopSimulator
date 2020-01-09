@@ -40,7 +40,6 @@ public class ShopOnlineAppE2E extends AssertJSwingJUnitTestCase {
 	private static final String CART_FIXTURE_LABEL_1 = "cartTest1";
 	private static final String CART_FIXTURE_LABEL_2 = "cartTest";
 
-
 	@SuppressWarnings("rawtypes")
 	@ClassRule
 	public static final GenericContainer mongo = new GenericContainer("mongo:4.0.5").withExposedPorts(27017);

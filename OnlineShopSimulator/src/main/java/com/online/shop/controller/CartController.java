@@ -29,6 +29,7 @@ public class CartController {
 			item1.setQuantity(1);
 			shopView.itemAddedToCart(item1);
 			items.add(item1);
+			shopView.updateItemsCart(items);
 		} else {
 			if (items.get(items.indexOf(item1)).getQuantity() < item.getQuantity()) {
 				items.get(items.indexOf(item1)).setQuantity(items.get(items.indexOf(item)).getQuantity() + 1);

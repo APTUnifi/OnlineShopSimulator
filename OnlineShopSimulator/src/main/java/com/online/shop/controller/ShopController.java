@@ -20,7 +20,6 @@ public class ShopController {
 
 	public void newItem(Item item) {
 		Item retrievedItem = shopRepository.findItemByProductCode(item.getProductCode());
-
 		if (item.getQuantity() <= 0) {
 			throw new IllegalArgumentException("Negative amount: " + item.getQuantity());
 		}
