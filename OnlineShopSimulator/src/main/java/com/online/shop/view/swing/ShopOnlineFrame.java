@@ -5,6 +5,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingConstants;
+import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 
 public class ShopOnlineFrame extends JFrame {
@@ -13,7 +14,7 @@ public class ShopOnlineFrame extends JFrame {
 	private JPanel contentPane;
 	
 	public ShopOnlineFrame(ShopViewPanel shopPanel, HistoryViewPanel historyPanel) {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setBounds(100, 100, 800, 400);
 		setTitle("ShopOnline");
 		contentPane = new JPanel();

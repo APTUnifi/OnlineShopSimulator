@@ -41,7 +41,6 @@ public class ShopController {
 
 	public void searchItem(String itemName) {
 		Item retrievedItem = shopRepository.findItemByName(itemName);
-		//TODO testare
 		if (retrievedItem == null) {
 			if (itemName.isEmpty()) {
 				itemsView.updateItemsShop(shopRepository.findAllItems());

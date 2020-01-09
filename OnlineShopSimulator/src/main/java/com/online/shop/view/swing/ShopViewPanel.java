@@ -36,14 +36,12 @@ public class ShopViewPanel extends JPanel implements ShopView {
 	private JLabel lblShop;
 	private JLabel lblErrorMessageLabel;
 
-	private ShopController shopController;
-	private CartController cartController;
+	private transient ShopController shopController;
+	private transient CartController cartController;
 	private JTextField itemName;
 	private JTextField cartNameText;
 
-	/**
-	 * Create the panel.
-	 */
+
 	public JPanel getPanel() {
 		return this;
 	}
@@ -82,7 +80,7 @@ public class ShopViewPanel extends JPanel implements ShopView {
 		btnRemove.setBounds(405, 250, 247, 29);
 		add(btnRemove);
 
-		itemListCart = new JList<Item>(itemListCartModel);
+		itemListCart = new JList<>(itemListCartModel);
 		itemListCart.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		itemListCart.setName("itemListCart");
 		itemListCart.setBounds(406, 69, 350, 169);
@@ -105,7 +103,7 @@ public class ShopViewPanel extends JPanel implements ShopView {
 		lblYourCart.setBounds(405, 11, 115, 16);
 		add(lblYourCart);
 
-		itemListShop = new JList<Item>(itemListShopModel);
+		itemListShop = new JList<>(itemListShopModel);
 		itemListShop.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		itemListShop.setName("itemListShop");
 		itemListShop.setBounds(12, 69, 350, 169);
@@ -132,9 +130,9 @@ public class ShopViewPanel extends JPanel implements ShopView {
 		lblShop.setName("lblShop");
 		lblShop.setBounds(12, 11, 125, 16);
 		add(lblShop);
-		btnBuy.addActionListener(e -> {
-			cartController.completePurchase(cartNameText.getText());
-		});
+		btnBuy.addActionListener(e -> 
+			cartController.completePurchase(cartNameText.getText())
+		);
 
 		btnRemove.addActionListener(e -> cartController.removeFromCart(itemListCart.getSelectedValue()));
 

@@ -17,6 +17,12 @@ import com.online.shop.repository.ShopRepository;
 
 public class ShopMongoRepository implements ShopRepository {
 
+	private static final String ITEMS = "items";
+	private static final String DATE = "date";
+	private static final String LABEL = "label";
+	private static final String QUANTITY = "quantity";
+	private static final String NAME = "name";
+	private static final String PRODUCT_CODE = "productCode";
 	private MongoCollection<Document> collectionItems;
 	private MongoCollection<Document> collectionCarts;
 
@@ -27,18 +33,18 @@ public class ShopMongoRepository implements ShopRepository {
 	}
 
 	private Item fromDocumentToItem(Document d) {
-		return new Item("" + d.get("productCode"), "" + d.get("name"), (int) d.get("quantity"));
+		return new Item("" + d.get(PRODUCT_CODE), "" + d.get(NAME), (int) d.get(QUANTITY));
 	}
 
 	@SuppressWarnings("unchecked")
 	private Cart fromDocumentToCart(Document d) {
 		List<Item> items = new ArrayList<>();
-		List<Document> documents = (List<Document>) (d.get("items"));
+		List<Document> documents = (List<Document>) (d.get(ITEMS));
 
 		for (Document item : documents) {
 			items.add(fromDocumentToItem(item));
 		}
-		return new Cart("" + d.get("label"), "" + d.get("date"), items);
+		return new Cart("" + d.get(LABEL), "" + d.get(DATE), items);
 
 	}
 
@@ -50,7 +56,7 @@ public class ShopMongoRepository implements ShopRepository {
 
 	@Override
 	public Item findItemByProductCode(String productCode) {
-		Document d = collectionItems.find(Filters.eq("productCode", productCode)).first();
+		Document d = collectionItems.find(Filters.eq(PRODUCT_CODE, productCode)).first();
 		if (d != null)
 			return fromDocumentToItem(d);
 		return null;
@@ -58,7 +64,7 @@ public class ShopMongoRepository implements ShopRepository {
 
 	@Override
 	public Item findItemByName(String name) {
-		Document d = collectionItems.find(Filters.eq("name", name)).first();
+		Document d = collectionItems.find(Filters.eq(NAME, name)).first();
 		if (d != null)
 			return fromDocumentToItem(d);
 		return null;
@@ -66,37 +72,37 @@ public class ShopMongoRepository implements ShopRepository {
 
 	@Override
 	public void storeItem(Item itemToAdd) {
-		collectionItems.insertOne(new Document().append("productCode", itemToAdd.getProductCode())
-				.append("name", itemToAdd.getName()).append("quantity", itemToAdd.getQuantity()));
+		collectionItems.insertOne(new Document().append(PRODUCT_CODE, itemToAdd.getProductCode())
+				.append(NAME, itemToAdd.getName()).append(QUANTITY, itemToAdd.getQuantity()));
 	}
 
 	@Override
 	public void removeItem(String productCode) {
-		collectionItems.deleteOne(Filters.eq("productCode", productCode));
+		collectionItems.deleteOne(Filters.eq(PRODUCT_CODE, productCode));
 	}
 
 	@Override
 	public void modifyItemQuantity(Item itemToBeModified, int modifier) {
 		int newQuantity = itemToBeModified.getQuantity() + modifier;
-		collectionItems.updateOne(Filters.eq("productCode", itemToBeModified.getProductCode()),
-				Updates.set("quantity", newQuantity));
+		collectionItems.updateOne(Filters.eq(PRODUCT_CODE, itemToBeModified.getProductCode()),
+				Updates.set(QUANTITY, newQuantity));
 	}
 
 	@Override
 	public void storeCart(Cart cartToStore) {
 		List<Document> list = new ArrayList<>();
 		for (Item item : cartToStore.getItems()) {
-			list.add(new Document().append("productCode", item.getProductCode()).append("name", item.getName())
-					.append("quantity", item.getQuantity()));
+			list.add(new Document().append(PRODUCT_CODE, item.getProductCode()).append(NAME, item.getName())
+					.append(QUANTITY, item.getQuantity()));
 		}
-		collectionCarts.insertOne(new Document().append("label", cartToStore.getLabel())
-				.append("date", cartToStore.getDate()).append("items", list));
+		collectionCarts.insertOne(new Document().append(LABEL, cartToStore.getLabel())
+				.append(DATE, cartToStore.getDate()).append(ITEMS, list));
 
 	}
 
 	@Override
 	public Cart findCart(String date, String label) {
-		Document d = collectionCarts.find(Filters.and(Filters.eq("date", date), Filters.eq("label", label))).first();
+		Document d = collectionCarts.find(Filters.and(Filters.eq(DATE, date), Filters.eq(LABEL, label))).first();
 		if (d != null)
 			return fromDocumentToCart(d);
 		return null;
@@ -110,6 +116,6 @@ public class ShopMongoRepository implements ShopRepository {
 
 	@Override
 	public void removeCart(String date, String label) {
-		collectionCarts.deleteOne(Filters.and(Filters.eq("date", date), Filters.eq("label", label)));
+		collectionCarts.deleteOne(Filters.and(Filters.eq(DATE, date), Filters.eq(LABEL, label)));
 	}
 }
