@@ -36,13 +36,13 @@ public class ShopViewPanelIT extends AssertJSwingJUnitTestCase {
 	private static final String SHOP_DB_NAME = "shop";
 	private static final String ITEMS_COLLECTION_NAME = "items";
 	private static final String CARTS_COLLECTION_NAME = "carts";
-
 	private static final String CART_FIXTURE_LABEL_TEST = "cartTest";
 	private static final String ITEM_FIXTURE_NAME_2 = "test1";
 	private static final String ITEM_FIXTURE_PRODUCTCODE_2 = "2";
 	private static final String ITEM_FIXTURE_NAME_1 = "test";
 	private static final String ITEM_FIXTURE_PRODUCTCODE_1 = "1";
 	private static final String ITEM_SEARCHED = "test";
+	
 	private static final int ITEM_FIXTURE_NEW_QUANTITY = 1;
 	private static final int ITEM_FIXTURE_QUANTITY_1 = 10;
 	private static final int MODIFIER = 1;

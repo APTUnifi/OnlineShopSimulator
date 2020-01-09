@@ -10,6 +10,7 @@ import com.mongodb.ServerAddress;
 
 import com.online.shop.controller.CartController;
 import com.online.shop.controller.ShopController;
+import com.online.shop.model.Cart;
 import com.online.shop.model.Item;
 import com.online.shop.repository.mongo.ShopMongoRepository;
 import com.online.shop.view.swing.HistoryViewPanel;
@@ -50,6 +51,9 @@ public class ShopOnlineApp implements Callable<Void> {
 	}
 
 	private void initDatabase(ShopMongoRepository shop) {
+		for (Item item : shop.findAllItems()) {
+			shop.removeItem(item.getProductCode());
+		}
 		shop.storeItem(new Item(ITEM_FIXTURE_PRODUCTCODE_1, ITEM_FIXTURE_NAME_1, ITEM_FIXTURE_QUANTITY_1));
 		shop.storeItem(new Item(ITEM_FIXTURE_PRODUCTCODE_2, ITEM_FIXTURE_NAME_2, ITEM_FIXTURE_QUANTITY_2));
 		shop.storeItem(new Item(ITEM_FIXTURE_PRODUCTCODE_3, ITEM_FIXTURE_NAME_3, ITEM_FIXTURE_QUANTITY_3));

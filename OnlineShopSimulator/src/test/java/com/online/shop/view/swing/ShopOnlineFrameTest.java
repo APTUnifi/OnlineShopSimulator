@@ -39,7 +39,6 @@ public class ShopOnlineFrameTest extends AssertJSwingJUnitTestCase {
 		window.panel("shopPanel");
 		window.tabbedPane("tabbedPanel").selectTab(1);
 		window.panel("historyPanel");
-
 	}
 
 }

@@ -30,12 +30,13 @@ import com.online.shop.model.Item;
 public class ShopViewPanelTest extends AssertJSwingJUnitTestCase {
 
 	private static final String CART_FIXTURE_LABEL_1 = "cartTest";
-	private static final int ITEM_FIXTURE_QUANTITY_1 = 10;
-	private static final int ITEM_FIXTURE_QUANTITY_2 = 19;
 	private static final String ITEM_FIXTURE_NAME_2 = "test1";
 	private static final String ITEM_FIXTURE_PRODUCTCODE_2 = "2";
 	private static final String ITEM_FIXTURE_NAME_1 = "test";
 	private static final String ITEM_FIXTURE_PRODUCTCODE_1 = "1";
+	
+	private static final int ITEM_FIXTURE_QUANTITY_1 = 10;
+	private static final int ITEM_FIXTURE_QUANTITY_2 = 19;
 	private static final int HEIGHT = 400;
 	private static final int WIDTH = 800;
 	private static final int FIRST_ITEM = 0;

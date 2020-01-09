@@ -32,7 +32,6 @@ public class CartControllerTest {
 	private static final String CART_NAME_1 = "testCart1";
 	private static final String ITEM_NAME_1 = "test1";
 	private static final String PRODUCT_CODE_1 = "1";
-
 	private static final String ITEM_NAME_2 = "test2";
 	private static final String PRODUCT_CODE_2 = "2";
 

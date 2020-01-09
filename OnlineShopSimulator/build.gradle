@@ -17,16 +17,22 @@ plugins {
     id 'com.gradle.build-scan' version '2.1'	
 }
 
-//create a single Jar with all dependencies
+
+jar {
+  manifest {
+    attributes(
+      'Main-Class': 'com.online.shop.app.swing.ShopOnlineApp',
+    )
+  }
+}
+
 task fatJar(type: Jar) {
-	manifest {
-        attributes 'Implementation-Title': 'Gradle Jar File Example',  
-        	'Implementation-Version': version,
-        	'Main-Class': 'com.online.shop.app.swing.ShopOnlineApp'
-    }
-    baseName = project.name + '-all'
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-    with jar
+  manifest.from jar.manifest
+  classifier = 'all'
+  from {
+    configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+  }
+  with jar
 }
 
 repositories {

@@ -17,7 +17,6 @@ import com.online.shop.repository.ShopRepository;
 
 public class ShopMongoRepository implements ShopRepository {
 
-	private static final String ITEMS = "items";
 	private static final String DATE = "date";
 	private static final String LABEL = "label";
 	private static final String QUANTITY = "quantity";
@@ -39,7 +38,7 @@ public class ShopMongoRepository implements ShopRepository {
 	@SuppressWarnings("unchecked")
 	private Cart fromDocumentToCart(Document d) {
 		List<Item> items = new ArrayList<>();
-		List<Document> documents = (List<Document>) (d.get(ITEMS));
+		List<Document> documents = (List<Document>) (d.get("items"));
 
 		for (Document item : documents) {
 			items.add(fromDocumentToItem(item));
@@ -96,7 +95,7 @@ public class ShopMongoRepository implements ShopRepository {
 					.append(QUANTITY, item.getQuantity()));
 		}
 		collectionCarts.insertOne(new Document().append(LABEL, cartToStore.getLabel())
-				.append(DATE, cartToStore.getDate()).append(ITEMS, list));
+				.append(DATE, cartToStore.getDate()).append("items", list));
 
 	}
 
