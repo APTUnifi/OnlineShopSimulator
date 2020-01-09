@@ -99,6 +99,14 @@ public class ShopControllerTest {
 	}
 
 	@Test
+	public void testSearchItemWhenTextBoxIsEmpty() {
+		when(shopRepository.findItemByName("")).thenReturn(null);
+		shopController.searchItem("");
+		verify(shopView).updateItemsShop(shopRepository.findAllItems());
+		verifyNoMoreInteractions(ignoreStubs(shopView));
+	}
+
+	@Test
 	public void testSearchItemWhenItemAlreadyExists() {
 		Item itemToSearch = new Item("1", ITEM_NAME);
 		when(shopRepository.findItemByName(ITEM_NAME)).thenReturn(itemToSearch);

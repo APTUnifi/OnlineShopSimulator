@@ -19,7 +19,16 @@ import com.online.shop.view.swing.ShopViewPanel;
 @Command(mixinStandardHelpOptions = true)
 public class ShopOnlineApp implements Callable<Void> {
 
+	private static final int ITEM_FIXTURE_QUANTITY_2 = 5;
+	private static final int ITEM_FIXTURE_QUANTITY_3 = 1;
+	private static final int ITEM_FIXTURE_QUANTITY_1 = 10;
+	private static final String ITEM_FIXTURE_NAME_3 = "Shirt";
+	private static final String ITEM_FIXTURE_NAME_2 = "Book";
+	private static final String ITEM_FIXTURE_NAME_1 = "Phone";
 	public static final String ITEM_FIXTURE_PRODUCTCODE_1 = "001";
+	public static final String ITEM_FIXTURE_PRODUCTCODE_2 = "002";
+	public static final String ITEM_FIXTURE_PRODUCTCODE_3 = "003";
+
 
 	@Option(names = { "--mongo-host" }, description = "MongoDB host address")
 	private String mongoHost = "localhost";
@@ -41,9 +50,9 @@ public class ShopOnlineApp implements Callable<Void> {
 	}
 
 	private void initDatabase(ShopMongoRepository shop) {
-		shop.storeItem(new Item(ITEM_FIXTURE_PRODUCTCODE_1, "Phone", 10));
-		shop.storeItem(new Item("002", "Book", 5));
-		shop.storeItem(new Item("003", "Shirt", 1));
+		shop.storeItem(new Item(ITEM_FIXTURE_PRODUCTCODE_1, ITEM_FIXTURE_NAME_1, ITEM_FIXTURE_QUANTITY_1));
+		shop.storeItem(new Item(ITEM_FIXTURE_PRODUCTCODE_2, ITEM_FIXTURE_NAME_2, ITEM_FIXTURE_QUANTITY_2));
+		shop.storeItem(new Item(ITEM_FIXTURE_PRODUCTCODE_3, ITEM_FIXTURE_NAME_3, ITEM_FIXTURE_QUANTITY_3));
 	}
 
 	@Override

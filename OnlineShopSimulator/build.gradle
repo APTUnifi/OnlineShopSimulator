@@ -52,22 +52,15 @@ configurations {
 
 dependencies {
     api 'org.apache.commons:commons-math3:3.6.1'
-
     implementation 'com.google.guava:guava:28.0-jre'
-
-    testImplementation 'junit:junit:4.12'
-	
-    testCompile 'org.assertj:assertj-swing-junit:3.9.2'
-	
     compile 'org.mongodb:mongodb-driver:3.11.1'
-	
     compile 'org.testcontainers:testcontainers:1.12.3'
-	
+    compile 'info.picocli:picocli:4.1.2'
+    runtime 'org.slf4j:slf4j-simple:2.0.0-alpha1'
+    testImplementation 'junit:junit:4.12'
+    testCompile 'org.assertj:assertj-swing-junit:3.9.2'
     testCompile 'org.mockito:mockito-core:2.23.4'	
-	
     testCompile 'de.bwaldvogel:mongo-java-server:1.21.0'
-	
-    compile 'info.picocli:picocli:4.1.2'	
 }
 
 // TASKS
@@ -105,7 +98,7 @@ sonarqube {
 check.dependsOn integrationTest
 integrationTest.mustRunAfter test
 check.dependsOn e2eTest
-e2eTest.mustRunAfter test
+e2eTest.mustRunAfter integrationTest
 project.tasks["sonarqube"].dependsOn "jacocoTestReport"
 
 //This task is essential for skipping the terms of service terminal procedure
