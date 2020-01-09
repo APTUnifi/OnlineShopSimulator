@@ -170,11 +170,11 @@ public class ShopViewPanel extends JPanel implements ShopView {
 
 	@Override
 	public void errorLog(String error, List<Item> items) {
-		String names = "";
+		StringBuilder bld = new StringBuilder();
 		for (Item item : items) {
-			names += item.getName() + " ";
+			bld.append(item.getName() + " ");
 		}
-		final String name = names;
+		final String name = bld.toString();
 		SwingUtilities.invokeLater(() -> lblErrorMessageLabel.setText(error + ": " + name));
 	}
 

@@ -76,7 +76,7 @@ public class CartController {
 
 	public void completePurchase(String label) {
 		cart.setLabel(label);
-		if(label == "") {
+		if(label.trim().isEmpty()) {
 			shopView.errorLogCart("Insert name cart ", label);
 			return;
 		}

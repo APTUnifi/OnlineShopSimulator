@@ -10,7 +10,6 @@ import com.mongodb.ServerAddress;
 
 import com.online.shop.controller.CartController;
 import com.online.shop.controller.ShopController;
-import com.online.shop.model.Cart;
 import com.online.shop.model.Item;
 import com.online.shop.repository.mongo.ShopMongoRepository;
 import com.online.shop.view.swing.HistoryViewPanel;
@@ -19,13 +18,13 @@ import com.online.shop.view.swing.ShopViewPanel;
 
 @Command(mixinStandardHelpOptions = true)
 public class ShopOnlineApp implements Callable<Void> {
-
+	
+	private static final int ITEM_FIXTURE_QUANTITY_1 = 10;
 	private static final int ITEM_FIXTURE_QUANTITY_2 = 5;
 	private static final int ITEM_FIXTURE_QUANTITY_3 = 1;
-	private static final int ITEM_FIXTURE_QUANTITY_1 = 10;
-	private static final String ITEM_FIXTURE_NAME_3 = "Shirt";
-	private static final String ITEM_FIXTURE_NAME_2 = "Book";
 	private static final String ITEM_FIXTURE_NAME_1 = "Phone";
+	private static final String ITEM_FIXTURE_NAME_2 = "Book";
+	private static final String ITEM_FIXTURE_NAME_3 = "Shirt";
 	public static final String ITEM_FIXTURE_PRODUCTCODE_1 = "001";
 	public static final String ITEM_FIXTURE_PRODUCTCODE_2 = "002";
 	public static final String ITEM_FIXTURE_PRODUCTCODE_3 = "003";
@@ -57,15 +56,11 @@ public class ShopOnlineApp implements Callable<Void> {
 	}
 
 	@Override
-	public Void call() throws Exception {
+	public Void call() {
 		EventQueue.invokeLater(() -> {
-			try {
 				ShopMongoRepository shopRepository = new ShopMongoRepository(
 						new MongoClient(new ServerAddress(mongoHost, mongoPort)), databaseName, collectionItems,
 						collectionCarts);
-				for (Item item : shopRepository.findAllItems()) {
-					shopRepository.removeItem(item.getProductCode());
-				}
 				initDatabase(shopRepository);
 				ShopViewPanel shopViewPanel = new ShopViewPanel();
 				HistoryViewPanel historyViewPanel = new HistoryViewPanel();
@@ -77,9 +72,7 @@ public class ShopOnlineApp implements Callable<Void> {
 				historyViewPanel.setCartController(cartController);
 				shopController.allItems();
 				cartController.allCarts();
-				shopViewFrame.setVisible(true);
-			} catch (Exception e) {
-			}
+				shopViewFrame.frame.setVisible(true);
 		});
 		return null;
 	}

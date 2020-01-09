@@ -23,7 +23,7 @@ public class ShopOnlineFrameTest extends AssertJSwingJUnitTestCase {
 			ShopViewPanel shopViewPanel = new ShopViewPanel();
 			HistoryViewPanel historyViewPanel = new HistoryViewPanel();
 			shopOnlineFrame = new ShopOnlineFrame(shopViewPanel,historyViewPanel);
-			window = new FrameFixture(robot(), shopOnlineFrame);
+			window = new FrameFixture(robot(), shopOnlineFrame.frame);
 
 		});
 		Dimension dimension = new Dimension(WIDTH, HEIGHT);

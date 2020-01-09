@@ -8,19 +8,20 @@ import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 
-public class ShopOnlineFrame extends JFrame {
+public class ShopOnlineFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
+	public JFrame frame = new JFrame();
 
 	public ShopOnlineFrame(ShopViewPanel shopPanel, HistoryViewPanel historyPanel) {
-		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		setBounds(100, 100, 800, 400);
-		setTitle("ShopOnline");
+		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		frame.setBounds(100, 100, 800, 400);
+		frame.setTitle("ShopOnline");
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
-		setContentPane(contentPane);
+		frame.setContentPane(contentPane);
 
 		JTabbedPane tabbedPane = new JTabbedPane(SwingConstants.TOP);
 		tabbedPane.setName("tabbedPanel");

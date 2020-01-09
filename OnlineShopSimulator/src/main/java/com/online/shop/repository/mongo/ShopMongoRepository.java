@@ -28,6 +28,7 @@ public class ShopMongoRepository implements ShopRepository {
 	public ShopMongoRepository(MongoClient client, String databaseName, String itemsCollection,
 			String cartsCollection) {
 		collectionItems = client.getDatabase(databaseName).getCollection(itemsCollection);
+		collectionItems.drop();
 		collectionCarts = client.getDatabase(databaseName).getCollection(cartsCollection);
 	}
 
