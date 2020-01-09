@@ -16,7 +16,7 @@ import com.online.shop.model.Item;
 import com.online.shop.repository.ShopRepository;
 
 public class ShopMongoRepository implements ShopRepository {
-	
+
 	private MongoCollection<Document> collectionItems;
 	private MongoCollection<Document> collectionCarts;
 

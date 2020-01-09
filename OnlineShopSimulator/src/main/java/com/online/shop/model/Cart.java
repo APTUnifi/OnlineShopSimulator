@@ -6,7 +6,7 @@ import java.util.Objects;
 import java.time.LocalDate;
 
 public class Cart {
-	
+
 	private List<Item> items;
 	private String label;
 	private String date;
@@ -69,10 +69,10 @@ public class Cart {
 	public int hashCode() {
 		return Objects.hash(label, date);
 	}
-	
+
 	@Override
 	public String toString() {
 		return label + " - date : " + date;
-		
+
 	}
 }

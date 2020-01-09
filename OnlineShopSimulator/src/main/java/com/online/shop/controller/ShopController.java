@@ -13,6 +13,7 @@ public class ShopController {
 		this.itemsView = itemsView;
 		this.shopRepository = shopRepository;
 	}
+
 	public void allItems() {
 		itemsView.updateItemsShop(shopRepository.findAllItems());
 	}
@@ -39,17 +40,17 @@ public class ShopController {
 	}
 
 	public void searchItem(String itemName) {
-			Item retrievedItem = shopRepository.findItemByName(itemName);
-
-			if (retrievedItem == null) {
-				if(itemName.isEmpty()){
-					itemsView.updateItemsShop(shopRepository.findAllItems());
-					return;
-				}
-				itemsView.errorLogItem("Item with name does not exists",itemName);
+		Item retrievedItem = shopRepository.findItemByName(itemName);
+		//TODO testare
+		if (retrievedItem == null) {
+			if (itemName.isEmpty()) {
+				itemsView.updateItemsShop(shopRepository.findAllItems());
 				return;
 			}
-			itemsView.showSearchResult(retrievedItem);
+			itemsView.errorLogItem("Item with name does not exists", itemName);
+			return;
+		}
+		itemsView.showSearchResult(retrievedItem);
 	}
 
 	public void modifyItemQuantity(Item item, int modifier) {

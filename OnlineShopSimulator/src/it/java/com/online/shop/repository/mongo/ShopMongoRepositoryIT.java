@@ -154,8 +154,7 @@ public class ShopMongoRepositoryIT {
 
 	@Test
 	public void testFindAllCarts() {
-		addTestCartToRepository(CART_NAME_1, DATE,
-				Arrays.asList(new Item(PRODUCT_CODE_1, ITEM_NAME_1)));
+		addTestCartToRepository(CART_NAME_1, DATE, Arrays.asList(new Item(PRODUCT_CODE_1, ITEM_NAME_1)));
 		assertThat(shopRepository.findAllCarts())
 				.containsExactly(new Cart(Arrays.asList(new Item(PRODUCT_CODE_1, ITEM_NAME_1)), CART_NAME_1));
 
@@ -163,10 +162,8 @@ public class ShopMongoRepositoryIT {
 
 	@Test
 	public void testFindCart() {
-		addTestCartToRepository(CART_NAME_1, DATE,
-				Arrays.asList(new Item(PRODUCT_CODE_1, ITEM_NAME_1)));
-		addTestCartToRepository(CART_NAME_2, DATE,
-				Arrays.asList(new Item(PRODUCT_CODE_1, ITEM_NAME_1)));
+		addTestCartToRepository(CART_NAME_1, DATE, Arrays.asList(new Item(PRODUCT_CODE_1, ITEM_NAME_1)));
+		addTestCartToRepository(CART_NAME_2, DATE, Arrays.asList(new Item(PRODUCT_CODE_1, ITEM_NAME_1)));
 		assertThat(shopRepository.findCart(DATE, CART_NAME_2))
 				.isEqualTo(new Cart(Arrays.asList(new Item(PRODUCT_CODE_1, ITEM_NAME_1)), CART_NAME_2));
 
@@ -174,8 +171,7 @@ public class ShopMongoRepositoryIT {
 
 	@Test
 	public void testRemoveCart() {
-		addTestCartToRepository(CART_NAME_1, DATE,
-				Arrays.asList(new Item(PRODUCT_CODE_1, ITEM_NAME_1)));
+		addTestCartToRepository(CART_NAME_1, DATE, Arrays.asList(new Item(PRODUCT_CODE_1, ITEM_NAME_1)));
 
 		shopRepository.removeCart(DATE, CART_NAME_1);
 
@@ -189,7 +185,7 @@ public class ShopMongoRepositoryIT {
 				itemToBeModified.getQuantity());
 		Cart cartToStore = new Cart(CART_NAME_1, DATE, Arrays.asList(itemToBeModified));
 		shopRepository.storeCart(cartToStore);
-		assertThat(retrieveAllCarts()).containsExactly(new Cart(CART_NAME_1, DATE,
-				Arrays.asList(new Item(PRODUCT_CODE_1, ITEM_NAME_1))));
+		assertThat(retrieveAllCarts())
+				.containsExactly(new Cart(CART_NAME_1, DATE, Arrays.asList(new Item(PRODUCT_CODE_1, ITEM_NAME_1))));
 	}
 }

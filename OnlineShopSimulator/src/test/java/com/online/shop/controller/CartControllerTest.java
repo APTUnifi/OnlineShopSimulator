@@ -29,13 +29,16 @@ import static org.assertj.core.api.Assertions.*;
 public class CartControllerTest {
 
 	private static final int EXISTING_QUANTITY = 3;
-	private static final String CART_LABEL = "test";
-	private static final String ITEM_NAME = "test1";
-	private static final String ITEM_PRODUCT_CODE = "1";
+	private static final String CART_NAME_1 = "testCart1";
+	private static final String ITEM_NAME_1 = "test1";
+	private static final String PRODUCT_CODE_1 = "1";
+
+	private static final String ITEM_NAME_2 = "test2";
+	private static final String PRODUCT_CODE_2 = "2";
 
 	@Mock
 	ShopView shopView;
-	
+
 	@Mock
 	HistoryView historyView;
 
@@ -49,16 +52,17 @@ public class CartControllerTest {
 	public void setUp() throws Exception {
 		MockitoAnnotations.initMocks(this);
 	}
+
 	@Test
 	public void testFindItemQuantityWhenItemIsNotPresent() {
-		Item item = new Item(ITEM_PRODUCT_CODE, ITEM_NAME);
+		Item item = new Item(PRODUCT_CODE_1, ITEM_NAME_1);
 		cartController.setCart(new Cart());
 		assertThat(cartController.findItemQuantity(item)).isEqualTo(0);
 	}
 
 	@Test
 	public void testAddItemToCartWhenItemIsNotPresent() {
-		Item itemToAdd = new Item(ITEM_PRODUCT_CODE, ITEM_NAME, 3);
+		Item itemToAdd = new Item(PRODUCT_CODE_1, ITEM_NAME_1, 3);
 		cartController.setCart(new Cart());
 
 		cartController.addToCart(itemToAdd);
@@ -69,12 +73,12 @@ public class CartControllerTest {
 
 	@Test
 	public void testAddItemToCartWhenItemIsAlreadyPresentWithQuantityBelowMaxQuantity() {
-		Item itemToAdd = new Item(ITEM_PRODUCT_CODE, ITEM_NAME, EXISTING_QUANTITY);
-		Item existingCartItem = new Item(ITEM_PRODUCT_CODE, ITEM_NAME);
+		Item itemToAdd = new Item(PRODUCT_CODE_1, ITEM_NAME_1, EXISTING_QUANTITY);
+		Item existingCartItem = new Item(PRODUCT_CODE_1, ITEM_NAME_1);
 		List<Item> items = new ArrayList<>();
 
 		items.add(existingCartItem);
-		cartController.setCart(new Cart(items, CART_LABEL));
+		cartController.setCart(new Cart(items, CART_NAME_1));
 		cartController.addToCart(itemToAdd);
 		assertThat(cartController.cartSize()).isEqualTo(1);
 		assertThat(cartController.findItemQuantity(existingCartItem)).isEqualTo(EXISTING_QUANTITY - 1);
@@ -84,26 +88,27 @@ public class CartControllerTest {
 
 	@Test
 	public void testAddItemToCartWhenItemIsAlreadyPresentWithQuantityAboveMaxQuantity() {
-		Item itemToAdd = new Item(ITEM_PRODUCT_CODE, ITEM_NAME, EXISTING_QUANTITY);
-		Item existingCartItem = new Item(ITEM_PRODUCT_CODE, ITEM_NAME, EXISTING_QUANTITY);
+		Item itemToAdd = new Item(PRODUCT_CODE_1, ITEM_NAME_1, EXISTING_QUANTITY);
+		Item existingCartItem = new Item(PRODUCT_CODE_1, ITEM_NAME_1, EXISTING_QUANTITY);
 		List<Item> items = new ArrayList<>();
 
 		items.add(existingCartItem);
-		cartController.setCart(new Cart(items, CART_LABEL));
+		cartController.setCart(new Cart(items, CART_NAME_1));
 		cartController.addToCart(itemToAdd);
 
 		assertThat(cartController.cartSize()).isEqualTo(1);
 		assertThat(cartController.findItemQuantity(existingCartItem)).isEqualTo(EXISTING_QUANTITY);
-		verify(shopView).errorLogItem("Can not add more this item", itemToAdd.getName());;
+		verify(shopView).errorLogItem("Can not add more this item", itemToAdd.getName());
+		;
 	}
 
 	@Test
 	public void testRemoveItemFromCartWhenItemQuantityIsEqualToOne() {
-		Item itemToRemove = new Item(ITEM_PRODUCT_CODE, ITEM_NAME);
+		Item itemToRemove = new Item(PRODUCT_CODE_1, ITEM_NAME_1);
 		List<Item> items = new ArrayList<>();
 		items.add(itemToRemove);
 
-		cartController.setCart(new Cart(items, CART_LABEL));
+		cartController.setCart(new Cart(items, CART_NAME_1));
 		cartController.removeFromCart(itemToRemove);
 
 		assertThat(cartController.cartSize()).isEqualTo(0);
@@ -113,11 +118,11 @@ public class CartControllerTest {
 
 	@Test
 	public void testRemoveItemFromCartWhenQuantityIsAboveOne() {
-		Item itemToRemove = new Item(ITEM_PRODUCT_CODE, ITEM_NAME, EXISTING_QUANTITY);
+		Item itemToRemove = new Item(PRODUCT_CODE_1, ITEM_NAME_1, EXISTING_QUANTITY);
 		List<Item> items = new ArrayList<>();
 		items.add(itemToRemove);
 
-		cartController.setCart(new Cart(items, CART_LABEL));
+		cartController.setCart(new Cart(items, CART_NAME_1));
 		cartController.removeFromCart(itemToRemove);
 		assertThat(cartController.cartSize()).isEqualTo(1);
 		assertThat(cartController.findItemQuantity(itemToRemove)).isEqualTo(EXISTING_QUANTITY - 1);
@@ -128,30 +133,30 @@ public class CartControllerTest {
 	@Test
 	public void testPurchaseItemsShouldRemoveItemsFromShop() {
 		List<Item> items = new ArrayList<>();
-		Item firstExistingItem = new Item(ITEM_PRODUCT_CODE, ITEM_NAME);
-		Item secondExistingItem = new Item("2", "test2", 2);
-		items.add(new Item(ITEM_PRODUCT_CODE, ITEM_NAME));
-		items.add(new Item("2", "test2", 2));
-		cartController.setCart(new Cart(items, CART_LABEL));
-		when(shopRepository.findItemByProductCode(ITEM_PRODUCT_CODE)).thenReturn(firstExistingItem);
-		when(shopRepository.findItemByProductCode("2")).thenReturn(secondExistingItem);
-		cartController.completePurchase(CART_LABEL);
-		verify(shopRepository).removeItem(ITEM_PRODUCT_CODE);
-		verify(shopRepository).removeItem("2");
+		Item firstExistingItem = new Item(PRODUCT_CODE_1, ITEM_NAME_1);
+		Item secondExistingItem = new Item(PRODUCT_CODE_2, ITEM_NAME_2, 2);
+		items.add(new Item(PRODUCT_CODE_1, ITEM_NAME_1));
+		items.add(new Item(PRODUCT_CODE_2, ITEM_NAME_2, 2));
+		cartController.setCart(new Cart(items, CART_NAME_1));
+		when(shopRepository.findItemByProductCode(PRODUCT_CODE_1)).thenReturn(firstExistingItem);
+		when(shopRepository.findItemByProductCode(PRODUCT_CODE_2)).thenReturn(secondExistingItem);
+		cartController.completePurchase(CART_NAME_1);
+		verify(shopRepository).removeItem(PRODUCT_CODE_1);
+		verify(shopRepository).removeItem(PRODUCT_CODE_2);
 	}
 
 	@Test
 	public void testPurchaseItemsShouldModifyItemsQuantityFromShop() {
 		List<Item> items = new ArrayList<>();
-		Item firstExistingItem = new Item(ITEM_PRODUCT_CODE, ITEM_NAME, 2);
-		Item secondExistingItem = new Item("2", "test2", 3);
-		items.add(new Item(ITEM_PRODUCT_CODE, ITEM_NAME, 1));
-		items.add(new Item("2", "test2", 2));
-		cartController.setCart(new Cart(items, CART_LABEL));
-		when(shopRepository.findItemByProductCode(ITEM_PRODUCT_CODE)).thenReturn(firstExistingItem);
-		when(shopRepository.findItemByProductCode("2")).thenReturn(secondExistingItem);
+		Item firstExistingItem = new Item(PRODUCT_CODE_1, ITEM_NAME_1, 2);
+		Item secondExistingItem = new Item(PRODUCT_CODE_2, ITEM_NAME_2, 3);
+		items.add(new Item(PRODUCT_CODE_1, ITEM_NAME_1, 1));
+		items.add(new Item(PRODUCT_CODE_2, ITEM_NAME_2, 2));
+		cartController.setCart(new Cart(items, CART_NAME_1));
+		when(shopRepository.findItemByProductCode(PRODUCT_CODE_1)).thenReturn(firstExistingItem);
+		when(shopRepository.findItemByProductCode(PRODUCT_CODE_2)).thenReturn(secondExistingItem);
 
-		cartController.completePurchase(CART_LABEL);
+		cartController.completePurchase(CART_NAME_1);
 
 		verify(shopRepository).modifyItemQuantity(firstExistingItem, -1);
 		verify(shopRepository).modifyItemQuantity(secondExistingItem, -2);
@@ -160,56 +165,56 @@ public class CartControllerTest {
 	@Test
 	public void testPurchaseItemsShouldThrowErrorWhenItemDoesNotExists() {
 		List<Item> items = new ArrayList<>();
-		Item firstExistingItem = new Item(ITEM_PRODUCT_CODE, ITEM_NAME, 2);
-		Item notExistingItem = new Item("2", "test2", 2);
-		items.add(new Item(ITEM_PRODUCT_CODE, ITEM_NAME, 1));
+		Item firstExistingItem = new Item(PRODUCT_CODE_1, ITEM_NAME_1, 2);
+		Item notExistingItem = new Item(PRODUCT_CODE_2, ITEM_NAME_2, 2);
+		items.add(new Item(PRODUCT_CODE_1, ITEM_NAME_1, 1));
 		items.add(notExistingItem);
-		cartController.setCart(new Cart(items, CART_LABEL));
-		when(shopRepository.findItemByProductCode(ITEM_PRODUCT_CODE)).thenReturn(firstExistingItem);
-		when(shopRepository.findItemByProductCode("2")).thenReturn(null);
-		cartController.completePurchase(CART_LABEL);
+		cartController.setCart(new Cart(items, CART_NAME_1));
+		when(shopRepository.findItemByProductCode(PRODUCT_CODE_1)).thenReturn(firstExistingItem);
+		when(shopRepository.findItemByProductCode(PRODUCT_CODE_2)).thenReturn(null);
+		cartController.completePurchase(CART_NAME_1);
 		verify(shopView).errorLog("Item/s not found", Arrays.asList(notExistingItem));
 	}
 
 	@Test
 	public void testPurchaseItemsShouldUpdateShopViewList() {
 		List<Item> items = new ArrayList<>();
-		Item firstExistingItem = new Item(ITEM_PRODUCT_CODE, ITEM_NAME, 2);
-		Item secondExistingItem = new Item("2", "test2", 3);
-		items.add(new Item(ITEM_PRODUCT_CODE, ITEM_NAME));
-		items.add(new Item("2", "test2", 2));
-		cartController.setCart(new Cart(items, CART_LABEL));
-		when(shopRepository.findItemByProductCode(ITEM_PRODUCT_CODE)).thenReturn(firstExistingItem);
-		when(shopRepository.findItemByProductCode("2")).thenReturn(secondExistingItem);
-		cartController.completePurchase(CART_LABEL);
+		Item firstExistingItem = new Item(PRODUCT_CODE_1, ITEM_NAME_1, 2);
+		Item secondExistingItem = new Item(PRODUCT_CODE_2, ITEM_NAME_2, 3);
+		items.add(new Item(PRODUCT_CODE_1, ITEM_NAME_1));
+		items.add(new Item(PRODUCT_CODE_2, ITEM_NAME_2, 2));
+		cartController.setCart(new Cart(items, CART_NAME_1));
+		when(shopRepository.findItemByProductCode(PRODUCT_CODE_1)).thenReturn(firstExistingItem);
+		when(shopRepository.findItemByProductCode(PRODUCT_CODE_2)).thenReturn(secondExistingItem);
+		cartController.completePurchase(CART_NAME_1);
 		verify(shopView).updateItemsShop(shopRepository.findAllItems());
 	}
 
 	@Test
 	public void testPurchaseItemsShouldUpdateCartViewList() {
 		List<Item> items = new ArrayList<>();
-		Item firstExistingItem = new Item(ITEM_PRODUCT_CODE, ITEM_NAME, 2);
-		Item secondExistingItem = new Item("2", "test2", 3);
-		items.add(new Item(ITEM_PRODUCT_CODE, ITEM_NAME));
-		items.add(new Item("2", "test2", 2));
-		cartController.setCart(new Cart(items, CART_LABEL));
-		when(shopRepository.findItemByProductCode(ITEM_PRODUCT_CODE)).thenReturn(firstExistingItem);
-		when(shopRepository.findItemByProductCode("2")).thenReturn(secondExistingItem);
-		cartController.completePurchase(CART_LABEL);
+		Item firstExistingItem = new Item(PRODUCT_CODE_1, ITEM_NAME_1, 2);
+		Item secondExistingItem = new Item(PRODUCT_CODE_2, ITEM_NAME_2, 3);
+		items.add(new Item(PRODUCT_CODE_1, ITEM_NAME_1));
+		items.add(new Item(PRODUCT_CODE_2, ITEM_NAME_2, 2));
+		cartController.setCart(new Cart(items, CART_NAME_1));
+		when(shopRepository.findItemByProductCode(PRODUCT_CODE_1)).thenReturn(firstExistingItem);
+		when(shopRepository.findItemByProductCode(PRODUCT_CODE_2)).thenReturn(secondExistingItem);
+		cartController.completePurchase(CART_NAME_1);
 		verify(shopView).updateItemsCart(shopRepository.findAllItems());
 	}
 
 	@Test
 	public void testPurchaseItemsShouldClearCartArrayList() {
 		List<Item> items = new ArrayList<>();
-		Item firstExistingItem = new Item(ITEM_PRODUCT_CODE, ITEM_NAME, 2);
-		Item secondExistingItem = new Item("2", "test2", 3);
-		items.add(new Item(ITEM_PRODUCT_CODE, ITEM_NAME));
-		items.add(new Item("2", "test2", 2));
-		cartController.setCart(new Cart(items, CART_LABEL));
-		when(shopRepository.findItemByProductCode(ITEM_PRODUCT_CODE)).thenReturn(firstExistingItem);
-		when(shopRepository.findItemByProductCode("2")).thenReturn(secondExistingItem);
-		cartController.completePurchase(CART_LABEL);
+		Item firstExistingItem = new Item(PRODUCT_CODE_1, ITEM_NAME_1, 2);
+		Item secondExistingItem = new Item(PRODUCT_CODE_2, "test2", 3);
+		items.add(new Item(PRODUCT_CODE_1, ITEM_NAME_1));
+		items.add(new Item(PRODUCT_CODE_2, "test2", 2));
+		cartController.setCart(new Cart(items, CART_NAME_1));
+		when(shopRepository.findItemByProductCode(PRODUCT_CODE_1)).thenReturn(firstExistingItem);
+		when(shopRepository.findItemByProductCode(PRODUCT_CODE_2)).thenReturn(secondExistingItem);
+		cartController.completePurchase(CART_NAME_1);
 		assertThat(cartController.cartItems()).isEmpty();
 	}
 
@@ -217,15 +222,15 @@ public class CartControllerTest {
 	public void testPurchaseItemsShouldSaveCartDetails() {
 		List<Item> items = new ArrayList<>();
 		Cart cart = spy(new Cart());
-		Item firstExistingItem = new Item(ITEM_PRODUCT_CODE, ITEM_NAME, 2);
-		Item secondExistingItem = new Item("2", "test2", 3);
-		items.add(new Item(ITEM_PRODUCT_CODE, ITEM_NAME));
-		items.add(new Item("2", "test2", 2));
+		Item firstExistingItem = new Item(PRODUCT_CODE_1, ITEM_NAME_1, 2);
+		Item secondExistingItem = new Item(PRODUCT_CODE_2, ITEM_NAME_2, 3);
+		items.add(new Item(PRODUCT_CODE_1, ITEM_NAME_1));
+		items.add(new Item(PRODUCT_CODE_2, ITEM_NAME_2, 2));
 		cart.setItems(items);
 		cartController.setCart(cart);
-		when(shopRepository.findItemByProductCode(ITEM_PRODUCT_CODE)).thenReturn(firstExistingItem);
-		when(shopRepository.findItemByProductCode("2")).thenReturn(secondExistingItem);
-		cartController.completePurchase(CART_LABEL);
+		when(shopRepository.findItemByProductCode(PRODUCT_CODE_1)).thenReturn(firstExistingItem);
+		when(shopRepository.findItemByProductCode(PRODUCT_CODE_2)).thenReturn(secondExistingItem);
+		cartController.completePurchase(CART_NAME_1);
 		InOrder inOrder = inOrder(shopRepository, cart);
 		inOrder.verify(shopRepository).storeCart(cart);
 		inOrder.verify(cart).setItems(new ArrayList<Item>());
@@ -251,39 +256,38 @@ public class CartControllerTest {
 	@Test
 	public void testRemoveCartWhenCartExists() {
 		List<Item> items = new ArrayList<>();
-		Item item = new Item(ITEM_PRODUCT_CODE, ITEM_NAME);
+		Item item = new Item(PRODUCT_CODE_1, ITEM_NAME_1);
 		items.add(item);
-		Cart cartToRemove = new Cart(items, CART_LABEL);
+		Cart cartToRemove = new Cart(items, CART_NAME_1);
 		cartController.setCart(cartToRemove);
-		when(shopRepository.findCart(LocalDate.now().toString(), CART_LABEL)).thenReturn(cartToRemove);
+		when(shopRepository.findCart(LocalDate.now().toString(), CART_NAME_1)).thenReturn(cartToRemove);
 		cartController.removeCart(cartToRemove);
 		InOrder inOrder = inOrder(shopRepository, historyView);
-		inOrder.verify(shopRepository).removeCart(LocalDate.now().toString(), CART_LABEL);
+		inOrder.verify(shopRepository).removeCart(LocalDate.now().toString(), CART_NAME_1);
 		inOrder.verify(historyView).removeCart(cartToRemove);
 	}
 
 	@Test
 	public void testRemoveCartWhenCartDoesNotExists() {
 		List<Item> items = new ArrayList<>();
-		Item item = new Item(ITEM_PRODUCT_CODE, ITEM_NAME);
+		Item item = new Item(PRODUCT_CODE_1, ITEM_NAME_1);
 		items.add(item);
-		Cart cartToRemove = new Cart(items, CART_LABEL);
-		when(shopRepository.findCart(LocalDate.now().toString(), CART_LABEL)).thenReturn(null);
+		Cart cartToRemove = new Cart(items, CART_NAME_1);
+		when(shopRepository.findCart(LocalDate.now().toString(), CART_NAME_1)).thenReturn(null);
 		cartController.removeCart(cartToRemove);
-		verify(historyView).errorLogCart("Cart not found" , cartToRemove.getLabel());
+		verify(historyView).errorLogCart("Cart not found", cartToRemove.getLabel());
 		verifyNoMoreInteractions(ignoreStubs(shopView));
 	}
-	
+
 	@Test
 	public void testCompletePurchaseShouldThrowErrorWhenNameCartAlreadyExists() {
 		List<Item> items = new ArrayList<>();
-		Cart cartToAdd = new Cart(CART_LABEL,LocalDate.now().toString(), items);
-		Cart cartExist = new Cart(CART_LABEL, LocalDate.now().toString(),items);
+		Cart cartToAdd = new Cart(CART_NAME_1, LocalDate.now().toString(), items);
+		Cart cartExist = new Cart(CART_NAME_1, LocalDate.now().toString(), items);
 		shopRepository.storeCart(cartExist);
 		cartController.setCart(cartToAdd);
 		when(shopRepository.findAllCarts()).thenReturn(Arrays.asList(cartExist));
-		cartController.completePurchase(CART_LABEL);
-		//verify(itemsRepository).storeCart(cartExist);
+		cartController.completePurchase(CART_NAME_1);
 		verify(shopView).errorLogCart("Cart with this label already exists ", cartExist.getLabel());
 		verifyNoMoreInteractions(ignoreStubs(shopView));
 	}

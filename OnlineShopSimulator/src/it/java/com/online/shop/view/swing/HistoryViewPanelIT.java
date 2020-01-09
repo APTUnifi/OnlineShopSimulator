@@ -30,8 +30,8 @@ import com.online.shop.repository.mongo.ShopMongoRepository;
 import de.bwaldvogel.mongo.MongoServer;
 import de.bwaldvogel.mongo.backend.memory.MemoryBackend;
 
-public class HistoryViewPanelIT  extends AssertJSwingJUnitTestCase{
-	
+public class HistoryViewPanelIT extends AssertJSwingJUnitTestCase {
+
 	private static final String SHOP_DB_NAME = "shop";
 	private static final String ITEMS_COLLECTION_NAME = "items";
 	private static final String CARTS_COLLECTION_NAME = "carts";
@@ -50,7 +50,7 @@ public class HistoryViewPanelIT  extends AssertJSwingJUnitTestCase{
 	@ClassRule
 	public static final GenericContainer mongo = new GenericContainer("mongo:4.0.5").withExposedPorts(27017);
 
-	private static MongoServer server;	
+	private static MongoServer server;
 	private MongoClient mongoClient;
 	private JPanelFixture window;
 	private static InetSocketAddress serverAddress;
@@ -75,87 +75,83 @@ public class HistoryViewPanelIT  extends AssertJSwingJUnitTestCase{
 	@Override
 	protected void onSetUp() {
 		mongoClient = new MongoClient(new ServerAddress(serverAddress));
-		shopRepository = new ShopMongoRepository(mongoClient, SHOP_DB_NAME, ITEMS_COLLECTION_NAME, CARTS_COLLECTION_NAME);
-		for(Item item : shopRepository.findAllItems()) {
+		shopRepository = new ShopMongoRepository(mongoClient, SHOP_DB_NAME, ITEMS_COLLECTION_NAME,
+				CARTS_COLLECTION_NAME);
+		for (Item item : shopRepository.findAllItems()) {
 			shopRepository.removeItem(item.getProductCode());
 		}
-		for(Cart cart: shopRepository.findAllCarts()) {
-			shopRepository.removeCart(cart.getDate(),cart.getLabel());
+		for (Cart cart : shopRepository.findAllCarts()) {
+			shopRepository.removeCart(cart.getDate(), cart.getLabel());
 		}
-		GuiActionRunner.execute(
-				()->{
-					shopViewPanel = new ShopViewPanel();
-					historyViewPanel = new HistoryViewPanel();
-					Dimension dimension = new Dimension(WIDTH, HEIGHT);
-					frame = new JFrame();
-					cartController = new CartController(shopViewPanel,shopRepository,historyViewPanel);
-					historyViewPanel.setCartController(cartController);
-					frame.setPreferredSize(dimension);
-					frame.add(historyViewPanel);
-					frame.pack();
-					frame.setVisible(true);
-				});
-		window = new JPanelFixture(robot(),historyViewPanel);
-	}	
+		GuiActionRunner.execute(() -> {
+			shopViewPanel = new ShopViewPanel();
+			historyViewPanel = new HistoryViewPanel();
+			Dimension dimension = new Dimension(WIDTH, HEIGHT);
+			frame = new JFrame();
+			cartController = new CartController(shopViewPanel, shopRepository, historyViewPanel);
+			historyViewPanel.setCartController(cartController);
+			frame.setPreferredSize(dimension);
+			frame.add(historyViewPanel);
+			frame.pack();
+			frame.setVisible(true);
+		});
+		window = new JPanelFixture(robot(), historyViewPanel);
+	}
 
-	@Test @GUITest
+	@Test
+	@GUITest
 	public void testAllCarts() {
-		Item itemExist1 = new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1);
-		Item itemExist2 = new Item(ITEM_FIXTURE_PRODUCTCODE_2,ITEM_FIXTURE_NAME_2);
-		Cart cartExist = new Cart(Arrays.asList(itemExist1,itemExist2),CART_FIXTURE_LABEL_1);
+		Item itemExist1 = new Item(ITEM_FIXTURE_PRODUCTCODE_1, ITEM_FIXTURE_NAME_1);
+		Item itemExist2 = new Item(ITEM_FIXTURE_PRODUCTCODE_2, ITEM_FIXTURE_NAME_2);
+		Cart cartExist = new Cart(Arrays.asList(itemExist1, itemExist2), CART_FIXTURE_LABEL_1);
 		shopRepository.storeItem(itemExist1);
 		shopRepository.storeItem(itemExist2);
 		shopRepository.storeCart(cartExist);
-		GuiActionRunner.execute(
-				()-> cartController.allCarts()
-				);
+		GuiActionRunner.execute(() -> cartController.allCarts());
 		assertThat(window.list("listCart").contents()).containsExactly(cartExist.toString());
 	}
-	
-	@Test @GUITest
+
+	@Test
+	@GUITest
 	public void testAllItemsCart() {
-		Item item1 = new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1);
-		Item item2 = new Item(ITEM_FIXTURE_PRODUCTCODE_2,ITEM_FIXTURE_NAME_2);
-		Cart cart = new Cart(Arrays.asList(item1,item2),CART_FIXTURE_LABEL_1);
+		Item item1 = new Item(ITEM_FIXTURE_PRODUCTCODE_1, ITEM_FIXTURE_NAME_1);
+		Item item2 = new Item(ITEM_FIXTURE_PRODUCTCODE_2, ITEM_FIXTURE_NAME_2);
+		Cart cart = new Cart(Arrays.asList(item1, item2), CART_FIXTURE_LABEL_1);
 		shopRepository.storeItem(item1);
 		shopRepository.storeItem(item2);
 		shopRepository.storeCart(cart);
-		GuiActionRunner.execute(
-				()-> cartController.allCarts()
-				);
+		GuiActionRunner.execute(() -> cartController.allCarts());
 		window.list("listCart").selectItem(FIRST_ITEM);
-		GuiActionRunner.execute(
-				()-> cartController.allItemsCart(cart)
-				);
+		GuiActionRunner.execute(() -> cartController.allItemsCart(cart));
 		assertThat(window.list("listItemsCart").contents()).containsExactly(cart.getItems().get(FIRST_ITEM).toString(),
 				cart.getItems().get(SECOND_ITEM).toString());
 	}
-	@Test @GUITest
+
+	@Test
+	@GUITest
 	public void testDeleteButtonSuccess() {
-		Item item1 = new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1);
-		Item item2 = new Item(ITEM_FIXTURE_PRODUCTCODE_2,ITEM_FIXTURE_NAME_2);
-		Cart cart = new Cart(Arrays.asList(item1,item2),CART_FIXTURE_LABEL_1);
+		Item item1 = new Item(ITEM_FIXTURE_PRODUCTCODE_1, ITEM_FIXTURE_NAME_1);
+		Item item2 = new Item(ITEM_FIXTURE_PRODUCTCODE_2, ITEM_FIXTURE_NAME_2);
+		Cart cart = new Cart(Arrays.asList(item1, item2), CART_FIXTURE_LABEL_1);
 		shopRepository.storeItem(item1);
 		shopRepository.storeItem(item2);
 		shopRepository.storeCart(cart);
-		GuiActionRunner.execute(
-				()-> cartController.allCarts()		
-				);
+		GuiActionRunner.execute(() -> cartController.allCarts());
 		window.list("listCart").selectItem(FIRST_ITEM);
 		window.button(JButtonMatcher.withName("btnDelete")).click();
 		assertThat(window.list("listCart").contents()).isEmpty();
 	}
 
-	@Test @GUITest
+	@Test
+	@GUITest
 	public void testDeleteButtonError() {
-		Item item1 = new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1);
-		Item item2 = new Item(ITEM_FIXTURE_PRODUCTCODE_2,ITEM_FIXTURE_NAME_2);
-		Cart cart = new Cart(Arrays.asList(item1,item2),CART_FIXTURE_LABEL_1);
-		GuiActionRunner.execute(
-				()->{ 
-					DefaultListModel<Cart> carts = historyViewPanel.getListCartModel();
-					carts.addElement(cart);
-				});
+		Item item1 = new Item(ITEM_FIXTURE_PRODUCTCODE_1, ITEM_FIXTURE_NAME_1);
+		Item item2 = new Item(ITEM_FIXTURE_PRODUCTCODE_2, ITEM_FIXTURE_NAME_2);
+		Cart cart = new Cart(Arrays.asList(item1, item2), CART_FIXTURE_LABEL_1);
+		GuiActionRunner.execute(() -> {
+			DefaultListModel<Cart> carts = historyViewPanel.getListCartModel();
+			carts.addElement(cart);
+		});
 		window.list("listCart").selectItem(FIRST_ITEM);
 		window.button(JButtonMatcher.withName("btnDelete")).click();
 		assertThat(window.list("listCart").contents()).containsExactly(cart.toString());
