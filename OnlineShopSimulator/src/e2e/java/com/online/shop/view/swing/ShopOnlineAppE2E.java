@@ -173,4 +173,29 @@ public class ShopOnlineAppE2E  extends AssertJSwingJUnitTestCase{
 		.contains("Cart not found: " + CART_FIXTURE_LABEL_1 );
 		assertThat(window.list("listItemsCart").contents()).isEmpty();
 	}
+	
+	@Test @GUITest
+	public void testSearchItemSuccess() {
+		window.tabbedPane().selectTab("Shop");
+		window.textBox("itemName").setText(ITEM_FIXTURE_1_NAME);
+		window.button(JButtonMatcher.withText("Search")).click();
+		assertThat(window.list("itemListShop").contents())
+		.anySatisfy(list -> assertThat(list).contains(
+				new Item(ITEM_FIXTURE_1_PRODUCTCODE,ITEM_FIXTURE_1_NAME,ITEM_FIXTURE_1_QUANTITY).toString()));
+	}
+
+	@Test @GUITest
+	public void testSearchItemError() {
+		window.tabbedPane().selectTab("Shop");
+		window.textBox("itemName").setText(ITEM_FIXTURE_1_NAME);
+		removeTestItemFromDatabase(ITEM_FIXTURE_1_PRODUCTCODE);
+		window.button(JButtonMatcher.withText("Search")).click();
+		assertThat(window.label("errorMessageLabel").text())
+		.contains("Item with name does not exists: " + ITEM_FIXTURE_1_NAME);
+		assertThat(window.list("itemListShop").contents())
+		.anySatisfy(list -> assertThat(list).contains(
+				new Item(ITEM_FIXTURE_1_PRODUCTCODE,ITEM_FIXTURE_1_NAME,ITEM_FIXTURE_1_QUANTITY).toString()))
+		.anySatisfy(list -> assertThat(list).contains(
+				new Item(ITEM_FIXTURE_2_PRODUCTCODE,ITEM_FIXTURE_2_NAME,ITEM_FIXTURE_2_QUANTITY).toString()));
+	}
 }
