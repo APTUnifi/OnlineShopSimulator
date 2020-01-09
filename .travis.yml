@@ -14,7 +14,7 @@ matrix:
     - jdk: openjdk8
     - jdk: openjdk9
     - jdk: openjdk11
-    - os:osx
+    - os: osx
     	osx_image : xcode10.1
 
 notifications:
