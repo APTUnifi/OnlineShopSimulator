@@ -72,7 +72,7 @@ public class ShopOnlineApp implements Callable<Void> {
 				historyViewPanel.setCartController(cartController);
 				shopController.allItems();
 				cartController.allCarts();
-				shopViewFrame.frame.setVisible(true);
+				shopViewFrame.getFrame().setVisible(true);
 		});
 		return null;
 	}

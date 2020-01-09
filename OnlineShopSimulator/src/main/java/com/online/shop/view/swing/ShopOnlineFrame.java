@@ -10,9 +10,8 @@ import javax.swing.border.EmptyBorder;
 
 public class ShopOnlineFrame {
 
-	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	public JFrame frame = new JFrame();
+	private JFrame frame = new JFrame();
 
 	public ShopOnlineFrame(ShopViewPanel shopPanel, HistoryViewPanel historyPanel) {
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -32,5 +31,9 @@ public class ShopOnlineFrame {
 
 		historyPanel.getPanel().setName("historyPanel");
 		tabbedPane.addTab("History",null, historyPanel.getPanel(),null);
+	}
+	
+	public JFrame getFrame() {
+		return frame;
 	}
 }
