@@ -51,9 +51,6 @@ public class ShopOnlineApp implements Callable<Void> {
 	}
 
 	private void initDatabase(ShopMongoRepository shop) {
-		for (Item item : shop.findAllItems()) {
-			shop.removeItem(item.getProductCode());
-		}
 		shop.storeItem(new Item(ITEM_FIXTURE_PRODUCTCODE_1, ITEM_FIXTURE_NAME_1, ITEM_FIXTURE_QUANTITY_1));
 		shop.storeItem(new Item(ITEM_FIXTURE_PRODUCTCODE_2, ITEM_FIXTURE_NAME_2, ITEM_FIXTURE_QUANTITY_2));
 		shop.storeItem(new Item(ITEM_FIXTURE_PRODUCTCODE_3, ITEM_FIXTURE_NAME_3, ITEM_FIXTURE_QUANTITY_3));
@@ -66,6 +63,9 @@ public class ShopOnlineApp implements Callable<Void> {
 				ShopMongoRepository shopRepository = new ShopMongoRepository(
 						new MongoClient(new ServerAddress(mongoHost, mongoPort)), databaseName, collectionItems,
 						collectionCarts);
+				for (Item item : shopRepository.findAllItems()) {
+					shopRepository.removeItem(item.getProductCode());
+				}
 				initDatabase(shopRepository);
 				ShopViewPanel shopViewPanel = new ShopViewPanel();
 				HistoryViewPanel historyViewPanel = new HistoryViewPanel();

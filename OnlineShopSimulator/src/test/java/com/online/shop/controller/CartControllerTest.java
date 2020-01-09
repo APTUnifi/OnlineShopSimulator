@@ -290,5 +290,16 @@ public class CartControllerTest {
 		verify(shopView).errorLogCart("Cart with this label already exists ", cartExist.getLabel());
 		verifyNoMoreInteractions(ignoreStubs(shopView));
 	}
+	@Test
+	public void testCompletePurchaseShouldThrowErrorWhenNameCartIsEmpty() {
+		List<Item> items = new ArrayList<>();
+		Cart cartToAdd = new Cart(CART_NAME_1, LocalDate.now().toString(), items);
+		Cart cartExist = new Cart(CART_NAME_1, LocalDate.now().toString(), items);
+		shopRepository.storeCart(cartExist);
+		cartController.setCart(cartToAdd);
+		cartController.completePurchase("");
+		verify(shopView).errorLogCart("Insert name cart ", "");
+		verifyNoMoreInteractions(ignoreStubs(shopView));
+	}
 
 }

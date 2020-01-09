@@ -1,5 +1,6 @@
 package com.online.shop.view.swing;
 
+import java.awt.Color;
 import java.util.List;
 
 import javax.swing.JPanel;
@@ -88,8 +89,7 @@ public class ShopViewPanel extends JPanel implements ShopView {
 		add(itemListCart);
 
 		itemListCart.addListSelectionListener(e -> {
-			if (!cartNameText.getText().trim().isEmpty())
-				btnBuy.setEnabled(itemListCart.getSelectedIndex() != -1);
+			btnBuy.setEnabled(itemListCart.getSelectedIndex() != -1);
 			btnRemove.setEnabled(itemListCart.getSelectedIndex() != -1);
 
 		});
@@ -131,10 +131,9 @@ public class ShopViewPanel extends JPanel implements ShopView {
 		lblShop.setName("lblShop");
 		lblShop.setBounds(12, 11, 125, 16);
 		add(lblShop);
-		btnBuy.addActionListener(e -> {
-			cartController.completePurchase(cartNameText.getText());
-			cartNameText.setText("");
-		});
+		btnBuy.addActionListener(e -> 
+			cartController.completePurchase(cartNameText.getText())
+		);
 
 		btnRemove.addActionListener(e -> cartController.removeFromCart(itemListCart.getSelectedValue()));
 
@@ -145,6 +144,7 @@ public class ShopViewPanel extends JPanel implements ShopView {
 
 		lblErrorMessageLabel = new JLabel(" ");
 		lblErrorMessageLabel.setOpaque(true);
+		lblErrorMessageLabel.setForeground(Color.red);
 		lblErrorMessageLabel.setName("errorMessageLabel");
 		lblErrorMessageLabel.setBounds(168, 284, 441, 16);
 		add(lblErrorMessageLabel);
