@@ -110,8 +110,8 @@ sonarqube {
         property "sonar.projectKey", "APTUnifi_OnlineShopSimulator"
         property "sonar.coverage.jacoco.xmlReportPaths", jacocoTestReport.reports.xml.destination
         property "sonar.coverage.jacoco.xmlReportPaths", jacocoTestReport.reports.xml.destination
-        property "sonar.sources", "src/main/java/**"
-        property "sonar.exclusions", "**/com/online/shop/model/**"
+        property "sonar.sources", "src/main/java"
+        property "sonar.exclusions", "**/com/online/shop/model"
     }
 }
 
