@@ -42,11 +42,14 @@ public class ShopController {
 			Item retrievedItem = shopRepository.findItemByName(itemName);
 
 			if (retrievedItem == null) {
+				if(itemName.isEmpty()){
+					itemsView.updateItemsShop(shopRepository.findAllItems());
+					return;
+				}
 				itemsView.errorLogItem("Item with name does not exists",itemName);
 				return;
 			}
 			itemsView.showSearchResult(retrievedItem);
-
 	}
 
 	public void modifyItemQuantity(Item item, int modifier) {

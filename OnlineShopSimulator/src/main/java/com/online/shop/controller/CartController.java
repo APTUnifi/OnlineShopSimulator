@@ -24,13 +24,14 @@ public class CartController {
 
 	public void addToCart(Item item) {
 		List<Item> items = cart.getItems();
-		if (!items.contains(item)) {
-			item.setQuantity(1);
-			shopView.itemAddedToCart(item);
-			items.add(item);
+		Item item1 = new Item(item);
+		if (!items.contains(item1)) {
+			item1.setQuantity(1);
+			shopView.itemAddedToCart(item1);
+			items.add(item1);
 		} else {
-			if (items.get(items.indexOf(item)).getQuantity() < item.getQuantity()) {
-				items.get(items.indexOf(item)).setQuantity(items.get(items.indexOf(item)).getQuantity() + 1);
+			if (items.get(items.indexOf(item1)).getQuantity() < item.getQuantity()) {
+				items.get(items.indexOf(item1)).setQuantity(items.get(items.indexOf(item)).getQuantity() + 1);
 				shopView.updateItemsCart(items);
 			} else {
 				shopView.errorLogItem("Can not add more this item", item.getName());

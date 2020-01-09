@@ -129,6 +129,7 @@ public class ShopControllerTest {
 		verify(shopView).showSearchResult(itemToSearch);
 	}
 
+
 	@Test
 	public void testSearchItemWhenItemDoestNotExists() {
 		// setup

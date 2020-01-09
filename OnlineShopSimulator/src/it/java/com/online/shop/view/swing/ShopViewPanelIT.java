@@ -145,6 +145,8 @@ public class ShopViewPanelIT extends AssertJSwingJUnitTestCase {
 		window.button(JButtonMatcher.withName("btnAdd")).click();
 		assertThat(window.list("itemListCart").contents()).containsExactly(
 				new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1,ITEM_FIXTURE_NEW_QUANTITY).toString());
+		assertThat(window.list("itemListShop").contents()).containsExactly(
+				new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1,ITEM_FIXTURE_QUANTITY_1).toString());
 	}
 
 	@Test @GUITest

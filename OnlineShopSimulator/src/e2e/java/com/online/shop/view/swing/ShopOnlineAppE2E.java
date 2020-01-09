@@ -27,6 +27,15 @@ import com.online.shop.model.Item;
 @RunWith(GUITestRunner.class)
 public class ShopOnlineAppE2E  extends AssertJSwingJUnitTestCase{
 
+	private static final int ITEM_FIXTURE_5_QUANTITY = 1;
+	private static final int ITEM_FIXTURE_4_QUANTITY = 5;
+	private static final int ITEM_FIXTURE_3_QUANTITY = 10;
+	private static final String ITEM_FIXTURE_NAME_5 = "Shirt";
+	private static final String ITEM_FIXTURE_NAME_4 = "Book";
+	private static final String ITEM_FIXTURE_NAME_3 = "Phone";
+	private static final String ITEM_FIXTURE_PRODUCTCODE_5 = "003";
+	private static final String ITEM_FIXTURE_PRODUCTCODE_4 = "002";
+	private static final String ITEM_FIXTURE_PRODUCTCODE_3 = "001";
 	private static final String CART_FIXTURE_DATE = LocalDate.now().toString();
 	private static final String CART_FIXTURE_LABEL_1 = "cartTest1";
 	private static final String CART_FIXTURE_LABEL_2 = "cartTest";
@@ -126,7 +135,13 @@ public class ShopOnlineAppE2E  extends AssertJSwingJUnitTestCase{
 		.anySatisfy(list -> assertThat(list).contains(
 				new Item(ITEM_FIXTURE_1_PRODUCTCODE,ITEM_FIXTURE_1_NAME,ITEM_FIXTURE_1_QUANTITY).toString()))
 		.anySatisfy(list -> assertThat(list).contains(
-				new Item(ITEM_FIXTURE_2_PRODUCTCODE,ITEM_FIXTURE_2_NAME,ITEM_FIXTURE_2_QUANTITY).toString()));
+				new Item(ITEM_FIXTURE_2_PRODUCTCODE,ITEM_FIXTURE_2_NAME,ITEM_FIXTURE_2_QUANTITY).toString()))
+		.anySatisfy(list -> assertThat(list).contains(
+				new Item(ITEM_FIXTURE_PRODUCTCODE_3, ITEM_FIXTURE_NAME_3, ITEM_FIXTURE_3_QUANTITY).toString()))
+		.anySatisfy(list -> assertThat(list).contains(
+				new Item(ITEM_FIXTURE_PRODUCTCODE_4, ITEM_FIXTURE_NAME_4, ITEM_FIXTURE_4_QUANTITY).toString()))
+		.anySatisfy(list -> assertThat(list).contains(
+				new Item(ITEM_FIXTURE_PRODUCTCODE_5, ITEM_FIXTURE_NAME_5, ITEM_FIXTURE_5_QUANTITY).toString()));
 	}
 
 	@Test @GUITest
@@ -137,9 +152,16 @@ public class ShopOnlineAppE2E  extends AssertJSwingJUnitTestCase{
 		window.list("itemListCart").selectItem(FIRST_ITEM);
 		window.button(JButtonMatcher.withName("btnBuy")).click();
 		assertThat(window.list("itemListCart").contents()).isEmpty();
-		assertThat(window.list("itemListShop").contents()).anySatisfy(
+		assertThat(window.list("itemListShop").contents())
+		.anySatisfy(
 				e -> assertThat(e).contains(
-						new Item(ITEM_FIXTURE_2_PRODUCTCODE,ITEM_FIXTURE_2_NAME,ITEM_FIXTURE_2_QUANTITY).toString()));
+						new Item(ITEM_FIXTURE_2_PRODUCTCODE,ITEM_FIXTURE_2_NAME,ITEM_FIXTURE_2_QUANTITY).toString()))
+		.anySatisfy(list -> assertThat(list).contains(
+				new Item(ITEM_FIXTURE_PRODUCTCODE_3, ITEM_FIXTURE_NAME_3, ITEM_FIXTURE_3_QUANTITY).toString()))
+		.anySatisfy(list -> assertThat(list).contains(
+				new Item(ITEM_FIXTURE_PRODUCTCODE_4, ITEM_FIXTURE_NAME_4, ITEM_FIXTURE_4_QUANTITY).toString()))
+		.anySatisfy(list -> assertThat(list).contains(
+				new Item(ITEM_FIXTURE_PRODUCTCODE_5, ITEM_FIXTURE_NAME_5, ITEM_FIXTURE_5_QUANTITY).toString()));
 	}
 
 	@Test @GUITest
@@ -196,6 +218,10 @@ public class ShopOnlineAppE2E  extends AssertJSwingJUnitTestCase{
 		.anySatisfy(list -> assertThat(list).contains(
 				new Item(ITEM_FIXTURE_1_PRODUCTCODE,ITEM_FIXTURE_1_NAME,ITEM_FIXTURE_1_QUANTITY).toString()))
 		.anySatisfy(list -> assertThat(list).contains(
-				new Item(ITEM_FIXTURE_2_PRODUCTCODE,ITEM_FIXTURE_2_NAME,ITEM_FIXTURE_2_QUANTITY).toString()));
+				new Item(ITEM_FIXTURE_PRODUCTCODE_3, ITEM_FIXTURE_NAME_3, ITEM_FIXTURE_3_QUANTITY).toString()))
+		.anySatisfy(list -> assertThat(list).contains(
+				new Item(ITEM_FIXTURE_PRODUCTCODE_4, ITEM_FIXTURE_NAME_4, ITEM_FIXTURE_4_QUANTITY).toString()))
+		.anySatisfy(list -> assertThat(list).contains(
+				new Item(ITEM_FIXTURE_PRODUCTCODE_5, ITEM_FIXTURE_NAME_5, ITEM_FIXTURE_5_QUANTITY).toString()));
 	}
 }
