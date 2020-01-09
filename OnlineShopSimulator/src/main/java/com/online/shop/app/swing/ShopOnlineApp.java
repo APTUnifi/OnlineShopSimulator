@@ -10,6 +10,7 @@ import com.mongodb.ServerAddress;
 
 import com.online.shop.controller.CartController;
 import com.online.shop.controller.ShopController;
+import com.online.shop.model.Item;
 import com.online.shop.repository.mongo.ShopMongoRepository;
 import com.online.shop.view.swing.HistoryViewPanel;
 import com.online.shop.view.swing.ShopOnlineFrame;
@@ -17,6 +18,8 @@ import com.online.shop.view.swing.ShopViewPanel;
 
 @Command(mixinStandardHelpOptions = true)
 public class ShopOnlineApp implements Callable<Void> {
+
+	public static final String ITEM_FIXTURE_PRODUCTCODE_1 = "001";
 
 	@Option(names = { "--mongo-host" }, description = "MongoDB host address")
 	private String mongoHost = "localhost";
@@ -36,6 +39,12 @@ public class ShopOnlineApp implements Callable<Void> {
 	public static void main(String[] args) { 
 		new CommandLine(new ShopOnlineApp()).execute(args);
 	}
+	
+	private void initDatabase(ShopMongoRepository shop) {
+		shop.storeItem(new Item(ITEM_FIXTURE_PRODUCTCODE_1, "Phone", 10));
+		shop.storeItem(new Item("002", "Book", 5));
+		shop.storeItem(new Item("003", "Shirt", 1));
+	}
 
 	@Override
 	public Void call() throws Exception {
@@ -44,6 +53,7 @@ public class ShopOnlineApp implements Callable<Void> {
 				ShopMongoRepository shopRepository = new ShopMongoRepository(
 						new MongoClient(new ServerAddress(mongoHost,mongoPort)),
 						databaseName, collectionItems, collectionCarts);
+				initDatabase(shopRepository);
 				ShopViewPanel shopViewPanel = new ShopViewPanel();
 				HistoryViewPanel historyViewPanel = new HistoryViewPanel();
 				ShopOnlineFrame shopViewFrame = new ShopOnlineFrame(shopViewPanel,historyViewPanel);

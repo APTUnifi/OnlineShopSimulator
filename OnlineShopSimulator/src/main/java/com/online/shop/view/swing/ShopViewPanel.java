@@ -93,12 +93,12 @@ public class ShopViewPanel extends JPanel implements ShopView {
 		
 		lblCartName = new JLabel("Choose a Cart Name");
 		lblCartName.setName("lblCartName");
-		lblCartName.setBounds(405, 36, 129, 16);
+		lblCartName.setBounds(405, 36, 146, 16);
 		add(lblCartName);
 		
 		lblYourCart = new JLabel("Your Cart");
 		lblYourCart.setName("lblYourCart");
-		lblYourCart.setBounds(405, 11, 61, 16);
+		lblYourCart.setBounds(405, 11, 115, 16);
 		add(lblYourCart);
 		
 		itemListShop = new JList<Item>(itemListShopModel);
@@ -143,8 +143,7 @@ public class ShopViewPanel extends JPanel implements ShopView {
 
 		btnSearch.addActionListener(
 				e ->{
-					if(!itemName.getText().trim().isEmpty())
-						shopController.searchItem(itemName.getText())	;
+					shopController.searchItem(itemName.getText());
 					resetErrorLabel();
 				}
 				);
@@ -163,7 +162,7 @@ public class ShopViewPanel extends JPanel implements ShopView {
 		itemName.setColumns(10);
 		
 		cartNameText = new JTextField();
-		cartNameText.setBounds(536, 35, 220, 18);
+		cartNameText.setBounds(563, 35, 193, 18);
 		cartNameText.setName("cartNameText");
 		add(cartNameText);
 		cartNameText.setColumns(10);

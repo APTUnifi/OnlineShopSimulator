@@ -24,6 +24,12 @@ public class Item {
 		this.quantity = quantity;
 	}
 
+	public Item(Item item) {
+		this.productCode = item.getProductCode();
+		this.name = item.getName();
+		this.quantity = item.getQuantity();
+	}
+
 	//TODO update with the other methods
 	@Override
 	public boolean equals(final Object obj){
