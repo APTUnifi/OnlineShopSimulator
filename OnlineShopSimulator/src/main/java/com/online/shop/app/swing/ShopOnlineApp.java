@@ -24,7 +24,7 @@ public class ShopOnlineApp implements Callable<Void> {
 	@Option(names = { "--mongo-host" }, description = "MongoDB host address")
 	private String mongoHost = "localhost";
 
-	@Option (names = { "--mongo-port" }, description = "MongoDB host port")
+	@Option(names = { "--mongo-port" }, description = "MongoDB host port")
 	private int mongoPort = 27017;
 
 	@Option(names = { "--db-name" }, description = "Database name")
@@ -36,10 +36,10 @@ public class ShopOnlineApp implements Callable<Void> {
 	@Option(names = { "--db-collectionCarts" }, description = "Collection carts")
 	private String collectionCarts = "test-carts";
 
-	public static void main(String[] args) { 
+	public static void main(String[] args) {
 		new CommandLine(new ShopOnlineApp()).execute(args);
 	}
-	
+
 	private void initDatabase(ShopMongoRepository shop) {
 		shop.storeItem(new Item(ITEM_FIXTURE_PRODUCTCODE_1, "Phone", 10));
 		shop.storeItem(new Item("002", "Book", 5));
@@ -48,26 +48,26 @@ public class ShopOnlineApp implements Callable<Void> {
 
 	@Override
 	public Void call() throws Exception {
-		EventQueue.invokeLater(()->{
+		EventQueue.invokeLater(() -> {
 			try {
 				ShopMongoRepository shopRepository = new ShopMongoRepository(
-						new MongoClient(new ServerAddress(mongoHost,mongoPort)),
-						databaseName, collectionItems, collectionCarts);
+						new MongoClient(new ServerAddress(mongoHost, mongoPort)), databaseName, collectionItems,
+						collectionCarts);
 				initDatabase(shopRepository);
 				ShopViewPanel shopViewPanel = new ShopViewPanel();
 				HistoryViewPanel historyViewPanel = new HistoryViewPanel();
-				ShopOnlineFrame shopViewFrame = new ShopOnlineFrame(shopViewPanel,historyViewPanel);
+				ShopOnlineFrame shopViewFrame = new ShopOnlineFrame(shopViewPanel, historyViewPanel);
 				ShopController shopController = new ShopController(shopViewPanel, shopRepository);
-				CartController cartController = new CartController(shopViewPanel, shopRepository,historyViewPanel);
+				CartController cartController = new CartController(shopViewPanel, shopRepository, historyViewPanel);
 				shopViewPanel.setShopController(shopController);
 				shopViewPanel.setCartController(cartController);
 				historyViewPanel.setCartController(cartController);
 				shopController.allItems();
 				cartController.allCarts();
 				shopViewFrame.setVisible(true);
-			}catch(Exception e ) {}
-		}	
-				);
+			} catch (Exception e) {
+			}
+		});
 		return null;
 	}
 }

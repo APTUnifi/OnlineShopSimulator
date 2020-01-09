@@ -9,13 +9,13 @@ import com.online.shop.view.HistoryView;
 import com.online.shop.view.ShopView;
 
 public class CartController {
-	
+
 	private ShopView shopView;
 	private ShopRepository shopRepository;
 	private HistoryView historyView;
 	private Cart cart;
 
-	public CartController(ShopView ShopView, ShopRepository shopRepository,HistoryView historyView) {
+	public CartController(ShopView ShopView, ShopRepository shopRepository, HistoryView historyView) {
 		this.shopView = ShopView;
 		this.shopRepository = shopRepository;
 		this.historyView = historyView;
@@ -74,9 +74,9 @@ public class CartController {
 
 	public void completePurchase(String label) {
 		cart.setLabel(label);
-		for(Cart carts : shopRepository.findAllCarts()) {
-			if(cart.getLabel().equals(carts.getLabel())) {
-				shopView.errorLogCart("Cart with this label already exists " , cart.getLabel());
+		for (Cart carts : shopRepository.findAllCarts()) {
+			if (cart.getLabel().equals(carts.getLabel())) {
+				shopView.errorLogCart("Cart with this label already exists ", cart.getLabel());
 				return;
 			}
 		}
@@ -120,7 +120,7 @@ public class CartController {
 
 	public void removeCart(Cart cartToRemove) {
 		if (shopRepository.findCart(cartToRemove.getDate(), cartToRemove.getLabel()) == null) {
-			historyView.errorLogCart("Cart not found", cartToRemove.getLabel() );
+			historyView.errorLogCart("Cart not found", cartToRemove.getLabel());
 			return;
 		}
 		shopRepository.removeCart(cartToRemove.getDate(), cartToRemove.getLabel());
