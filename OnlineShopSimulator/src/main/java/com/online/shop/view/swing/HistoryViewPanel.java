@@ -1,5 +1,6 @@
 package com.online.shop.view.swing;
 
+import java.awt.Color;
 import java.util.List;
 
 import javax.swing.JPanel;
@@ -100,6 +101,7 @@ public class HistoryViewPanel extends JPanel implements HistoryView {
 
 		lblErrorMessageLabel = new JLabel(" ");
 		lblErrorMessageLabel.setOpaque(true);
+		lblErrorMessageLabel.setForeground(Color.red);
 		lblErrorMessageLabel.setName("errorMessageLabel");
 		lblErrorMessageLabel.setBounds(168, 284, 441, 16);
 		add(lblErrorMessageLabel);

@@ -67,6 +67,7 @@ public class CartController {
 		if (items.get(items.indexOf(item)).getQuantity() == 1) {
 			items.remove(items.indexOf(item));
 			shopView.itemRemovedFromCart(item);
+			shopView.updateItemsCart(items);
 		} else {
 			items.get(items.indexOf(item)).setQuantity(items.get(items.indexOf(item)).getQuantity() - 1);
 			shopView.updateItemsCart(items);
@@ -75,6 +76,10 @@ public class CartController {
 
 	public void completePurchase(String label) {
 		cart.setLabel(label);
+		if(label == "") {
+			shopView.errorLogCart("Insert name cart ", label);
+			return;
+		}
 		for (Cart carts : shopRepository.findAllCarts()) {
 			if (cart.getLabel().equals(carts.getLabel())) {
 				shopView.errorLogCart("Cart with this label already exists ", cart.getLabel());
