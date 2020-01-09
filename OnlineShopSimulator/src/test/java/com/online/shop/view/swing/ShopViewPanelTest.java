@@ -246,7 +246,6 @@ public class ShopViewPanelTest extends AssertJSwingJUnitTestCase {
 	}
 	@Test
 	public void testItemRemovedToCartShouldRemoveTheItemFromTheItemListCartAndResetErrorLabel() {
-		//setup
 		Item item1 = new Item(ITEM_FIXTURE_PRODUCTCODE_1,ITEM_FIXTURE_NAME_1);
 		Item item2 = new Item(ITEM_FIXTURE_PRODUCTCODE_2,ITEM_FIXTURE_NAME_2);
 		GuiActionRunner.execute(

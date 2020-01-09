@@ -72,7 +72,7 @@ public class Cart {
 
 	@Override
 	public String toString() {
-		return label + " - date : " + date;
+		return label + " purchased on " + date;
 
 	}
 }
