@@ -30,7 +30,7 @@
       <submoduleCfg class="list"/>
       <extensions/>
     </scm>
-    <scriptPath>Jenkins/Jenkinsfile</scriptPath>
+    <scriptPath>Jenkinsfile</scriptPath>
     <lightweight>true</lightweight>
   </definition>
   <triggers/>
