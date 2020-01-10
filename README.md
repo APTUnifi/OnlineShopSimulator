@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/APTUnifi/OnlineShopSimulator.svg?branch=master)](https://travis-ci.org/APTUnifi/OnlineShopSimulator) [![Coverage Status](https://coveralls.io/repos/github/APTUnifi/OnlineShopSimulator/badge.svg)](https://coveralls.io/github/APTUnifi/OnlineShopSimulator) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=APTUnifi_OnlineShopSimulator&metric=alert_status)](https://sonarcloud.io/dashboard?id=APTUnifi_OnlineShopSimulator)
 
-[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=APTUnifi_OnlineShopSimulator&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=APTUnifi_OnlineShopSimulator)[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=APTUnifi_OnlineShopSimulator&metric=sqale_index)](https://sonarcloud.io/dashboard?id=APTUnifi_OnlineShopSimulator) [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=APTUnifi_OnlineShopSimulator&metric=bugs)](https://sonarcloud.io/dashboard?id=APTUnifi_OnlineShopSimulator) [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=APTUnifi_OnlineShopSimulator&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=APTUnifi_OnlineShopSimulator) [![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=APTUnifi_OnlineShopSimulator&metric=duplicated_lines_density)](https://sonarcloud.io/dashboard?id=APTUnifi_OnlineShopSimulator)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=APTUnifi_OnlineShopSimulator&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=APTUnifi_OnlineShopSimulator) [![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=APTUnifi_OnlineShopSimulator&metric=sqale_index)](https://sonarcloud.io/dashboard?id=APTUnifi_OnlineShopSimulator) [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=APTUnifi_OnlineShopSimulator&metric=bugs)](https://sonarcloud.io/dashboard?id=APTUnifi_OnlineShopSimulator) [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=APTUnifi_OnlineShopSimulator&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=APTUnifi_OnlineShopSimulator) [![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=APTUnifi_OnlineShopSimulator&metric=duplicated_lines_density)](https://sonarcloud.io/dashboard?id=APTUnifi_OnlineShopSimulator)
 
 ### Description
 
@@ -17,29 +17,33 @@ Below are shown two screenshots from the application: the first one is the store
 
 ### Dependencies
 
-* Gradle
-* Docker
+* Gradle 5.6.1
+* Docker 19.03.5
+* Java
 
 ### How to run Jenkins CI
-From the Docker folder launch:
 
-`docker build -t jenkins-pipeline .`
+If you want to run Jenkins from Mac OS or Windows, skip the first step:
 
-This command will build the container on which Jenkins will be instancieted with all its dependencies and the pipeline we defined. Then, to run it launch:
+1. open a terminal and type `sudo iptables -A INPUT -i docker0 -j ACCEPT` ;
 
+2. move to Docker folder and launch `docker build -t jenkins-pipeline .` : this command will build the container on which Jenkins will be instancieted with all its dependencies and the pipeline we defined. 
+
+3. Then, to run it launch: 
 `docker run -it --rm --name jenkins-pipeline -p 8081:8080 -v /var/run/docker.sock:/var/run/docker.sock jenkins-pipeline`
 
-Then, connecting to `localhost:8081` you will be redirect to Jenkins dashboard where you will find the "pipeline" job. Click on it and start the compilation.
+4. After the terminal prompts "Jenkins is fully up and running", connect to `localhost:8081` and you will be redirect to the Jenkins dashboard where you will find the "pipeline" job. Click on it and start the compilation.
 
 ### Launch the application
-First of all launch a docker mongodb container with:
 
-`docker run --rm --name mongo -p 27017:27017 mongo:4.0.5`
+1. First of all launch a docker mongodb container with:
 
-Then, from the root folder, run:
+    - `docker run --rm --name mongo -p 27017:27017 mongo:4.0.5`
 
-`cd OnlineShopSimulator`
+2. Then, from the root project folder:
 
-`./gradlew clean app`
+    - `cd OnlineShopSimulator`
 
-`java -jar build/libs/OnlineShopSimulator.jar `
+    - `./gradlew clean app`
+
+    - `java -jar build/libs/OnlineShopSimulator.jar `
