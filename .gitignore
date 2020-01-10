@@ -15,7 +15,6 @@
 #/OnlineShopSimulator/gradle/wrapper/gradle-wrapper.properties
 
 # Eclipse
-/OnlineShopSimulator/.classpath
 /OnlineShopSimulator/.project
 /OnlineShopSimulator/.settings/
 /OnlineShopSimulator/bin/
