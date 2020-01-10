@@ -281,6 +281,8 @@ public class CartControllerTest {
 	@Test
 	public void testCompletePurchaseShouldThrowErrorWhenNameCartAlreadyExists() {
 		List<Item> items = new ArrayList<>();
+		Item item = new Item(PRODUCT_CODE_1, ITEM_NAME_1);
+		items.add(item);
 		Cart cartToAdd = new Cart(CART_NAME_1, LocalDate.now().toString(), items);
 		Cart cartExist = new Cart(CART_NAME_1, LocalDate.now().toString(), items);
 		shopRepository.storeCart(cartExist);
@@ -293,6 +295,8 @@ public class CartControllerTest {
 	@Test
 	public void testCompletePurchaseShouldThrowErrorWhenNameCartIsEmpty() {
 		List<Item> items = new ArrayList<>();
+		Item item = new Item(PRODUCT_CODE_1, ITEM_NAME_1);
+		items.add(item);
 		Cart cartToAdd = new Cart(CART_NAME_1, LocalDate.now().toString(), items);
 		Cart cartExist = new Cart(CART_NAME_1, LocalDate.now().toString(), items);
 		shopRepository.storeCart(cartExist);
@@ -301,5 +305,17 @@ public class CartControllerTest {
 		verify(shopView).errorLogCart("Insert name cart ", "");
 		verifyNoMoreInteractions(ignoreStubs(shopView));
 	}
+	
+	@Test
+	public void testCompletePurchaseShouldThrowErrorWhenCartIsEmpty() {
+		List<Item> items = new ArrayList<>();
+		Cart cartToAdd = new Cart(CART_NAME_1, LocalDate.now().toString(), items);
+		cartController.setCart(cartToAdd);
+		cartController.completePurchase(CART_NAME_1);
+		verify(shopView).errorLog("Item/s not found", items);
+		verifyNoMoreInteractions(ignoreStubs(shopView));
+	}
+	
+	
 
 }
