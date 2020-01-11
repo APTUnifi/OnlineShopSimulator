@@ -14,7 +14,8 @@ plugins {
     id 'org.sonarqube' version '2.7'
     id 'jacoco'
     id 'com.github.kt3k.coveralls' version '2.8.4'
-    id 'com.gradle.build-scan' version '2.1'	
+    id 'com.gradle.build-scan' version '2.1'
+    id 'info.solidsoft.pitest' version '1.4.6'
 }
 
 repositories {
@@ -84,6 +85,16 @@ task app(type: Jar) {
     configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
   }
   with jar
+}
+
+pitest {
+    targetClasses = ['com.online.shop.*']  //by default "${project.group}.*"
+    testSourceSets = [sourceSets.integrationTest,sourceSets.e2eTest]
+    pitestVersion = '1.4.6' //not needed when a default PIT version should be used
+    threads = 4
+    outputFormats = ['XML', 'HTML']
+    timestampedReports = false
+    excludedClasses = ['com.online.shop.view.*','com.online.shop.model.*']
 }
 
 jacocoTestReport {	

@@ -82,9 +82,6 @@ public class ShopViewPanelIT extends AssertJSwingJUnitTestCase {
 		mongoClient = new MongoClient(new ServerAddress(serverAddress));
 		shopRepository = new ShopMongoRepository(mongoClient, SHOP_DB_NAME, ITEMS_COLLECTION_NAME,
 				CARTS_COLLECTION_NAME);
-		for (Item item : shopRepository.findAllItems()) {
-			shopRepository.removeItem(item.getProductCode());
-		}
 		for (Cart cart : shopRepository.findAllCarts()) {
 			shopRepository.removeCart(cart.getDate(), cart.getLabel());
 		}
