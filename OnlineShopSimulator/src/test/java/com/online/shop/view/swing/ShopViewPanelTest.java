@@ -310,10 +310,10 @@ public class ShopViewPanelTest extends AssertJSwingJUnitTestCase {
 					itemListCartModel.addElement(item1);
 					itemListCartModel.addElement(item2);
 				});
-		window.textBox("cartNameText").enterText("testCart");
+		window.textBox("cartNameText").enterText(CART_FIXTURE_LABEL_1);
 		window.list("itemListCart").selectItem(FIRST_ITEM);
 		window.button(JButtonMatcher.withName("btnBuy")).click();
-		verify(cartController).completePurchase(window.textBox("cartNameText").text());
+		verify(cartController).completePurchase(CART_FIXTURE_LABEL_1);
 	}
 	@Test
 	public void testErrorLogCartShouldShowTheMessageInTheErrorMessageLabel() {
