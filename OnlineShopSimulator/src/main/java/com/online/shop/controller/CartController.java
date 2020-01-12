@@ -29,15 +29,15 @@ public class CartController {
 			item1.setQuantity(1);
 			shopView.itemAddedToCart(item1);
 			items.add(item1);
-			shopView.updateItemsCart(items);
 		} else {
 			if (items.get(items.indexOf(item1)).getQuantity() < item.getQuantity()) {
 				items.get(items.indexOf(item1)).setQuantity(items.get(items.indexOf(item)).getQuantity() + 1);
-				shopView.updateItemsCart(items);
 			} else {
 				shopView.errorLogItem("Can not add more this item", item.getName());
+				return;
 			}
 		}
+		shopView.updateItemsCart(items);
 	}
 
 	public int cartSize() {
@@ -50,6 +50,10 @@ public class CartController {
 
 	public void setCart(Cart cart) {
 		this.cart = cart;
+	}
+
+	public Cart getCart() {
+		return this.cart;
 	}
 
 	public int findItemQuantity(Item item) {
@@ -67,21 +71,21 @@ public class CartController {
 		if (items.get(items.indexOf(item)).getQuantity() == 1) {
 			items.remove(items.indexOf(item));
 			shopView.itemRemovedFromCart(item);
-			shopView.updateItemsCart(items);
 		} else {
 			items.get(items.indexOf(item)).setQuantity(items.get(items.indexOf(item)).getQuantity() - 1);
-			shopView.updateItemsCart(items);
 		}
+		shopView.updateItemsCart(items);
 	}
 
 	public void completePurchase(String label) {
 		cart.setLabel(label);
-		if(label.trim().isEmpty()) {
+
+		if (label.trim().isEmpty()) {
 			shopView.errorLogCart("Insert name cart ", label);
 			return;
 		}
 		for (Cart carts : shopRepository.findAllCarts()) {
-			if (cart.getLabel().equals(carts.getLabel())) {
+			if (label.equals(carts.getLabel())) {
 				shopView.errorLogCart("Cart with this label already exists ", cart.getLabel());
 				return;
 			}

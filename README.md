@@ -8,7 +8,7 @@
 
 OnlineShopSimulator is a java program able to simulate the behavior of an online shop, where a customer can buy items and review past purchases. The project has been developed following TDD principles and using Gradle as build automation tool. CI, coverage and code quality were also taken into account linking the Git project repository to the online services of Travis, Coveralls and Sonarqube. A Dockerfile and a Jenkinsfile comes with the code to provide a portable continuous integration environment, in which is possible to reproduce the build we defined thanks to a pipeline.
 
-Link to whole paper [here](https://drive.google.com/file/d/1-01CTL-k6WWqx98tIsMKwPpJXTKMv4dG/view?usp=sharing).
+Link to whole paper [here](https://drive.google.com/open?id=1JBILgLOpn0VcT2eOmZ5WQEv3ActGyosV).
 
 Below are shown two screenshots from the application: the first one is the store panel where a customer can add items to its cart and the purchase them. The second one, instead, is the history panel where it's possible to check past orders.
 
@@ -47,3 +47,7 @@ If you want to run Jenkins from Mac OS or Windows, skip the first step:
     - `./gradlew clean app`
 
     - `java -jar build/libs/OnlineShopSimulator.jar `
+
+### PIT Mutuation testing
+
+A task is defined in the build.gradle file to launch mutation testing, so you just need to open a terminal and run `./gradlew pitest`. Reports are saved under the directory OnlineShopSimulatorLocal/build/reports/pitest.

@@ -55,11 +55,13 @@ public class ShopController {
 		if (modifier == 0) {
 			return;
 		}
-		if (modifier + item.getQuantity() == 0) {
-			shopRepository.removeItem(item.getProductCode());
+
+		if (modifier + item.getQuantity() < 0) {
 			return;
 		}
-		if (modifier + item.getQuantity() < 0) {
+
+		if (modifier + item.getQuantity() == 0) {
+			shopRepository.removeItem(item.getProductCode());
 			return;
 		}
 		shopRepository.modifyItemQuantity(item, modifier);
